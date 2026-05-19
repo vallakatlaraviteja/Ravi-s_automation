@@ -1,0 +1,1689 @@
+{
+  "name": "ENHANCED MASTER Job Automation System (with Resume Intelligence)",
+  "nodes": [
+    {
+      "id": "trigger-1-job-discovery",
+      "name": "Schedule Trigger: Job Discovery (8 AM)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * *"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "trigger-2-email-outreach",
+      "name": "Schedule Trigger: Email Outreach (9 AM)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        1800
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * *"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "trigger-3-telegram",
+      "name": "Telegram Trigger: Interactive Assistant",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        3300
+      ],
+      "parameters": {
+        "updates": [
+          "message"
+        ]
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_TELEGRAM_CREDENTIAL_ID",
+          "name": "Telegram Bot"
+        }
+      },
+      "webhookId": "telegram-job-bot"
+    },
+    {
+      "id": "user-config",
+      "name": "User Config (Master Profile)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ],
+      "parameters": {
+        "jsCode": "// User profile configuration - single source of truth\nreturn [{\n  json: {\n    name: 'Your Name',\n    currentRole: 'Senior Backend Engineer',\n    targetRole: 'Staff Engineer',\n    experience: '5 years',\n    skills: ['Python', 'Node.js', 'AWS', 'Docker', 'Kubernetes', 'PostgreSQL'],\n    location: 'Hyderabad, India',\n    workMode: ['remote', 'hybrid'],\n    minSalary: 80000,\n    targetRoles: ['Backend Engineer', 'Full Stack Engineer', 'DevOps Engineer'],\n    keywords: 'python developer OR backend engineer OR nodejs',\n    country: 'in',\n    githubUrl: 'https://github.com/yourusername',\n    linkedinUrl: 'https://linkedin.com/in/yourprofile',\n    portfolioUrl: 'https://yourportfolio.com',\n    resumeUrl: 'https://drive.google.com/file/d/YOUR_RESUME_ID/view',\n    resumeParsingEnabled: true,\n    userEmail: 'YOUR_EMAIL@example.com',\n    dailyLimit: 10,\n    scoreThreshold: 30,\n    sheetId: 'YOUR_SPREADSHEET_ID'\n  }\n}];"
+      }
+    },
+    {
+      "id": "fetch-remotive",
+      "name": "Fetch Remotive API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        680,
+        240
+      ],
+      "parameters": {
+        "url": "https://remotive.com/api/remote-jobs",
+        "method": "GET",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "search",
+              "value": "={{ $('User Config (Master Profile)').item.json.keywords }}"
+            },
+            {
+              "name": "limit",
+              "value": "50"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "id": "fetch-arbeitnow",
+      "name": "Fetch Arbeitnow API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        680,
+        360
+      ],
+      "parameters": {
+        "url": "https://www.arbeitnow.com/api/job-board-api",
+        "method": "GET",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "search",
+              "value": "={{ $('User Config (Master Profile)').item.json.keywords }}"
+            },
+            {
+              "name": "limit",
+              "value": "50"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "id": "fetch-adzuna",
+      "name": "Fetch Adzuna API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        680,
+        480
+      ],
+      "parameters": {
+        "url": "=https://api.adzuna.com/v1/api/jobs/{{ $('User Config (Master Profile)').item.json.country }}/search/1",
+        "method": "GET",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "app_id",
+              "value": "YOUR_ADZUNA_APP_ID"
+            },
+            {
+              "name": "app_key",
+              "value": "YOUR_ADZUNA_APP_KEY"
+            },
+            {
+              "name": "what",
+              "value": "={{ $('User Config (Master Profile)').item.json.keywords }}"
+            },
+            {
+              "name": "results_per_page",
+              "value": "50"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "id": "parse-remotive",
+      "name": "Parse Remotive Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        240
+      ],
+      "parameters": {
+        "jsCode": "// Parse Remotive API response\nconst response = items[0].json;\nconst jobs = response.jobs || [];\n\nreturn jobs.map(job => ({\n  json: {\n    source: 'Remotive',\n    jobTitle: job.title || 'Unknown',\n    company: job.company_name || 'Unknown',\n    location: job.candidate_required_location || 'Remote',\n    jobType: job.job_type || 'Full-time',\n    workMode: 'Remote',\n    salary: job.salary || 'Not disclosed',\n    applyUrl: job.url || '',\n    description: (job.description || '').substring(0, 500),\n    tags: job.tags || [],\n    postedDate: job.publication_date || new Date().toISOString().split('T')[0],\n    category: job.category || '',\n    jobId: `remotive-${job.id || Date.now()}`,\n    fetchedDate: new Date().toISOString().split('T')[0],\n    recruiterEmail: '',\n    recruiterName: ''\n  }\n}));"
+      },
+      "continueOnFail": true
+    },
+    {
+      "id": "parse-arbeitnow",
+      "name": "Parse Arbeitnow Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        360
+      ],
+      "parameters": {
+        "jsCode": "// Parse Arbeitnow API response\nconst response = items[0].json;\nconst jobs = response.data || [];\n\nreturn jobs.map(job => ({\n  json: {\n    source: 'Arbeitnow',\n    jobTitle: job.title || 'Unknown',\n    company: job.company_name || 'Unknown',\n    location: job.location || 'Remote',\n    jobType: job.job_types?.[0] || 'Full-time',\n    workMode: job.remote ? 'Remote' : 'Onsite',\n    salary: 'Not disclosed',\n    applyUrl: job.url || '',\n    description: (job.description || '').substring(0, 500),\n    tags: job.tags || [],\n    postedDate: job.created_at ? new Date(job.created_at * 1000).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],\n    category: '',\n    jobId: `arbeitnow-${job.slug || Date.now()}`,\n    fetchedDate: new Date().toISOString().split('T')[0],\n    recruiterEmail: '',\n    recruiterName: ''\n  }\n}));"
+      },
+      "continueOnFail": true
+    },
+    {
+      "id": "parse-adzuna",
+      "name": "Parse Adzuna Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        480
+      ],
+      "parameters": {
+        "jsCode": "// Parse Adzuna API response\nconst response = items[0].json;\nconst jobs = response.results || [];\n\nreturn jobs.map(job => ({\n  json: {\n    source: 'Adzuna',\n    jobTitle: job.title || 'Unknown',\n    company: job.company?.display_name || 'Unknown',\n    location: job.location?.display_name || 'Not specified',\n    jobType: job.contract_time || 'Full-time',\n    workMode: 'Not specified',\n    salary: job.salary_max ? `${job.salary_min || 0} - ${job.salary_max}` : 'Not disclosed',\n    applyUrl: job.redirect_url || '',\n    description: (job.description || '').substring(0, 500),\n    tags: job.category?.tag ? [job.category.tag] : [],\n    postedDate: job.created || new Date().toISOString().split('T')[0],\n    category: job.category?.label || '',\n    jobId: `adzuna-${job.id || Date.now()}`,\n    fetchedDate: new Date().toISOString().split('T')[0],\n    recruiterEmail: '',\n    recruiterName: ''\n  }\n}));"
+      },
+      "continueOnFail": true
+    },
+    {
+      "id": "merge-job-apis",
+      "name": "Merge All API Results",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        360
+      ],
+      "parameters": {
+        "mode": "combine",
+        "options": {}
+      }
+    },
+    {
+      "id": "deduplicate-jobs",
+      "name": "Deduplicate Jobs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1340,
+        360
+      ],
+      "parameters": {
+        "jsCode": "// Deduplicate and filter existing jobs\nconst jobs = items.map(item => item.json);\nconst seen = new Set();\nconst unique = [];\n\nfor (const job of jobs) {\n  const key = `${job.company}-${job.jobTitle}`.toLowerCase().replace(/\\s+/g, '-');\n  if (!seen.has(key) && job.applyUrl) {\n    seen.add(key);\n    unique.push(job);\n  }\n}\n\nreturn unique.map(job => ({ json: job }));"
+      }
+    },
+    {
+      "id": "read-existing-jobs",
+      "name": "Read Existing Jobs from Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.2,
+      "position": [
+        1560,
+        360
+      ],
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('User Config (Master Profile)').item.json.sheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Jobs",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets OAuth2"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "id": "filter-new-jobs",
+      "name": "Filter Out Already-Fetched Jobs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1780,
+        360
+      ],
+      "parameters": {
+        "jsCode": "// Filter out jobs already in sheet\nconst newJobs = $('Deduplicate Jobs').all().map(item => item.json);\nconst existingJobs = items.map(item => item.json);\n\nconst existingIds = new Set(existingJobs.map(j => j['Job ID'] || j.jobId));\n\nconst trulyNew = newJobs.filter(job => !existingIds.has(job.jobId));\n\nif (trulyNew.length === 0) {\n  throw new Error('No new jobs found - all already in sheet');\n}\n\nreturn trulyNew.map(job => ({ json: job }));"
+      },
+      "continueOnFail": true
+    },
+    {
+      "id": "groq-score-job",
+      "name": "Groq AI: Score Job Match",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        360
+      ],
+      "parameters": {
+        "operation": "text",
+        "options": {
+          "temperature": 0.3
+        },
+        "text": "=You are a job matching expert. Score this job for relevance (0-100):\n\n**Job:** {{ $json.jobTitle }} at {{ $json.company }}\n**Location:** {{ $json.location }}\n**Work Mode:** {{ $json.workMode }}\n**Description:** {{ $json.description }}\n\n**User Profile:**\n- Current Role: {{ $('Merge User Config with Resume Data').item.json.currentRole }}\n- Target Role: {{ $('Merge User Config with Resume Data').item.json.targetRole }}\n- Skills: {{ $('Merge User Config with Resume Data').item.json.skills.join(', ') }}\n- Work Mode: {{ $('Merge User Config with Resume Data').item.json.workMode.join(' or ') }}\n- Location: {{ $('Merge User Config with Resume Data').item.json.location }}\n\n**Resume Data:**\n- Resume Parsed: {{ $('Merge User Config with Resume Data').item.json.resumeParsed ? 'Yes' : 'No (using config)' }}\n- Resume Skills: {{ ($('Merge User Config with Resume Data').item.json.resumeData.skills || []).join(', ') }}\n- Experience: {{ ($('Merge User Config with Resume Data').item.json.resumeData.experience || []).map(e => e.role + ' at ' + e.company).join('; ') }}\n- Key Projects: {{ ($('Merge User Config with Resume Data').item.json.resumeData.projects || []).slice(0, 3).map(p => p.name).join(', ') }}\n\n**Scoring Instructions:**\n- Give +20 points for strong skill overlap with resume\n- Give +15 points for relevant project experience\n- Give +10 points for matching work mode and location\n- Give +10 points for career progression alignment\n\nProvide ONLY a JSON object:\n{\"score\": <0-100>, \"priority\": \"high|medium|low\", \"matchReason\": \"<1 sentence mentioning resume skills if parsed>\"}\n\nNo other text."
+      },
+      "credentials": {
+        "groqApi": {
+          "id": "YOUR_GROQ_CREDENTIAL_ID",
+          "name": "Groq API"
+        }
+      }
+    },
+    {
+      "id": "parse-score",
+      "name": "Parse AI Score",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2220,
+        360
+      ],
+      "parameters": {
+        "jsCode": "// Parse Groq scoring response\nconst jobData = items[0].json;\nconst groqResponse = $node[\"Groq AI: Score Job Match\"].json.response || $node[\"Groq AI: Score Job Match\"].json.text || '';\n\nlet score = 50;\nlet priority = 'medium';\nlet matchReason = 'Standard match';\n\ntry {\n  const jsonMatch = groqResponse.match(/\\{[\\s\\S]*\\}/);\n  if (jsonMatch) {\n    const parsed = JSON.parse(jsonMatch[0]);\n    score = parsed.score || 50;\n    priority = parsed.priority || 'medium';\n    matchReason = parsed.matchReason || 'Standard match';\n  }\n} catch (error) {\n  console.error('Failed to parse Groq response, using defaults');\n}\n\nreturn [{\n  json: {\n    ...jobData,\n    score,\n    priority,\n    matchReason,\n    status: 'New',\n    applicationId: '',\n    emailSentDate: '',\n    lastUpdated: new Date().toISOString().split('T')[0]\n  }\n}];"
+      }
+    },
+    {
+      "id": "filter-by-score",
+      "name": "Filter by Score Threshold (\u226530)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2440,
+        360
+      ],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.score }}",
+              "operation": "largerEqual",
+              "value2": "={{ $('User Config (Master Profile)').item.json.scoreThreshold }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "append-to-sheet-jobs",
+      "name": "Append to Google Sheets: Jobs Tab",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.2,
+      "position": [
+        2660,
+        360
+      ],
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('User Config (Master Profile)').item.json.sheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Jobs",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "jobId",
+              "displayName": "Job ID",
+              "type": "string"
+            },
+            {
+              "id": "jobTitle",
+              "displayName": "Job Title",
+              "type": "string"
+            },
+            {
+              "id": "company",
+              "displayName": "Company",
+              "type": "string"
+            },
+            {
+              "id": "location",
+              "displayName": "Location",
+              "type": "string"
+            },
+            {
+              "id": "workMode",
+              "displayName": "Work Mode",
+              "type": "string"
+            },
+            {
+              "id": "salary",
+              "displayName": "Salary",
+              "type": "string"
+            },
+            {
+              "id": "applyUrl",
+              "displayName": "Apply URL",
+              "type": "string"
+            },
+            {
+              "id": "source",
+              "displayName": "Source",
+              "type": "string"
+            },
+            {
+              "id": "score",
+              "displayName": "Score",
+              "type": "number"
+            },
+            {
+              "id": "priority",
+              "displayName": "Priority",
+              "type": "string"
+            },
+            {
+              "id": "matchReason",
+              "displayName": "Match Reason",
+              "type": "string"
+            },
+            {
+              "id": "status",
+              "displayName": "Status",
+              "type": "string"
+            },
+            {
+              "id": "postedDate",
+              "displayName": "Posted Date",
+              "type": "string"
+            },
+            {
+              "id": "fetchedDate",
+              "displayName": "Fetched Date",
+              "type": "string"
+            },
+            {
+              "id": "recruiterEmail",
+              "displayName": "Recruiter Email",
+              "type": "string"
+            },
+            {
+              "id": "recruiterName",
+              "displayName": "Recruiter Name",
+              "type": "string"
+            },
+            {
+              "id": "applicationId",
+              "displayName": "Application ID",
+              "type": "string"
+            },
+            {
+              "id": "emailSentDate",
+              "displayName": "Email Sent Date",
+              "type": "string"
+            },
+            {
+              "id": "lastUpdated",
+              "displayName": "Last Updated",
+              "type": "string"
+            }
+          ],
+          "value": {
+            "jobId": "={{ $json.jobId }}",
+            "jobTitle": "={{ $json.jobTitle }}",
+            "company": "={{ $json.company }}",
+            "location": "={{ $json.location }}",
+            "workMode": "={{ $json.workMode }}",
+            "salary": "={{ $json.salary }}",
+            "applyUrl": "={{ $json.applyUrl }}",
+            "source": "={{ $json.source }}",
+            "score": "={{ $json.score }}",
+            "priority": "={{ $json.priority }}",
+            "matchReason": "={{ $json.matchReason }}",
+            "status": "={{ $json.status }}",
+            "postedDate": "={{ $json.postedDate }}",
+            "fetchedDate": "={{ $json.fetchedDate }}",
+            "recruiterEmail": "={{ $json.recruiterEmail }}",
+            "recruiterName": "={{ $json.recruiterName }}",
+            "applicationId": "={{ $json.applicationId }}",
+            "emailSentDate": "={{ $json.emailSentDate }}",
+            "lastUpdated": "={{ $json.lastUpdated }}",
+            "resumeMatchDetails": "={{ $json.resumeMatchDetails || \"\" }}"
+          }
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    },
+    {
+      "id": "aggregate-job-summary",
+      "name": "Aggregate Job Discovery Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2880,
+        360
+      ],
+      "parameters": {
+        "jsCode": "// Aggregate job discovery summary\nconst jobs = items.map(item => item.json);\nconst total = jobs.length;\nconst high = jobs.filter(j => j.priority === 'high').length;\nconst medium = jobs.filter(j => j.priority === 'medium').length;\nconst low = jobs.filter(j => j.priority === 'low').length;\n\nconst topJobs = jobs\n  .sort((a, b) => b.score - a.score)\n  .slice(0, 5)\n  .map(j => `\u2022 **${j.jobTitle}** at **${j.company}** (${j.location}) - Score: ${j.score} [${j.source}]`);\n\nconst sourceBreakdown = jobs.reduce((acc, j) => {\n  acc[j.source] = (acc[j.source] || 0) + 1;\n  return acc;\n}, {});\n\nconst sourceStats = Object.entries(sourceBreakdown)\n  .map(([source, count]) => `${source}: ${count}`)\n  .join(', ');\n\nreturn [{\n  json: {\n    total,\n    high,\n    medium,\n    low,\n    topJobsList: topJobs.join('\\n'),\n    sourceStats,\n    date: new Date().toISOString().split('T')[0]\n  }\n}];"
+      }
+    },
+    {
+      "id": "send-telegram-job-digest",
+      "name": "Send Telegram: Job Discovery Digest",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3100,
+        300
+      ],
+      "parameters": {
+        "chatId": "YOUR_TELEGRAM_CHAT_ID",
+        "text": "=\ud83d\udcca **Daily Job Discovery Complete**\n\n\u2705 Found **{{ $json.total }}** new relevant jobs!\n\n**Priority Breakdown:**\n\ud83d\udd34 High: {{ $json.high }}\n\ud83d\udfe1 Medium: {{ $json.medium }}\n\ud83d\udfe2 Low: {{ $json.low }}\n\n**Sources:** {{ $json.sourceStats }}\n\n**Top 5 Matches:**\n{{ $json.topJobsList }}\n\nAll jobs saved to Google Sheet. Add recruiter emails for auto-outreach!\n\n**Date:** {{ $json.date }}",
+        "additionalFields": {}
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_TELEGRAM_CREDENTIAL_ID",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "id": "send-gmail-job-digest",
+      "name": "Send Gmail: Job Discovery Digest",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        3100,
+        420
+      ],
+      "parameters": {
+        "sendTo": "={{ $('User Config (Master Profile)').item.json.userEmail }}",
+        "subject": "\ud83d\udcca Daily Job Discovery - {{ $json.total }} New Jobs",
+        "message": "=Hello {{ $('User Config (Master Profile)').item.json.name }},\n\nYour job discovery engine found **{{ $json.total }}** new relevant jobs!\n\n**Priority Breakdown:**\n\ud83d\udd34 High: {{ $json.high }}\n\ud83d\udfe1 Medium: {{ $json.medium }}\n\ud83d\udfe2 Low: {{ $json.low }}\n\n**Sources:**\n{{ $json.sourceStats }}\n\n**Top 5 Matches:**\n{{ $json.topJobsList }}\n\nAll jobs have been added to your Google Sheet.\nReview them and add recruiter emails for auto-outreach.\n\n**Date:** {{ $json.date }}\n\nBest regards,\nJob Discovery Engine",
+        "options": {}
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_GMAIL_CREDENTIAL_ID",
+          "name": "Gmail OAuth2"
+        }
+      }
+    },
+    {
+      "id": "read-jobs-for-outreach",
+      "name": "Read Jobs from Sheet for Outreach",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.2,
+      "position": [
+        680,
+        1800
+      ],
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('User Config (Master Profile)').item.json.sheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Jobs",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    },
+    {
+      "id": "filter-sendable-jobs",
+      "name": "Filter: Status=New AND Has Recruiter Email",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        900,
+        1800
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.Status || $json.status }}",
+              "operation": "equals",
+              "value2": "New"
+            },
+            {
+              "value1": "={{ $json['Recruiter Email'] || $json.recruiterEmail }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        },
+        "combineOperation": "all"
+      }
+    },
+    {
+      "id": "limit-daily-emails",
+      "name": "Limit to Daily Max (10 emails)",
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        1800
+      ],
+      "parameters": {
+        "numberValue": "={{ $('User Config (Master Profile)').item.json.dailyLimit }}"
+      }
+    },
+    {
+      "id": "groq-generate-email",
+      "name": "Groq AI: Generate Personalized Email",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        1800
+      ],
+      "parameters": {
+        "operation": "text",
+        "options": {
+          "temperature": 0.7
+        },
+        "text": "=You are a professional email writer. Generate a personalized cold email to a recruiter.\n\n**Job Details:**\n- Title: {{ $json['Job Title'] || $json.jobTitle }}\n- Company: {{ $json.Company || $json.company }}\n- Recruiter: {{ $json['Recruiter Name'] || $json.recruiterName || 'Hiring Manager' }}\n- Location: {{ $json.Location || $json.location }}\n- Apply URL: {{ $json['Apply URL'] || $json.applyUrl }}\n\n**Candidate Profile:**\n- Name: {{ $('Merge User Config with Resume Data').item.json.name }}\n- Current Role: {{ $('Merge User Config with Resume Data').item.json.currentRole }}\n- Experience: {{ $('Merge User Config with Resume Data').item.json.experience }}\n- Skills: {{ $('Merge User Config with Resume Data').item.json.skills.join(', ') }}\n- Location: {{ $('Merge User Config with Resume Data').item.json.location }}\n\n**Resume Insights (Use to personalize email):**\n- Resume Parsed: {{ $('Merge User Config with Resume Data').item.json.resumeParsed }}\n- Key Projects: {{ ($('Merge User Config with Resume Data').item.json.resumeData.projects || []).slice(0, 3).map(p => p.name + ' (' + (p.technologies || []).join(', ') + ')').join('; ') }}\n- Recent Experience: {{ ($('Merge User Config with Resume Data').item.json.resumeData.experience || []).slice(0, 2).map(e => e.role + ' at ' + e.company).join('; ') }}\n- Achievements: {{ ($('Merge User Config with Resume Data').item.json.resumeData.achievements || []).slice(0, 2).join('; ') }}\n\n**Requirements:**\n1. Professional, concise (150-200 words)\n2. Show genuine interest in the company/role\n3. Mention 2-3 specific projects from resume that align with job requirements\n4. Reference relevant achievements from resume\n5. Highlight matching technical skills\n6. Include a clear call-to-action\n7. End with \"Best regards, {{ $('Merge User Config with Resume Data').item.json.name }}\"\n\n**Format:**\nSubject: [Generate compelling subject line]\n\n[Email body with specific resume project references]\n\nProvide ONLY the subject line and email body. No additional commentary."
+      },
+      "credentials": {
+        "groqApi": {
+          "id": "YOUR_GROQ_CREDENTIAL_ID",
+          "name": "Groq API"
+        }
+      }
+    },
+    {
+      "id": "parse-format-email",
+      "name": "Parse & Format Email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1560,
+        1800
+      ],
+      "parameters": {
+        "jsCode": "// Parse Groq email response\nconst jobData = items[0].json;\nconst groqResponse = $node[\"Groq AI: Generate Personalized Email\"].json.response || $node[\"Groq AI: Generate Personalized Email\"].json.text || '';\n\nlet subject = `Application for ${jobData['Job Title'] || jobData.jobTitle} at ${jobData.Company || jobData.company}`;\nlet body = groqResponse;\n\n// Try to extract subject line\nconst subjectMatch = groqResponse.match(/Subject:\\s*(.+?)\\n/i);\nif (subjectMatch) {\n  subject = subjectMatch[1].trim();\n  body = groqResponse.replace(/Subject:\\s*.+?\\n/i, '').trim();\n}\n\nconst config = $('Merge User Config with Resume Data').item.json;\n\n// Add signature if not present\nif (!body.includes(config.name)) {\n  body += `\\n\\nBest regards,\\n${config.name}`;\n}\n\n// Add profile links\nbody += `\\n\\nPortfolio: ${config.portfolioUrl}`;\nbody += `\\nLinkedIn: ${config.linkedinUrl}`;\nbody += `\\nGitHub: ${config.githubUrl}`;\nbody += `\\nResume: ${config.resumeUrl}`;\n\nreturn [{\n  json: {\n    ...jobData,\n    emailSubject: subject,\n    emailBody: body,\n    sentDate: new Date().toISOString().split('T')[0]\n  }\n}];"
+      }
+    },
+    {
+      "id": "send-gmail-outreach",
+      "name": "Send Email via Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1780,
+        1800
+      ],
+      "parameters": {
+        "sendTo": "={{ $json['Recruiter Email'] || $json.recruiterEmail }}",
+        "subject": "={{ $json.emailSubject }}",
+        "message": "={{ $json.emailBody }}",
+        "options": {
+          "ccList": "={{ $('User Config (Master Profile)').item.json.userEmail }}"
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_GMAIL_CREDENTIAL_ID",
+          "name": "Gmail OAuth2"
+        }
+      }
+    },
+    {
+      "id": "update-email-metadata",
+      "name": "Update Metadata (Status & Application ID)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2000,
+        1800
+      ],
+      "parameters": {
+        "jsCode": "// Update status and add metadata\nconst applicationId = `EMAIL-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;\n\nreturn [{\n  json: {\n    ...items[0].json,\n    Status: 'Email Sent',\n    status: 'Email Sent',\n    'Application ID': applicationId,\n    applicationId: applicationId,\n    'Email Sent Date': new Date().toISOString().split('T')[0],\n    emailSentDate: new Date().toISOString().split('T')[0],\n    'Last Updated': new Date().toISOString().split('T')[0],\n    lastUpdated: new Date().toISOString().split('T')[0]\n  }\n}];"
+      }
+    },
+    {
+      "id": "update-sheet-status",
+      "name": "Update Sheet: Mark Email Sent",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.2,
+      "position": [
+        2220,
+        1800
+      ],
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('User Config (Master Profile)').item.json.sheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Jobs",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "matchingColumns": [
+            "Job Title",
+            "Company"
+          ],
+          "schema": [
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "type": "string"
+            },
+            {
+              "id": "Application ID",
+              "displayName": "Application ID",
+              "type": "string"
+            },
+            {
+              "id": "Email Sent Date",
+              "displayName": "Email Sent Date",
+              "type": "string"
+            },
+            {
+              "id": "Last Updated",
+              "displayName": "Last Updated",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    },
+    {
+      "id": "rate-limit-delay",
+      "name": "Rate Limit Delay (3 seconds)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        2440,
+        1800
+      ],
+      "parameters": {
+        "amount": 3,
+        "unit": "seconds"
+      }
+    },
+    {
+      "id": "aggregate-outreach-summary",
+      "name": "Aggregate Outreach Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2660,
+        1800
+      ],
+      "parameters": {
+        "jsCode": "// Aggregate sending summary\nconst jobs = items.map(item => item.json);\nconst total = jobs.length;\n\nconst sentList = jobs.map(j => \n  `\u2022 **${j['Job Title'] || j.jobTitle}** at **${j.Company || j.company}** \u2192 ${j['Recruiter Email'] || j.recruiterEmail}`\n);\n\nreturn [{\n  json: {\n    total,\n    sentList: sentList.join('\\n'),\n    date: new Date().toISOString().split('T')[0]\n  }\n}];"
+      }
+    },
+    {
+      "id": "send-outreach-digest",
+      "name": "Send Gmail: Outreach Digest",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2880,
+        1800
+      ],
+      "parameters": {
+        "sendTo": "={{ $('User Config (Master Profile)').item.json.userEmail }}",
+        "subject": "\u2705 Email Outreach Complete - {{ $json.total }} Emails Sent",
+        "message": "=Hello {{ $('User Config (Master Profile)').item.json.name }},\n\nYour daily email outreach campaign has completed!\n\n**Total Emails Sent:** {{ $json.total }}\n\n**Sent To:**\n{{ $json.sentList }}\n\nAll applications have been logged in your Google Sheet with status \"Email Sent\".\n\nCheck your Gmail Sent folder for copies (you were CC'd on all emails).\n\n**Date:** {{ $json.date }}\n\nBest regards,\nEmail Outreach System",
+        "options": {}
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_GMAIL_CREDENTIAL_ID",
+          "name": "Gmail OAuth2"
+        }
+      }
+    },
+    {
+      "id": "extract-telegram-message",
+      "name": "Extract Telegram Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        460,
+        3300
+      ],
+      "parameters": {
+        "jsCode": "// Extract message and user info\nconst message = items[0].json.message || {};\n\nconst userId = message.from?.id?.toString() || 'unknown';\nconst username = message.from?.username || message.from?.first_name || 'User';\nconst chatId = message.chat?.id;\nconst text = message.text || '';\n\nreturn [{\n  json: {\n    userId,\n    username,\n    chatId,\n    text,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      }
+    },
+    {
+      "id": "handle-quick-commands",
+      "name": "Handle Quick Commands",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        3300
+      ],
+      "parameters": {
+        "jsCode": "// Quick command handler\nconst text = items[0].json.text.toLowerCase();\nconst config = $('User Config (Master Profile)').item.json;\n\nlet quickResponse = '';\nlet isQuickCommand = false;\n\nif (text === '/start' || text === '/help') {\n  isQuickCommand = true;\n  quickResponse = `**Job Hunt Assistant**\n\nWelcome ${config.name}! \n\n**Commands:**\n\u2022 /stats - View your application stats\n\u2022 /resume - View your resume\n\u2022 /help - Show this help message\n\nAsk me anything about your job search!`;\n} else if (text === '/resume') {\n  isQuickCommand = true;\n  quickResponse = `**Your Resume:**\n${config.resumeUrl}\n\n**Profile:**\n\u2022 ${config.currentRole}\n\u2022 ${config.experience}\n\u2022 Skills: ${config.skills.join(', ')}\n\u2022 Location: ${config.location}\n\n**Links:**\nLinkedIn: ${config.linkedinUrl}\nGitHub: ${config.githubUrl}\nPortfolio: ${config.portfolioUrl}`;\n} else if (text === '/stats') {\n  isQuickCommand = false; // Will need sheet query\n  quickResponse = '';\n}\n\nreturn [{\n  json: {\n    ...items[0].json,\n    quickResponse,\n    isQuickCommand\n  }\n}];"
+      }
+    },
+    {
+      "id": "check-quick-command",
+      "name": "Is Quick Command?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        900,
+        3300
+      ],
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.isQuickCommand }}",
+              "value2": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "send-quick-reply",
+      "name": "Send Quick Reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1120,
+        3200
+      ],
+      "parameters": {
+        "chatId": "={{ $('Extract Telegram Message').item.json.chatId }}",
+        "text": "={{ $json.quickResponse }}",
+        "additionalFields": {}
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_TELEGRAM_CREDENTIAL_ID",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "id": "build-system-prompt",
+      "name": "Build Dynamic System Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        3400
+      ],
+      "parameters": {
+        "jsCode": "// Build dynamic system prompt for Groq\nconst config = $('User Config (Master Profile)').item.json;\nconst userMessage = $('Extract Telegram Message').item.json;\n\nconst systemPrompt = `You are ${config.name}'s personal job hunt assistant.\n\n**User Profile:**\n- Current Role: ${config.currentRole}\n- Target Role: ${config.targetRole}\n- Experience: ${config.experience}\n- Skills: ${config.skills.join(', ')}\n- Location: ${config.location}\n- Work Preference: ${config.workMode.join(' or ')}\n- Minimum Salary: $${config.minSalary}\n\n**Your Capabilities:**\n1. Query job tracker (see applications, stats, pending jobs)\n2. Provide resume information\n3. Answer job search questions\n4. Give career advice\n\n**Guidelines:**\n- Be concise and action-oriented\n- Suggest next steps\n- Use bullet points for lists\n- Keep responses under 300 words\n- Be encouraging and supportive\n\nUser message: ${userMessage.text}`;\n\nreturn [{\n  json: {\n    ...items[0].json,\n    systemPrompt,\n    userMessage: userMessage.text\n  }\n}];"
+      }
+    },
+    {
+      "id": "groq-agent",
+      "name": "Groq Agent (Llama 3.3 70B)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        3400
+      ],
+      "parameters": {
+        "operation": "text",
+        "options": {
+          "temperature": 0.7
+        },
+        "text": "={{ $json.systemPrompt }}"
+      },
+      "credentials": {
+        "groqApi": {
+          "id": "YOUR_GROQ_CREDENTIAL_ID",
+          "name": "Groq API"
+        }
+      }
+    },
+    {
+      "id": "parse-agent-response",
+      "name": "Parse Response & Detect Intents",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1560,
+        3400
+      ],
+      "parameters": {
+        "jsCode": "// Parse agent response and extract actions\nconst response = items[0].json.response || items[0].json.text || 'Sorry, I could not process your request.';\nconst userMessage = $('Extract Telegram Message').item.json.text.toLowerCase();\n\n// Detect action intents\nconst needsSheetQuery = userMessage.includes('stats') || userMessage.includes('status') || userMessage.includes('how many') || userMessage.includes('count');\n\nreturn [{\n  json: {\n    ...items[0].json,\n    response,\n    needsSheetQuery\n  }\n}];"
+      }
+    },
+    {
+      "id": "check-needs-sheet-query",
+      "name": "Needs Sheet Query?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        3400
+      ],
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.needsSheetQuery }}",
+              "value2": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "query-sheet-for-stats",
+      "name": "Query Google Sheet for Stats",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.2,
+      "position": [
+        2000,
+        3300
+      ],
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('User Config (Master Profile)').item.json.sheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Jobs",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    },
+    {
+      "id": "aggregate-telegram-stats",
+      "name": "Aggregate Stats",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2220,
+        3300
+      ],
+      "parameters": {
+        "jsCode": "// Aggregate sheet stats\nconst jobs = items.map(item => item.json);\n\nconst total = jobs.length;\nconst statusCounts = jobs.reduce((acc, j) => {\n  const status = j.Status || j.status || 'Unknown';\n  acc[status] = (acc[status] || 0) + 1;\n  return acc;\n}, {});\n\nconst priorityCounts = jobs.reduce((acc, j) => {\n  const priority = j.Priority || j.priority || 'unknown';\n  acc[priority] = (acc[priority] || 0) + 1;\n  return acc;\n}, {});\n\nconst stats = `**Your Job Tracker Stats:**\n\u2022 Total jobs: ${total}\n\n**Status Breakdown:**\n` + Object.entries(statusCounts).map(([status, count]) => \n  `\u2022 ${status}: ${count}`\n).join('\\n') + `\n\n**Priority Breakdown:**\n` + Object.entries(priorityCounts).map(([priority, count]) => \n  `\u2022 ${priority}: ${count}`\n).join('\\n');\n\nreturn [{\n  json: {\n    ...items[0].json,\n    stats\n  }\n}];"
+      }
+    },
+    {
+      "id": "send-telegram-reply-with-stats",
+      "name": "Send Telegram Reply (with stats)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2440,
+        3300
+      ],
+      "parameters": {
+        "chatId": "={{ $('Extract Telegram Message').item.json.chatId }}",
+        "text": "={{ $json.response }}\\n\\n{{ $json.stats }}",
+        "additionalFields": {}
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_TELEGRAM_CREDENTIAL_ID",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "id": "send-telegram-reply-simple",
+      "name": "Send Telegram Reply (simple)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2000,
+        3500
+      ],
+      "parameters": {
+        "chatId": "={{ $('Extract Telegram Message').item.json.chatId }}",
+        "text": "={{ $json.response }}",
+        "additionalFields": {}
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_TELEGRAM_CREDENTIAL_ID",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "id": "download-resume",
+      "name": "Download Resume",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        680,
+        150
+      ],
+      "parameters": {
+        "url": "={{ \n  const config = $('User Config (Master Profile)').item.json;\n  const url = config.resumeUrl || '';\n  \n  // Convert Google Drive view URL to download URL\n  if (url.includes('drive.google.com/file/d/')) {\n    const match = url.match(/\\/d\\/([^\\/]+)/);\n    if (match) return `https://drive.google.com/uc?export=download&id=${match[1]}`;\n  }\n  \n  // Convert GitHub blob URL to raw URL\n  if (url.includes('github.com') && url.includes('/blob/')) {\n    return url.replace('/blob/', '/raw/');\n  }\n  \n  // Add Dropbox download parameter\n  if (url.includes('dropbox.com')) {\n    return url.includes('?') ? url + '&dl=1' : url + '?dl=1';\n  }\n  \n  return url;\n}}",
+        "method": "GET",
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "fullResponse": false,
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "id": "check-resume-download",
+      "name": "Check Resume Download Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        900,
+        150
+      ],
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $('User Config (Master Profile)').item.json.resumeParsingEnabled && $json.data && $json.data.length > 100 }}",
+              "operation": "equal",
+              "value2": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "parse-resume-groq",
+      "name": "Parse Resume with Groq AI",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        100
+      ],
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {
+          "temperature": 0.1
+        },
+        "text": "=You are a resume parser. Extract structured information from this resume text.\n\n**Resume Content:**\n{{ $('Download Resume').item.json.data }}\n\n**Extract the following in JSON format ONLY:**\n{\n  \"skills\": [\"skill1\", \"skill2\", ...],\n  \"experience\": [\n    {\n      \"role\": \"Job Title\",\n      \"company\": \"Company Name\",\n      \"duration\": \"2020-2023\",\n      \"responsibilities\": \"Key achievements and responsibilities\"\n    }\n  ],\n  \"projects\": [\n    {\n      \"name\": \"Project Name\",\n      \"description\": \"Brief description\",\n      \"technologies\": [\"tech1\", \"tech2\"]\n    }\n  ],\n  \"achievements\": [\"achievement1\", \"achievement2\", ...],\n  \"education\": [\n    {\n      \"degree\": \"Degree Name\",\n      \"institution\": \"University Name\",\n      \"year\": \"2019\"\n    }\n  ]\n}\n\nProvide ONLY valid JSON. No additional text or explanation."
+      },
+      "credentials": {
+        "groqApi": {
+          "id": "YOUR_GROQ_CREDENTIAL_ID",
+          "name": "Groq API"
+        }
+      }
+    },
+    {
+      "id": "structure-resume-data",
+      "name": "Structure Resume Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1340,
+        100
+      ],
+      "parameters": {
+        "jsCode": "// Parse and validate Groq resume response\nconst config = $('User Config (Master Profile)').item.json;\nconst groqResponse = $node[\"Parse Resume with Groq AI\"].json.response || $node[\"Parse Resume with Groq AI\"].json.text || '';\n\nlet resumeData = {\n  skills: config.skills || [],\n  experience: [],\n  projects: [],\n  achievements: [],\n  education: [],\n  parsed: false\n};\n\ntry {\n  // Extract JSON from response\n  const jsonMatch = groqResponse.match(/\\{[\\s\\S]*\\}/);\n  if (jsonMatch) {\n    const parsed = JSON.parse(jsonMatch[0]);\n    \n    // Validate and use parsed data\n    if (parsed.skills && Array.isArray(parsed.skills) && parsed.skills.length > 0) {\n      resumeData.skills = parsed.skills;\n      resumeData.parsed = true;\n    }\n    \n    if (parsed.experience && Array.isArray(parsed.experience)) {\n      resumeData.experience = parsed.experience;\n    }\n    \n    if (parsed.projects && Array.isArray(parsed.projects)) {\n      resumeData.projects = parsed.projects;\n    }\n    \n    if (parsed.achievements && Array.isArray(parsed.achievements)) {\n      resumeData.achievements = parsed.achievements;\n    }\n    \n    if (parsed.education && Array.isArray(parsed.education)) {\n      resumeData.education = parsed.education;\n    }\n  }\n} catch (error) {\n  console.error('Resume parsing failed, using User Config fallback:', error.message);\n}\n\nreturn [{\n  json: {\n    resumeData,\n    config\n  }\n}];"
+      }
+    },
+    {
+      "id": "fallback-user-config",
+      "name": "Fallback: User Config Only",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        200
+      ],
+      "parameters": {
+        "jsCode": "// Use User Config when resume download/parsing fails\nconst config = $('User Config (Master Profile)').item.json;\n\nreturn [{\n  json: {\n    resumeData: {\n      skills: config.skills || [],\n      experience: [],\n      projects: [],\n      achievements: [],\n      education: [],\n      parsed: false\n    },\n    config\n  }\n}];"
+      }
+    },
+    {
+      "id": "merge-config-resume",
+      "name": "Merge User Config with Resume Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1560,
+        150
+      ],
+      "parameters": {
+        "jsCode": "// Merge resume data with user config, prioritize resume data\nconst input = items[0].json;\nconst resumeData = input.resumeData;\nconst config = input.config;\n\n// Create enriched profile\nconst enrichedProfile = {\n  ...config,\n  resumeData: resumeData,\n  \n  // Skills: resume data takes priority if available\n  skills: resumeData.parsed ? resumeData.skills : config.skills,\n  \n  // Enhanced fields from resume\n  experience: resumeData.experience || [],\n  projects: resumeData.projects || [],\n  achievements: resumeData.achievements || [],\n  education: resumeData.education || [],\n  \n  // Resume parsing metadata\n  resumeParsed: resumeData.parsed,\n  resumeSkillCount: (resumeData.skills || []).length,\n  resumeProjectCount: (resumeData.projects || []).length\n};\n\nreturn [{\n  json: enrichedProfile\n}];"
+      }
+    },
+    {
+      "id": "resume-match-analysis",
+      "name": "Resume Match Analysis",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2220,
+        480
+      ],
+      "parameters": {
+        "jsCode": "// Analyze resume match with job requirements\nconst jobData = items[0].json;\nconst enrichedProfile = $('Merge User Config with Resume Data').item.json;\nconst resumeData = enrichedProfile.resumeData;\n\n// Extract job requirements (basic keyword extraction from description)\nconst jobDesc = (jobData.description || '').toLowerCase();\nconst jobTitle = (jobData.jobTitle || '').toLowerCase();\n\n// Calculate skill overlap\nconst resumeSkills = (resumeData.skills || []).map(s => s.toLowerCase());\nconst matchedSkills = resumeSkills.filter(skill => \n  jobDesc.includes(skill) || jobTitle.includes(skill)\n);\n\nconst skillOverlapPercent = resumeSkills.length > 0 \n  ? Math.round((matchedSkills.length / resumeSkills.length) * 100)\n  : 0;\n\n// Calculate experience relevance\nconst experienceYears = parseInt(enrichedProfile.experience.match(/\\d+/)?.[0] || '0');\nconst hasRelevantProjects = (resumeData.projects || []).some(project => {\n  const projectTech = (project.technologies || []).join(' ').toLowerCase();\n  return matchedSkills.some(skill => projectTech.includes(skill));\n});\n\nconst experienceScore = Math.min(experienceYears * 10, 50);\nconst projectScore = hasRelevantProjects ? 20 : 0;\n\n// Overall relevance score\nconst relevanceScore = Math.min(skillOverlapPercent + experienceScore + projectScore, 100);\n\n// Generate match details\nconst matchDetails = {\n  skillOverlapPercent,\n  matchedSkills: matchedSkills.slice(0, 5), // Top 5\n  totalResumeSkills: resumeSkills.length,\n  experienceYears,\n  hasRelevantProjects,\n  relevanceScore,\n  resumeParsed: resumeData.parsed\n};\n\nreturn [{\n  json: {\n    ...jobData,\n    resumeMatchDetails: JSON.stringify(matchDetails)\n  }\n}];"
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger: Job Discovery (8 AM)": {
+      "main": [
+        [
+          {
+            "node": "User Config (Master Profile)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "User Config (Master Profile)": {
+      "main": [
+        [
+          {
+            "node": "Fetch Remotive API",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Arbeitnow API",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Adzuna API",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Download Resume",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Remotive API": {
+      "main": [
+        [
+          {
+            "node": "Parse Remotive Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Arbeitnow API": {
+      "main": [
+        [
+          {
+            "node": "Parse Arbeitnow Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Adzuna API": {
+      "main": [
+        [
+          {
+            "node": "Parse Adzuna Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Remotive Response": {
+      "main": [
+        [
+          {
+            "node": "Merge All API Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Arbeitnow Response": {
+      "main": [
+        [
+          {
+            "node": "Merge All API Results",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Parse Adzuna Response": {
+      "main": [
+        [
+          {
+            "node": "Merge All API Results",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge All API Results": {
+      "main": [
+        [
+          {
+            "node": "Deduplicate Jobs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deduplicate Jobs": {
+      "main": [
+        [
+          {
+            "node": "Read Existing Jobs from Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Existing Jobs from Sheet": {
+      "main": [
+        [
+          {
+            "node": "Filter Out Already-Fetched Jobs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Out Already-Fetched Jobs": {
+      "main": [
+        [
+          {
+            "node": "Groq AI: Score Job Match",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq AI: Score Job Match": {
+      "main": [
+        [
+          {
+            "node": "Parse AI Score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse AI Score": {
+      "main": [
+        [
+          {
+            "node": "Resume Match Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter by Score Threshold (\u226530)": {
+      "main": [
+        [
+          {
+            "node": "Append to Google Sheets: Jobs Tab",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Append to Google Sheets: Jobs Tab": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Job Discovery Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Job Discovery Summary": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram: Job Discovery Digest",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Gmail: Job Discovery Digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger: Email Outreach (9 AM)": {
+      "main": [
+        [
+          {
+            "node": "Read Jobs from Sheet for Outreach",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Jobs from Sheet for Outreach": {
+      "main": [
+        [
+          {
+            "node": "Filter: Status=New AND Has Recruiter Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter: Status=New AND Has Recruiter Email": {
+      "main": [
+        [
+          {
+            "node": "Limit to Daily Max (10 emails)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Limit to Daily Max (10 emails)": {
+      "main": [
+        [
+          {
+            "node": "Groq AI: Generate Personalized Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq AI: Generate Personalized Email": {
+      "main": [
+        [
+          {
+            "node": "Parse & Format Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse & Format Email": {
+      "main": [
+        [
+          {
+            "node": "Send Email via Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email via Gmail": {
+      "main": [
+        [
+          {
+            "node": "Update Metadata (Status & Application ID)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Metadata (Status & Application ID)": {
+      "main": [
+        [
+          {
+            "node": "Update Sheet: Mark Email Sent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Sheet: Mark Email Sent": {
+      "main": [
+        [
+          {
+            "node": "Rate Limit Delay (3 seconds)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rate Limit Delay (3 seconds)": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Outreach Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Outreach Summary": {
+      "main": [
+        [
+          {
+            "node": "Send Gmail: Outreach Digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger: Interactive Assistant": {
+      "main": [
+        [
+          {
+            "node": "Extract Telegram Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Telegram Message": {
+      "main": [
+        [
+          {
+            "node": "Handle Quick Commands",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Quick Commands": {
+      "main": [
+        [
+          {
+            "node": "Is Quick Command?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Quick Command?": {
+      "main": [
+        [
+          {
+            "node": "Send Quick Reply",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Dynamic System Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Dynamic System Prompt": {
+      "main": [
+        [
+          {
+            "node": "Groq Agent (Llama 3.3 70B)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Agent (Llama 3.3 70B)": {
+      "main": [
+        [
+          {
+            "node": "Parse Response & Detect Intents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Response & Detect Intents": {
+      "main": [
+        [
+          {
+            "node": "Needs Sheet Query?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Needs Sheet Query?": {
+      "main": [
+        [
+          {
+            "node": "Query Google Sheet for Stats",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Telegram Reply (simple)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Google Sheet for Stats": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Stats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Stats": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Reply (with stats)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Resume": {
+      "main": [
+        [
+          {
+            "node": "Check Resume Download Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Resume Download Success": {
+      "main": [
+        [
+          {
+            "node": "Parse Resume with Groq AI",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fallback: User Config Only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Resume with Groq AI": {
+      "main": [
+        [
+          {
+            "node": "Structure Resume Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structure Resume Data": {
+      "main": [
+        [
+          {
+            "node": "Merge User Config with Resume Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fallback: User Config Only": {
+      "main": [
+        [
+          {
+            "node": "Merge User Config with Resume Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resume Match Analysis": {
+      "main": [
+        [
+          {
+            "node": "Filter by Score Threshold (\u226530)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 3,
+  "updatedAt": "2024-01-20T00:00:00.000Z",
+  "versionId": "1"
+}
