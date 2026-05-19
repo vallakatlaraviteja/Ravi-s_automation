@@ -1,0 +1,620 @@
+{
+  "_metadata": {
+    "title": "Complete Accounts and Credentials Checklist",
+    "description": "Structured checklist of all accounts, credentials, IDs, and values needed for the n8n Job Automation workflow",
+    "version": "1.0.0",
+    "last_updated": "2024-01-20",
+    "related_feature": "FEAT-003 - Complete Documentation"
+  },
+
+  "accounts_to_create": [
+    {
+      "service": "Groq AI",
+      "url": "https://console.groq.com",
+      "signup_method": "GitHub or Google sign-in",
+      "purpose": "AI-powered job scoring and personalized email generation",
+      "what_you_get": "API key (format: gsk_...)",
+      "free_tier": "14,400 requests/day (30 requests/min)",
+      "where_to_save": "n8n Credentials page as 'Groq API' credential",
+      "cost": "$0/month",
+      "required": true,
+      "setup_time": "2 minutes"
+    },
+    {
+      "service": "Google Cloud Console",
+      "url": "https://console.cloud.google.com",
+      "signup_method": "Use existing Google account",
+      "purpose": "Create OAuth credentials for Google Sheets and Gmail access",
+      "what_you_get": "OAuth Client ID and Client Secret",
+      "free_tier": "Unlimited for this use case",
+      "where_to_save": "Used in n8n Gmail and Sheets OAuth2 credentials",
+      "cost": "$0/month",
+      "required": true,
+      "setup_time": "10 minutes",
+      "notes": "One project handles both Gmail accounts"
+    },
+    {
+      "service": "Gmail Primary Account",
+      "url": "https://gmail.com",
+      "signup_method": "Use your existing primary Gmail",
+      "purpose": "Main email account for sending job outreach emails",
+      "what_you_get": "Gmail OAuth2 credential in n8n",
+      "free_tier": "500 emails/day (we use 50 for safety)",
+      "where_to_save": "n8n credential: 'Gmail Primary OAuth2'",
+      "cost": "$0/month",
+      "required": true,
+      "setup_time": "3 minutes"
+    },
+    {
+      "service": "Gmail Secondary Account",
+      "url": "https://gmail.com",
+      "signup_method": "Create a new free Gmail account",
+      "purpose": "Backup email account for automatic failover",
+      "what_you_get": "Gmail OAuth2 credential in n8n",
+      "free_tier": "500 emails/day (we use 50 for safety)",
+      "where_to_save": "n8n credential: 'Gmail Secondary OAuth2'",
+      "cost": "$0/month",
+      "required": true,
+      "setup_time": "3 minutes",
+      "notes": "Can use same OAuth client as primary"
+    },
+    {
+      "service": "Google Sheets",
+      "url": "https://sheets.google.com",
+      "signup_method": "Use your Google account",
+      "purpose": "Database for storing all discovered jobs and tracking statuses",
+      "what_you_get": "Spreadsheet ID and OAuth2 credential",
+      "free_tier": "Unlimited sheets, 5 million cells per sheet",
+      "where_to_save": "Sheet ID in User Config node, credential in n8n",
+      "cost": "$0/month",
+      "required": true,
+      "setup_time": "5 minutes"
+    },
+    {
+      "service": "Telegram",
+      "url": "https://telegram.org",
+      "signup_method": "Create account in Telegram app",
+      "purpose": "Interactive job assistant bot and notifications",
+      "what_you_get": "Bot token and your chat ID",
+      "free_tier": "Unlimited messages",
+      "where_to_save": "Token in n8n Telegram credential, chat ID in notification nodes",
+      "cost": "$0/month",
+      "required": true,
+      "setup_time": "5 minutes"
+    },
+    {
+      "service": "Adzuna Developer",
+      "url": "https://developer.adzuna.com",
+      "signup_method": "Email registration",
+      "purpose": "Job search API (one of three job sources)",
+      "what_you_get": "Application ID and Application Key",
+      "free_tier": "250 requests/day",
+      "where_to_save": "Directly in 'Fetch Adzuna API' node query parameters",
+      "cost": "$0/month",
+      "required": true,
+      "setup_time": "3 minutes",
+      "notes": "Not stored as n8n credential"
+    },
+    {
+      "service": "Resume Hosting (Choose One)",
+      "url": "Google Drive / GitHub / Dropbox",
+      "signup_method": "Use existing account",
+      "purpose": "Publicly accessible URL for resume download and AI parsing",
+      "what_you_get": "Public URL to your resume PDF",
+      "free_tier": "Unlimited (all options)",
+      "where_to_save": "User Config node: resumeUrl field",
+      "cost": "$0/month",
+      "required": true,
+      "setup_time": "3 minutes",
+      "notes": "Must be publicly accessible without login"
+    }
+  ],
+
+  "credentials_to_configure": [
+    {
+      "name": "Groq API",
+      "credential_type": "Groq API",
+      "how_to_obtain": "Sign up at console.groq.com → API Keys → Create API Key",
+      "add_to_n8n_steps": [
+        "1. n8n → Credentials → Add Credential",
+        "2. Search for 'Groq API'",
+        "3. Paste API key (starts with gsk_)",
+        "4. Save",
+        "5. Copy credential ID from URL"
+      ],
+      "placeholder_to_replace": "YOUR_GROQ_CREDENTIAL_ID",
+      "format_example": "gsk_abc123def456ghi789jkl012mno345pqr678stu901vwx234yz",
+      "used_in_nodes": [
+        "Parse Resume with Groq AI",
+        "Groq AI: Score Job Match",
+        "Groq AI: Generate Personalized Email",
+        "Groq Agent (Llama 3.3 70B)"
+      ],
+      "node_count": 4,
+      "verification": "Execute any Groq node - should return AI response without auth errors"
+    },
+    {
+      "name": "Google Sheets OAuth2",
+      "credential_type": "Google Sheets OAuth2 API",
+      "how_to_obtain": "Google Cloud Console → Create OAuth client → Enable Sheets API",
+      "add_to_n8n_steps": [
+        "1. n8n → Credentials → Add Credential",
+        "2. Search for 'Google Sheets OAuth2'",
+        "3. Paste Client ID and Client Secret",
+        "4. Click 'Connect my account'",
+        "5. Authorize with your Google account",
+        "6. Save and copy credential ID"
+      ],
+      "placeholder_to_replace": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+      "format_example": "abc-123-def-456-ghi-789",
+      "used_in_nodes": [
+        "Read Existing Jobs from Sheet",
+        "Append to Google Sheets: Jobs Tab",
+        "Read Jobs from Sheet for Outreach",
+        "Update Sheet: Mark Email Sent",
+        "Query Google Sheet for Stats"
+      ],
+      "node_count": 5,
+      "verification": "Execute 'Read Existing Jobs from Sheet' - should read sheet data"
+    },
+    {
+      "name": "Gmail Primary OAuth2",
+      "credential_type": "Gmail OAuth2 API",
+      "how_to_obtain": "Use same OAuth client as Sheets, enable Gmail API, authorize PRIMARY account",
+      "add_to_n8n_steps": [
+        "1. n8n → Credentials → Add Credential",
+        "2. Search for 'Gmail OAuth2'",
+        "3. Use same Client ID/Secret as Sheets",
+        "4. Click 'Connect my account'",
+        "5. SELECT PRIMARY GMAIL ACCOUNT",
+        "6. Grant 'Send email' permission",
+        "7. Save as 'Gmail Primary OAuth2'",
+        "8. Copy credential ID"
+      ],
+      "placeholder_to_replace": "YOUR_PRIMARY_GMAIL_CREDENTIAL_ID",
+      "format_example": "xyz-789-uvw-012-rst-345",
+      "used_in_nodes": [
+        "Send Email via Gmail Primary",
+        "Send Gmail: Job Discovery Digest"
+      ],
+      "node_count": 2,
+      "verification": "Send test email to yourself - check sender is primary account"
+    },
+    {
+      "name": "Gmail Secondary OAuth2",
+      "credential_type": "Gmail OAuth2 API",
+      "how_to_obtain": "Same OAuth client, authorize SECONDARY Gmail account",
+      "add_to_n8n_steps": [
+        "1. n8n → Credentials → Add Credential",
+        "2. Search for 'Gmail OAuth2'",
+        "3. Use same Client ID/Secret",
+        "4. Click 'Connect my account'",
+        "5. SELECT SECONDARY GMAIL ACCOUNT (different from primary)",
+        "6. Grant permissions",
+        "7. Save as 'Gmail Secondary OAuth2'",
+        "8. Copy credential ID"
+      ],
+      "placeholder_to_replace": "YOUR_SECONDARY_GMAIL_CREDENTIAL_ID",
+      "format_example": "lmn-456-opq-789-abc-123",
+      "used_in_nodes": [
+        "Send Email via Gmail Secondary"
+      ],
+      "node_count": 1,
+      "verification": "Simulate primary exhaustion, verify email sent from secondary account"
+    },
+    {
+      "name": "Telegram Bot API",
+      "credential_type": "Telegram API",
+      "how_to_obtain": "Telegram → @BotFather → /newbot → follow prompts → copy token",
+      "add_to_n8n_steps": [
+        "1. n8n → Credentials → Add Credential",
+        "2. Search for 'Telegram'",
+        "3. Paste bot token",
+        "4. Save and copy credential ID"
+      ],
+      "placeholder_to_replace": "YOUR_TELEGRAM_CREDENTIAL_ID",
+      "format_example": "hij-890-klm-234-nop-567",
+      "used_in_nodes": [
+        "Telegram Trigger: Interactive Assistant",
+        "Send Telegram: Job Discovery Digest",
+        "Send Quick Reply",
+        "Send Telegram Reply (with stats)",
+        "Send Telegram Reply (simple)",
+        "Email Account Switch Notification"
+      ],
+      "node_count": 6,
+      "verification": "Send /start to your bot - should receive welcome message"
+    }
+  ],
+
+  "ids_and_values": [
+    {
+      "name": "Google Spreadsheet ID",
+      "where_to_find": "Open your Google Sheet → Copy from URL between /d/ and /edit",
+      "format_example": "1A2B3C4D5E6F7G8H9I0J_K1L2M3N4O5P6Q7R8S9T0",
+      "validation": "36-44 characters, alphanumeric with hyphens and underscores",
+      "where_to_use_in_workflow": [
+        "User Config (Master Profile) node → sheetId field"
+      ],
+      "placeholder": "YOUR_SPREADSHEET_ID",
+      "required": true,
+      "how_to_test": "Open URL: https://docs.google.com/spreadsheets/d/YOUR_ID/edit - should open your sheet"
+    },
+    {
+      "name": "Telegram Chat ID",
+      "where_to_find": "Message your bot → Open https://api.telegram.org/bot<TOKEN>/getUpdates → Find 'chat':{'id':123456789}",
+      "format_example": "123456789",
+      "validation": "Numeric, 9-10 digits",
+      "where_to_use_in_workflow": [
+        "Send Telegram: Job Discovery Digest → chatId parameter",
+        "Email Account Switch Notification → chatId parameter"
+      ],
+      "placeholder": "YOUR_TELEGRAM_CHAT_ID",
+      "required": true,
+      "how_to_test": "Execute a Telegram send node with your chat ID - you should receive message"
+    },
+    {
+      "name": "Adzuna Application ID",
+      "where_to_find": "developer.adzuna.com → Dashboard → Your application → Application ID",
+      "format_example": "12345678",
+      "validation": "Numeric, typically 8 digits",
+      "where_to_use_in_workflow": [
+        "Fetch Adzuna API → Query Parameters → app_id"
+      ],
+      "placeholder": "YOUR_ADZUNA_APP_ID",
+      "required": true,
+      "how_to_test": "Execute Adzuna node - should return job listings without auth errors"
+    },
+    {
+      "name": "Adzuna Application Key",
+      "where_to_find": "developer.adzuna.com → Dashboard → Your application → Application Key",
+      "format_example": "abc123def456ghi789jkl012mno345pq",
+      "validation": "Alphanumeric string, typically 32 characters",
+      "where_to_use_in_workflow": [
+        "Fetch Adzuna API → Query Parameters → app_key"
+      ],
+      "placeholder": "YOUR_ADZUNA_APP_KEY",
+      "required": true,
+      "how_to_test": "Execute Adzuna node with both ID and key - should return results"
+    },
+    {
+      "name": "Resume Public URL",
+      "where_to_find": "Upload resume to Google Drive/GitHub/Dropbox → Get public sharing link → Convert format",
+      "format_example": "https://drive.google.com/uc?export=download&id=1AbCdEfGhIjKlMnOp",
+      "validation": "Must be publicly accessible, downloads PDF without login",
+      "where_to_use_in_workflow": [
+        "User Config (Master Profile) node → resumeUrl field"
+      ],
+      "placeholder": "YOUR_RESUME_PUBLIC_URL",
+      "required": true,
+      "how_to_test": "Open URL in incognito browser - should download PDF file",
+      "url_formats": {
+        "google_drive": "https://drive.google.com/uc?export=download&id=FILE_ID",
+        "github_raw": "https://raw.githubusercontent.com/username/repo/main/resume.pdf",
+        "dropbox": "https://www.dropbox.com/s/FILE_ID/resume.pdf?dl=1"
+      }
+    },
+    {
+      "name": "Primary Gmail Address",
+      "where_to_find": "Your main Gmail account email address",
+      "format_example": "yourname@gmail.com",
+      "validation": "Valid Gmail address",
+      "where_to_use_in_workflow": [
+        "User Config (Master Profile) node → primaryEmail field"
+      ],
+      "placeholder": "your-primary@gmail.com",
+      "required": true,
+      "notes": "Must match the account authorized in primary Gmail credential"
+    },
+    {
+      "name": "Secondary Gmail Address",
+      "where_to_find": "Your backup Gmail account email address",
+      "format_example": "yourname2@gmail.com",
+      "validation": "Valid Gmail address, different from primary",
+      "where_to_use_in_workflow": [
+        "User Config (Master Profile) node → secondaryEmail field"
+      ],
+      "placeholder": "your-secondary@gmail.com",
+      "required": true,
+      "notes": "Must match the account authorized in secondary Gmail credential"
+    },
+    {
+      "name": "Your Personal Email",
+      "where_to_find": "Your personal email for receiving workflow notifications",
+      "format_example": "you@example.com",
+      "validation": "Valid email address",
+      "where_to_use_in_workflow": [
+        "User Config (Master Profile) node → userEmail field"
+      ],
+      "placeholder": "YOUR_EMAIL@example.com",
+      "required": true,
+      "notes": "Used for CC on outreach emails and digest emails"
+    }
+  ],
+
+  "credential_mapping": {
+    "description": "Maps each credential to exact nodes in the workflow",
+    "purpose": "Helps you understand why each credential is needed and where it's used",
+    "mappings": [
+      {
+        "credential": "Groq API",
+        "credential_id_placeholder": "YOUR_GROQ_CREDENTIAL_ID",
+        "total_nodes": 4,
+        "nodes": [
+          {
+            "node_name": "Parse Resume with Groq AI",
+            "purpose": "Extracts skills, experience, and education from your resume PDF"
+          },
+          {
+            "node_name": "Groq AI: Score Job Match",
+            "purpose": "Analyzes job description and scores match against your profile (0-100)"
+          },
+          {
+            "node_name": "Groq AI: Generate Personalized Email",
+            "purpose": "Creates customized outreach email for each job and recruiter"
+          },
+          {
+            "node_name": "Groq Agent (Llama 3.3 70B)",
+            "purpose": "Powers Telegram bot to answer your questions about jobs"
+          }
+        ]
+      },
+      {
+        "credential": "Google Sheets OAuth2",
+        "credential_id_placeholder": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+        "total_nodes": 5,
+        "nodes": [
+          {
+            "node_name": "Read Existing Jobs from Sheet",
+            "purpose": "Checks for duplicate jobs before adding new ones"
+          },
+          {
+            "node_name": "Append to Google Sheets: Jobs Tab",
+            "purpose": "Adds newly discovered jobs to your tracking sheet"
+          },
+          {
+            "node_name": "Read Jobs from Sheet for Outreach",
+            "purpose": "Retrieves jobs with 'New' status and recruiter emails for outreach"
+          },
+          {
+            "node_name": "Update Sheet: Mark Email Sent",
+            "purpose": "Updates job status to 'Email Sent' after successful outreach"
+          },
+          {
+            "node_name": "Query Google Sheet for Stats",
+            "purpose": "Reads job data for Telegram /stats command"
+          }
+        ]
+      },
+      {
+        "credential": "Gmail Primary OAuth2",
+        "credential_id_placeholder": "YOUR_PRIMARY_GMAIL_CREDENTIAL_ID",
+        "total_nodes": 2,
+        "nodes": [
+          {
+            "node_name": "Send Email via Gmail Primary",
+            "purpose": "Sends outreach emails using your primary Gmail account (first 50/day)"
+          },
+          {
+            "node_name": "Send Gmail: Job Discovery Digest",
+            "purpose": "Sends daily summary of discovered jobs to your email"
+          }
+        ]
+      },
+      {
+        "credential": "Gmail Secondary OAuth2",
+        "credential_id_placeholder": "YOUR_SECONDARY_GMAIL_CREDENTIAL_ID",
+        "total_nodes": 1,
+        "nodes": [
+          {
+            "node_name": "Send Email via Gmail Secondary",
+            "purpose": "Backup email sender when primary hits daily limit or errors (failover)"
+          }
+        ]
+      },
+      {
+        "credential": "Telegram Bot API",
+        "credential_id_placeholder": "YOUR_TELEGRAM_CREDENTIAL_ID",
+        "total_nodes": 6,
+        "nodes": [
+          {
+            "node_name": "Telegram Trigger: Interactive Assistant",
+            "purpose": "Listens for messages sent to your bot (trigger node)"
+          },
+          {
+            "node_name": "Send Telegram: Job Discovery Digest",
+            "purpose": "Sends daily summary of discovered jobs via Telegram"
+          },
+          {
+            "node_name": "Send Quick Reply",
+            "purpose": "Responds to quick commands like /start and /help"
+          },
+          {
+            "node_name": "Send Telegram Reply (with stats)",
+            "purpose": "Sends job statistics in response to /stats command"
+          },
+          {
+            "node_name": "Send Telegram Reply (simple)",
+            "purpose": "Sends simple text responses for basic commands"
+          },
+          {
+            "node_name": "Email Account Switch Notification",
+            "purpose": "Alerts you when email failover occurs (primary to secondary switch)"
+          }
+        ]
+      }
+    ]
+  },
+
+  "google_sheet_setup": {
+    "description": "Required structure for your Google Sheets database",
+    "sheet_name": "Jobs",
+    "sheet_name_case_sensitive": true,
+    "required_columns": [
+      {"column": "A", "header": "Job ID", "data_type": "Text", "example": "remotive-12345"},
+      {"column": "B", "header": "Job Title", "data_type": "Text", "example": "Senior Backend Engineer"},
+      {"column": "C", "header": "Company", "data_type": "Text", "example": "TechCorp Inc"},
+      {"column": "D", "header": "Location", "data_type": "Text", "example": "Remote, USA"},
+      {"column": "E", "header": "Work Mode", "data_type": "Text", "example": "Remote"},
+      {"column": "F", "header": "Salary", "data_type": "Text", "example": "$120k-150k"},
+      {"column": "G", "header": "Apply URL", "data_type": "URL", "example": "https://jobs.techcorp.com/apply/12345"},
+      {"column": "H", "header": "Source", "data_type": "Text", "example": "Remotive"},
+      {"column": "I", "header": "Score", "data_type": "Number", "example": "85"},
+      {"column": "J", "header": "Priority", "data_type": "Text", "example": "High"},
+      {"column": "K", "header": "Match Reason", "data_type": "Text", "example": "Strong Python skills match"},
+      {"column": "L", "header": "Status", "data_type": "Text", "example": "New"},
+      {"column": "M", "header": "Posted Date", "data_type": "Date", "example": "2024-01-15"},
+      {"column": "N", "header": "Fetched Date", "data_type": "Date", "example": "2024-01-20"},
+      {"column": "O", "header": "Recruiter Email", "data_type": "Email", "example": "recruiter@techcorp.com"},
+      {"column": "P", "header": "Recruiter Name", "data_type": "Text", "example": "Jane Smith"},
+      {"column": "Q", "header": "Application ID", "data_type": "Text", "example": "EMAIL-2024-01-20-abc123"},
+      {"column": "R", "header": "Email Sent Date", "data_type": "Date", "example": "2024-01-20"},
+      {"column": "S", "header": "Last Updated", "data_type": "DateTime", "example": "2024-01-20 09:15:30"}
+    ],
+    "setup_steps": [
+      "1. Create new Google Sheet",
+      "2. Rename first tab from 'Sheet1' to 'Jobs' (exact name, case-sensitive)",
+      "3. In row 1, add all 19 column headers in order A-S",
+      "4. Leave row 2 onwards empty (workflow fills automatically)",
+      "5. Copy Sheet ID from URL",
+      "6. Ensure the Google account used for OAuth has edit permission"
+    ],
+    "critical_notes": [
+      "Column order matters - workflow maps by position",
+      "Use exact header names (case-sensitive)",
+      "Tab must be named 'Jobs' exactly",
+      "Don't add extra columns between A-S",
+      "OK to add columns after S for custom tracking"
+    ]
+  },
+
+  "optional_items": [
+    {
+      "name": "Custom Domain for Gmail",
+      "required_for_feature": "Professional sender address (yourname@yourdomain.com)",
+      "skip_if": "You're OK sending from @gmail.com addresses",
+      "complexity": "Advanced",
+      "benefits": ["Better sender reputation", "More professional", "Custom branding"],
+      "how_to_setup": "Register domain → Set up Google Workspace → Configure DNS"
+    },
+    {
+      "name": "Third Gmail Account",
+      "required_for_feature": "Sending more than 100 emails/day",
+      "skip_if": "100 emails/day is sufficient",
+      "complexity": "Medium",
+      "benefits": ["150 emails/day total capacity", "Triple redundancy"],
+      "how_to_setup": "Create third Gmail → Add OAuth credential → Modify workflow switch logic"
+    },
+    {
+      "name": "Additional Job APIs",
+      "required_for_feature": "More job sources beyond Remotive, Arbeitnow, Adzuna",
+      "skip_if": "3 sources provide enough jobs",
+      "complexity": "Medium",
+      "benefits": ["More job coverage", "Diverse sources", "Higher discovery rate"],
+      "examples": ["LinkedIn API (requires approval)", "Indeed API", "GitHub Jobs"]
+    },
+    {
+      "name": "Error Notification Workflow",
+      "required_for_feature": "Email alerts when workflow fails",
+      "skip_if": "You check execution logs regularly",
+      "complexity": "Low",
+      "benefits": ["Immediate failure awareness", "Automated monitoring"],
+      "how_to_setup": "n8n Settings → Error Workflow → Create error handler workflow"
+    }
+  ],
+
+  "setup_time_estimate": {
+    "total_time": "45-60 minutes",
+    "breakdown": [
+      {"task": "Create accounts (Groq, Google Cloud, Telegram, Adzuna)", "time": "15 minutes"},
+      {"task": "Configure OAuth credentials in Google Cloud", "time": "10 minutes"},
+      {"task": "Add credentials to n8n (5 credentials)", "time": "10 minutes"},
+      {"task": "Create Google Sheet with 19 columns", "time": "5 minutes"},
+      {"task": "Import workflow and replace placeholders", "time": "10 minutes"},
+      {"task": "Configure user profile in User Config node", "time": "5 minutes"},
+      {"task": "Test all branches and verify", "time": "10 minutes"}
+    ],
+    "first_time_setup": "60 minutes",
+    "experienced_user": "30 minutes"
+  },
+
+  "verification_checklist": {
+    "before_activation": [
+      "All 5 credentials show green checkmark in n8n",
+      "All credential IDs copied and placeholders replaced",
+      "Google Sheet has 19 columns in correct order",
+      "Sheet tab named 'Jobs' exactly",
+      "Resume URL is publicly accessible (test in incognito)",
+      "Telegram bot responds to /start command",
+      "User Config has all YOUR_ placeholders replaced",
+      "Test execution of job discovery runs successfully",
+      "Test email sent and received",
+      "Telegram bot /stats command works"
+    ],
+    "after_activation": [
+      "Check execution log after 8 AM UTC - job discovery ran",
+      "Google Sheet has new jobs from today",
+      "Check execution log after 9 AM UTC - email outreach ran",
+      "Verify emails in Gmail sent folder",
+      "Telegram digest notifications received",
+      "No errors in execution logs for 3 consecutive days"
+    ]
+  },
+
+  "monthly_cost_breakdown": {
+    "total_monthly_cost": "$0.00",
+    "total_annual_cost": "$0.00",
+    "services": [
+      {"service": "Groq AI", "cost": "$0", "usage": "~100 requests/day", "limit": "14,400/day"},
+      {"service": "Gmail (Primary)", "cost": "$0", "usage": "~50 emails/day", "limit": "500/day"},
+      {"service": "Gmail (Secondary)", "cost": "$0", "usage": "~50 emails/day", "limit": "500/day"},
+      {"service": "Google Sheets", "cost": "$0", "usage": "1 sheet, ~5000 rows/year", "limit": "5M cells"},
+      {"service": "Telegram", "cost": "$0", "usage": "~50 messages/day", "limit": "Unlimited"},
+      {"service": "Adzuna API", "cost": "$0", "usage": "1 request/day", "limit": "250/day"},
+      {"service": "Remotive API", "cost": "$0", "usage": "1 request/day", "limit": "Unlimited"},
+      {"service": "Arbeitnow API", "cost": "$0", "usage": "1 request/day", "limit": "Unlimited"},
+      {"service": "n8n Cloud", "cost": "$0", "usage": "~70 executions/month", "limit": "5000/month free"}
+    ],
+    "sustainability": "100% free forever - no paid services required"
+  },
+
+  "troubleshooting_quick_reference": {
+    "credential_errors": "Verify credential IDs match in User Config and node settings",
+    "oauth_redirect_mismatch": "Check n8n URL matches Google Cloud OAuth redirect URI exactly",
+    "sheet_not_found": "Verify Sheet ID is correct and tab named 'Jobs'",
+    "resume_download_fails": "Ensure URL is public (test in incognito), use correct format",
+    "telegram_bot_not_responding": "Check bot token, verify workflow is active, test with /start",
+    "adzuna_no_results": "Use 2-letter country code (us, gb, in), verify both app_id and app_key",
+    "emails_going_to_spam": "Reduce daily limit to 30, warm up accounts gradually",
+    "both_accounts_exhausted": "Wait for midnight UTC reset or manually reset counts",
+    "wrong_gmail_sending": "Verify credential IDs match correct accounts in User Config"
+  },
+
+  "related_documentation": [
+    {
+      "file": "COMPLETE-SETUP-GUIDE.md",
+      "description": "Absolute beginner guide with every step explained",
+      "use_for": "First-time setup, step-by-step instructions"
+    },
+    {
+      "file": "EMAIL-SETUP-GUIDE.md",
+      "description": "Detailed Gmail OAuth setup for dual accounts",
+      "use_for": "Email credential configuration, troubleshooting OAuth"
+    },
+    {
+      "file": "ACCOUNTS-CREDENTIALS-TEMPLATE.txt",
+      "description": "Fill-in-the-blank tracking template",
+      "use_for": "Keeping track of IDs and values during setup"
+    },
+    {
+      "file": "DUAL-EMAIL-SETUP-GUIDE.md",
+      "description": "Technical deep-dive into email failover system",
+      "use_for": "Understanding how dual email accounts work"
+    },
+    {
+      "file": "ENHANCED-WORKFLOW-GUIDE.md",
+      "description": "Complete workflow architecture and node details",
+      "use_for": "Technical reference, customization, advanced configuration"
+    }
+  ]
+}
