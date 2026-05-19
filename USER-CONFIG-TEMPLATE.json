@@ -1,0 +1,91 @@
+{
+  "personal_info": {
+    "name": "Your Full Name",
+    "current_role": "Your Current Job Title",
+    "target_role": "Your Target Job Title",
+    "experience": "X years",
+    "location": "Your Location (City, Country)"
+  },
+  "job_search": {
+    "target_roles": [
+      "Role 1",
+      "Role 2",
+      "Role 3"
+    ],
+    "keywords": "keyword1 OR keyword2 OR keyword3",
+    "skills": [
+      "Skill 1",
+      "Skill 2",
+      "Skill 3",
+      "Skill 4",
+      "Skill 5"
+    ],
+    "work_mode": [
+      "remote",
+      "hybrid"
+    ],
+    "min_salary": 80000,
+    "country": "in"
+  },
+  "urls": {
+    "resume_url": "https://drive.google.com/file/d/YOUR_RESUME_ID/view",
+    "linkedin_url": "https://linkedin.com/in/yourprofile",
+    "github_url": "https://github.com/yourusername",
+    "portfolio_url": "https://yourportfolio.com"
+  },
+  "preferences": {
+    "user_email": "YOUR_EMAIL@example.com",
+    "daily_email_limit": 10,
+    "score_threshold": 30,
+    "sheet_id": "YOUR_SPREADSHEET_ID"
+  },
+  "_instructions": {
+    "description": "Fill in all fields above with your actual information",
+    "usage": "Copy the values from personal_info, job_search, urls, and preferences sections into the 'User Config (Master Profile)' node in the n8n workflow",
+    "notes": [
+      "skills: List your top technical/domain skills that you want to highlight in job matching",
+      "keywords: Use OR to combine multiple role names or keywords for broader job discovery (e.g., 'python developer OR backend engineer OR nodejs')",
+      "work_mode: Choose from 'remote', 'hybrid', or 'onsite'. You can include multiple options.",
+      "country: Use 2-letter ISO country code for Adzuna API (us=United States, gb=UK, in=India, au=Australia, ca=Canada, de=Germany, etc.)",
+      "min_salary: Set your minimum acceptable annual salary in USD or local currency. Jobs below this will score lower.",
+      "score_threshold: Minimum AI match score (0-100) required to save a job to your sheet. Start with 30 and adjust based on results.",
+      "daily_email_limit: Maximum number of outreach emails to send per day. Keep at 10 or lower to maintain good sender reputation.",
+      "resume_url: Make sure your Google Drive resume is set to 'Anyone with the link can view'",
+      "sheet_id: This is the long alphanumeric string in your Google Sheets URL between /d/ and /edit"
+    ],
+    "where_to_update": {
+      "node_name": "User Config (Master Profile)",
+      "node_type": "Code (JavaScript)",
+      "location": "Near the top-left of the workflow canvas, connected to all three trigger branches",
+      "how_to_edit": [
+        "1. Double-click the 'User Config (Master Profile)' node in the n8n workflow editor",
+        "2. You'll see a JavaScript code block with a return statement",
+        "3. Replace the example values in the json object with your actual information from this template",
+        "4. Keep the structure exactly the same - only change the values inside quotes and arrays",
+        "5. Click 'Execute Node' to test - you should see your config data in the output",
+        "6. Click 'Save' to persist your changes"
+      ]
+    },
+    "example_mapping": {
+      "personal_info.name": "json.name",
+      "personal_info.current_role": "json.currentRole",
+      "personal_info.target_role": "json.targetRole",
+      "personal_info.experience": "json.experience",
+      "personal_info.location": "json.location",
+      "job_search.target_roles": "json.targetRoles",
+      "job_search.keywords": "json.keywords",
+      "job_search.skills": "json.skills",
+      "job_search.work_mode": "json.workMode",
+      "job_search.min_salary": "json.minSalary",
+      "job_search.country": "json.country",
+      "urls.resume_url": "json.resumeUrl",
+      "urls.linkedin_url": "json.linkedinUrl",
+      "urls.github_url": "json.githubUrl",
+      "urls.portfolio_url": "json.portfolioUrl",
+      "preferences.user_email": "json.userEmail",
+      "preferences.daily_email_limit": "json.dailyLimit",
+      "preferences.score_threshold": "json.scoreThreshold",
+      "preferences.sheet_id": "json.sheetId"
+    }
+  }
+}
