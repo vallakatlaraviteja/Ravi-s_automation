@@ -1,457 +1,233 @@
-# MASTER Job Automation System
+# Job Automation System with AI
 
-## 🎯 What This Is
+**Automated job discovery, AI-powered matching, and smart email outreach**
 
-**ONE complete, production-grade n8n workflow** that automates your entire job search process using **ONLY genuinely free tools** - no trials, no hidden costs, no paid dependencies.
+## What This Does
 
-This system:
-- ✅ Discovers 50-150 relevant jobs per day from 3 free APIs
-- ✅ AI-scores each job against your profile (Groq AI)
-- ✅ Automatically sends personalized outreach emails to recruiters
-- ✅ Tracks all applications in Google Sheets
-- ✅ Provides an interactive Telegram bot for stats and queries
-- ✅ Costs **$0/month** forever (all services genuinely free)
+- 🔍 **Discovers jobs** from 3 sources (Remotive, Arbeitnow, Adzuna) daily at 8 AM UTC
+- 🤖 **AI scoring** matches jobs to your resume (0-100 score)
+- ✉️ **Personalized emails** to recruiters with automatic failover between 2 Gmail accounts
+- 📊 **Tracks everything** in Google Sheets
+- 💬 **Telegram bot** for job stats and queries
 
----
+## Features
 
-## 📦 What's Included
+### Resume Intelligence
+- Automatically parses your resume (PDF from Google Drive/GitHub/Dropbox)
+- Extracts skills, experience, projects with AI
+- Job scoring uses actual resume content
+- Emails reference specific projects from your resume
 
-### Core Files
+### Dual Email Failover
+- Primary: Your first Gmail (50 emails/day)
+- Secondary: Your second Gmail (50 emails/day)
+- Auto-switch when primary hits limit or errors
+- Total: 100 emails/day with zero manual intervention
 
-1. **MASTER-job-automation-workflow.json** (48KB)
-   - The complete unified n8n workflow (44 nodes, 3 triggers)
-   - Import this into n8n to get started
-   - Merges all functionality from 4 original workflows
+### 100% Free
+- Groq AI: 14,400 requests/day
+- Gmail: 500/day per account (we use 50 for safety)
+- Google Sheets: 5M cells
+- Telegram: Unlimited
+- Adzuna API: 250 requests/day
+- n8n Cloud: 5,000 executions/month
 
-2. **SETUP-INSTRUCTIONS.md** (22KB, 602 lines)
-   - Complete 7-step deployment guide
-   - Credential setup for all 5 services
-   - Test procedures for each workflow branch
-   - Troubleshooting guide with 8 common issues
-
-3. **USER-CONFIG-TEMPLATE.json** (4.1KB)
-   - Template for your personal profile
-   - Job search preferences and criteria
-   - Includes field-by-field mapping guide
-
-4. **WHAT-YOU-MUST-PROVIDE.json** (18KB)
-   - Complete checklist of what YOU need to provide
-   - Accounts, credentials, IDs, personal data
-   - Step-by-step guidance on WHERE and HOW
-
-5. **FREE-VALIDATION-REPORT.md** (9.5KB)
-   - Verification that ALL tools are genuinely free
-   - Service-by-service analysis with proof
-   - Cost breakdown and sustainability report
-
-6. **README.md** (this file)
-   - Quick start overview and navigation
-
-### Original Workflows (Reference)
-
-- `workflow-1-job-discovery-engine.json` - Original job discovery logic
-- `workflow-2-email-outreach-sender.json` - Original email automation
-- `workflow-3-job-scraper-fallback.json` - Original scraper (removed ScraperAPI)
-- `workflow-4-telegram-job-assistant.json` - Original Telegram bot
-
-**Note:** You only need the MASTER workflow. Original files kept for reference.
+**Monthly cost: $0**
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
-### Prerequisites
+### 1. Import Workflow
 
-- **n8n instance** (self-hosted or n8n Cloud free tier)
-- **Google account** (for Sheets and Gmail OAuth)
-- **Telegram account** (to create your bot)
-- **30 minutes** to complete setup
-
-### Setup Steps (Summary)
-
-1. **Import** `MASTER-job-automation-workflow.json` into n8n
-2. **Create accounts** (Groq, Telegram bot, Adzuna - all free)
-3. **Configure OAuth** (Google Sheets + Gmail in Google Cloud Console)
-4. **Replace placeholders** (8 credential IDs and API keys)
-5. **Update profile** (use `USER-CONFIG-TEMPLATE.json` as guide)
-6. **Create Google Sheet** (19-column schema in "Jobs" tab)
-7. **Test workflow** (run each branch manually to verify)
-8. **Activate** (toggle ON in n8n)
-
-**Detailed instructions:** See `SETUP-INSTRUCTIONS.md`
-
----
-
-## 🏗️ Architecture
-
-### 3 Independent Triggers
-
+**n8n Cloud URL:**
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  TRIGGER 1: Schedule (Daily 8 AM)                           │
-│  ├─ Fetch jobs from 3 FREE APIs (Remotive, Arbeitnow, Adzuna)│
-│  ├─ Parse & normalize to common schema                       │
-│  ├─ Deduplicate & check against existing jobs                │
-│  ├─ AI scoring with Groq (0-100 match score)                 │
-│  ├─ Filter by threshold (≥30)                                 │
-│  ├─ Append to Google Sheets                                   │
-│  └─ Send Telegram + Gmail digest                              │
-└─────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────┐
-│  TRIGGER 2: Schedule (Daily 9 AM)                           │
-│  ├─ Read jobs from Sheet (Status="New", has recruiter email) │
-│  ├─ Limit to 10 per day                                       │
-│  ├─ Generate personalized emails with Groq AI                 │
-│  ├─ Send via Gmail (user CC'd)                                │
-│  ├─ Update Sheet (Status="Email Sent")                        │
-│  ├─ Rate limit (3s delay between emails)                      │
-│  └─ Send outreach digest email                                │
-└─────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────┐
-│  TRIGGER 3: Telegram Bot (Always On)                        │
-│  ├─ Quick commands (/start, /help, /resume, /stats)          │
-│  ├─ Complex queries → Groq AI agent                           │
-│  ├─ Stats queries → Google Sheets read                        │
-│  └─ Reply to user in Telegram                                 │
-└─────────────────────────────────────────────────────────────┘
+https://raw.githubusercontent.com/vallakatlaraviteja/Ravi-s_automation/main/ENHANCED-MASTER-workflow.json
 ```
 
----
+In n8n:
+1. Go to **Workflows** → **Import from URL**
+2. Paste the URL above
+3. Click **Import**
 
-## 💰 Cost Analysis
+### 2. Follow Setup Guide
 
-### Monthly Costs
+Open: **[COMPLETE-SETUP-GUIDE.md](COMPLETE-SETUP-GUIDE.md)**
 
-| Service | Free Tier | Your Usage | Cost |
-|---------|-----------|------------|------|
-| Groq AI | 14,400 req/day | 80 req/day | $0 |
-| Remotive API | Unlimited | 1 req/day | $0 |
-| Arbeitnow API | Unlimited | 1 req/day | $0 |
-| Adzuna API | 250 req/day | 1 req/day | $0 |
-| Google Sheets | 5M cells | 18K rows/year | $0 |
-| Gmail | 500/day | 13/day | $0 |
-| Telegram | Unlimited | 30/day | $0 |
-| n8n (self-hosted) | Unlimited | 300 exec/month | $0 |
+This guide walks you through:
+- Creating 7 free accounts (Groq, Google Cloud, Telegram, Adzuna, etc.)
+- Setting up OAuth for both Gmail accounts
+- Configuring your resume URL
+- Testing all features
+- Activation
 
-**Total:** $0/month, $0/year
-
-**Sustainable:** ✅ YES - All free tiers are permanent, not promotional
-
-**See detailed analysis:** `FREE-VALIDATION-REPORT.md`
+**Setup time: 45-60 minutes**
 
 ---
 
-## 📊 Expected Results
+## Files in This Repo
 
-### Daily Job Discovery (8 AM)
-- **50-150 jobs** discovered from 3 sources
-- **10-30 jobs** pass AI scoring threshold (≥30)
-- **Telegram notification** with summary
-- **Email digest** with top 5 matches
-
-### Daily Email Outreach (9 AM)
-- **0-10 emails** sent (only if recruiter emails added manually)
-- **Gmail copies** (you're CC'd on all emails)
-- **Sheet updates** (Status changed to "Email Sent")
-- **Outreach digest** email with sending stats
-
-### Telegram Assistant (Anytime)
-- **/start, /help** → Instant reply with commands
-- **/stats** → Real-time application statistics
-- **/resume** → Your profile and links
-- **Natural language** → AI-powered responses
+| File | Purpose |
+|------|---------|
+| **ENHANCED-MASTER-workflow.json** | Main workflow (62 nodes) - import this |
+| **COMPLETE-SETUP-GUIDE.md** | Step-by-step setup (beginner-friendly) |
+| **EMAIL-SETUP-GUIDE.md** | Gmail OAuth for dual accounts |
+| **ACCOUNTS-CHECKLIST.json** | What accounts/credentials you need |
+| **ACCOUNTS-CREDENTIALS-TEMPLATE.txt** | Track IDs during setup |
+| **FREE-VALIDATION-REPORT.md** | Proof all services are free |
 
 ---
 
-## 🔧 Configuration
+## System Architecture
 
-### Essential Config (Required)
-
-Edit the **"User Config (Master Profile)"** node in n8n:
-
-```javascript
-{
-  name: 'Your Name',
-  currentRole: 'Senior Backend Engineer',
-  targetRole: 'Staff Engineer',
-  experience: '5 years',
-  skills: ['Python', 'Node.js', 'AWS', 'Docker', 'Kubernetes'],
-  location: 'Hyderabad, India',
-  workMode: ['remote', 'hybrid'],
-  minSalary: 80000,
-  keywords: 'python developer OR backend engineer OR nodejs',
-  country: 'in',  // Adzuna country code (us, gb, in, au, ca, etc.)
-  
-  // URLs
-  resumeUrl: 'https://drive.google.com/file/d/YOUR_ID/view',
-  linkedinUrl: 'https://linkedin.com/in/yourprofile',
-  githubUrl: 'https://github.com/yourusername',
-  portfolioUrl: 'https://yourportfolio.com',
-  
-  // Settings
-  userEmail: 'YOUR_EMAIL@example.com',
-  dailyLimit: 10,         // Max emails per day
-  scoreThreshold: 30,     // Min AI score to save job
-  sheetId: 'YOUR_SPREADSHEET_ID'
-}
+```
+┌─────────────────────────────────────────────────────────┐
+│  TRIGGERS (3 branches)                                  │
+├─────────────────────────────────────────────────────────┤
+│  1. Job Discovery (8 AM UTC daily)                      │
+│  2. Email Outreach (9 AM UTC daily)                     │
+│  3. Telegram Bot (always listening)                     │
+└─────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────┐
+│  BRANCH 1: JOB DISCOVERY                                │
+├─────────────────────────────────────────────────────────┤
+│  • Fetch from 3 APIs (Remotive, Arbeitnow, Adzuna)     │
+│  • Parse & normalize job data                           │
+│  • Download & parse resume with Groq AI                 │
+│  • Score each job (0-100) against resume                │
+│  • Filter duplicates                                     │
+│  • Save to Google Sheets                                │
+│  • Send Telegram + Email digest                         │
+└─────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────┐
+│  BRANCH 2: EMAIL OUTREACH                               │
+├─────────────────────────────────────────────────────────┤
+│  • Read jobs from Sheet (Status=New, has recruiter)     │
+│  • Limit to 10/day                                      │
+│  • Generate personalized email with Groq AI             │
+│  • Reference resume projects in email                   │
+│  • Select Gmail account (primary or secondary)          │
+│  • Send email with auto-failover                        │
+│  • Update Sheet status to "Email Sent"                  │
+│  • Send notification if account switches                │
+└─────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────┐
+│  BRANCH 3: TELEGRAM ASSISTANT                           │
+├─────────────────────────────────────────────────────────┤
+│  • Listen for messages                                  │
+│  • Handle commands: /start, /stats, /resume             │
+│  • Answer questions with Groq AI                        │
+│  • Query Google Sheet for stats                         │
+│  • Send intelligent replies                             │
+└─────────────────────────────────────────────────────────┘
 ```
 
-### Optional Tuning
+---
 
-**Adjust AI scoring sensitivity:**
-- `scoreThreshold: 20` → More jobs, lower quality
-- `scoreThreshold: 40` → Fewer jobs, higher quality
+## What You Need to Provide
 
-**Change schedule times:**
-- Edit cron expressions in Schedule Trigger nodes
-- Default: 8 AM (discovery), 9 AM (outreach) in UTC
+### Accounts (7 free accounts):
+1. **Groq** - AI scoring and email generation
+2. **Google Cloud** - OAuth credentials
+3. **Gmail Primary** - Your first email account
+4. **Gmail Secondary** - Your second email account
+5. **Google Sheets** - Job storage
+6. **Telegram** - Bot notifications
+7. **Adzuna** - Job search API
 
-**Modify email limit:**
-- `dailyLimit: 10` → Standard (recommended)
-- `dailyLimit: 5` → Conservative (new Gmail accounts)
-- `dailyLimit: 20` → Aggressive (established accounts only)
+### Information:
+- Your resume (PDF on Google Drive/GitHub/Dropbox)
+- Your skills, experience, target roles
+- Job search keywords
+- Both Gmail addresses
+- Telegram chat ID
+
+**See [ACCOUNTS-CHECKLIST.json](ACCOUNTS-CHECKLIST.json) for complete list**
 
 ---
 
-## 📋 Google Sheets Schema
+## Daily Workflow
 
-The workflow expects a Google Sheet named **"Jobs"** with these **19 columns**:
+**8:00 AM UTC:**
+1. Discovers 10-50 jobs from 3 sources
+2. AI scores each against your resume
+3. Saves jobs scoring ≥30 to Sheet
+4. Sends digest via Telegram + email
 
-| Column | Header | Type | Filled By |
-|--------|--------|------|-----------|
-| A | Job ID | String | Workflow |
-| B | Job Title | String | Workflow |
-| C | Company | String | Workflow |
-| D | Location | String | Workflow |
-| E | Work Mode | String | Workflow |
-| F | Salary | String | Workflow |
-| G | Apply URL | String | Workflow |
-| H | Source | String | Workflow |
-| I | Score | Number | Workflow (AI) |
-| J | Priority | String | Workflow (AI) |
-| K | Match Reason | String | Workflow (AI) |
-| L | Status | String | Workflow + You |
-| M | Posted Date | Date | Workflow |
-| N | Fetched Date | Date | Workflow |
-| O | Recruiter Email | String | **YOU** (manual) |
-| P | Recruiter Name | String | **YOU** (manual) |
-| Q | Application ID | String | Workflow |
-| R | Email Sent Date | Date | Workflow |
-| S | Last Updated | Date | Workflow |
+**9:00 AM UTC:**
+1. Reads jobs with recruiter emails
+2. Generates personalized emails citing your resume
+3. Sends up to 10 emails (split between 2 accounts)
+4. Updates Sheet with "Email Sent" status
+5. Notifies if account failover occurs
 
-**Critical:**
-- Column order must match exactly (A-S, left to right)
-- Tab must be named "Jobs" (case-sensitive)
-- You manually add **Recruiter Email** and **Recruiter Name** for jobs you want to apply to
+**Anytime:**
+- Message bot: `/stats` for job breakdown
+- Ask: "What remote Python jobs do I have?"
+- Bot responds with AI-generated answers
 
 ---
 
-## 🛠️ Troubleshooting
+## Testing
+
+After setup, run these 6 tests:
+
+1. **Resume Download** - Verify resume fetched successfully
+2. **Resume Parsing** - Confirm skills extracted
+3. **Job Discovery** - Check Sheet populated with jobs
+4. **Email Sending** - Send test email to yourself
+5. **Telegram Bot** - Test `/start` and `/stats` commands
+6. **Email Failover** - Simulate primary exhaustion
+
+**See COMPLETE-SETUP-GUIDE.md Part 6 for detailed test procedures**
+
+---
+
+## Troubleshooting
 
 ### Common Issues
 
-**1. No jobs appearing in Sheet**
-- Check API responses in n8n execution logs
-- Try broader `keywords` in User Config
-- Lower `scoreThreshold` to 20
+**Resume download fails:**
+- Check URL is publicly accessible (test in incognito browser)
+- Google Drive: Use `https://drive.google.com/uc?export=download&id=FILE_ID`
+- GitHub: Use raw URL (click "Raw" button)
+- Dropbox: Change `?dl=0` to `?dl=1`
 
-**2. Emails not sending**
-- Verify Gmail OAuth is authorized
-- Check that `recruiterEmail` column is filled in Sheet
-- Ensure Status="New" for jobs you want to send to
+**Credentials not found:**
+- Click nodes with ⚠️ warnings
+- Select credentials from dropdown
+- Don't use placeholder text like "YOUR_GROQ_CREDENTIAL_ID"
 
-**3. Telegram bot not responding**
-- Verify bot token is correct (test with getMe API)
-- Check workflow is activated (toggle ON)
-- Ensure n8n instance is publicly accessible (for webhook)
+**OAuth redirect mismatch:**
+- Google Cloud redirect URI must match n8n URL exactly
+- Format: `https://YOUR_N8N_URL/rest/oauth2-credential/callback`
 
-**4. Credential errors**
-- Re-authorize OAuth credentials in n8n
-- Verify credential IDs match in workflow nodes
-- Check API keys haven't expired
-
-**5. Groq rate limit errors**
-- Free tier: 30 req/min, 14,400/day
-- Workflow uses ~80/day - shouldn't hit limits
-- If hit, reduce job volume or add delays
-
-**See full troubleshooting guide:** `SETUP-INSTRUCTIONS.md` (Section 7)
+**Emails not sending:**
+- Verify both Gmail credentials are authorized
+- Check User Config has both email addresses
+- See EMAIL-SETUP-GUIDE.md for OAuth troubleshooting
 
 ---
 
-## 📚 Documentation
+## Support
 
-### Complete Guides
-
-1. **SETUP-INSTRUCTIONS.md** - Start here for deployment
-2. **WHAT-YOU-MUST-PROVIDE.json** - Checklist of requirements
-3. **USER-CONFIG-TEMPLATE.json** - Profile configuration template
-4. **FREE-VALIDATION-REPORT.md** - Proof all services are free
-
-### Quick Reference
-
-**Credential Placeholders to Replace:**
-- `YOUR_GROQ_CREDENTIAL_ID` (3 nodes)
-- `YOUR_GOOGLE_SHEETS_CREDENTIAL_ID` (5 nodes)
-- `YOUR_GMAIL_CREDENTIAL_ID` (3 nodes)
-- `YOUR_TELEGRAM_CREDENTIAL_ID` (5 nodes)
-- `YOUR_SPREADSHEET_ID` (1 node)
-- `YOUR_TELEGRAM_CHAT_ID` (1 node)
-- `YOUR_ADZUNA_APP_ID` (1 node)
-- `YOUR_ADZUNA_APP_KEY` (1 node)
-
-**Total:** 8 placeholders across 20 locations
+- **Setup Guide:** [COMPLETE-SETUP-GUIDE.md](COMPLETE-SETUP-GUIDE.md)
+- **Email Setup:** [EMAIL-SETUP-GUIDE.md](EMAIL-SETUP-GUIDE.md)
+- **n8n Community:** [community.n8n.io](https://community.n8n.io)
+- **Groq Docs:** [console.groq.com/docs](https://console.groq.com/docs)
 
 ---
 
-## 🎯 Workflow Stats
+## License
 
-- **Total Nodes:** 44
-- **Total Connections:** 38
-- **Triggers:** 3 (2 scheduled, 1 event-driven)
-- **HTTP Requests:** 3 job APIs
-- **AI Operations:** 3 Groq nodes
-- **Google Sheets Operations:** 5 (read/append/update)
-- **Notifications:** 5 (Telegram + Gmail)
-- **Error Handling:** All HTTP nodes have `continueOnFail: true`
-- **Rate Limiting:** 3-second delay between outreach emails
+MIT License - Free to use and modify
 
 ---
 
-## 🔒 Privacy & Security
-
-### Data Storage
-- **Job data:** Stored in YOUR Google Sheet (you own it)
-- **Email copies:** In YOUR Gmail Sent folder (you control it)
-- **Telegram messages:** Not logged (only stored by Telegram, not by workflow)
-
-### API Keys
-- All credentials stored in n8n (encrypted at rest)
-- No credentials hardcoded in workflow JSON
-- OAuth tokens auto-refresh
-
-### Email Sending
-- You're CC'd on every outreach email (full transparency)
-- Sent from YOUR Gmail account (your sender reputation)
-- No third-party SMTP or email proxies
-
-### Personal Data
-- Resume URL, LinkedIn, GitHub - you provide links (stored in User Config node)
-- No PII sent to AI models except what's in job descriptions
-- Groq AI doesn't train on your data (per their privacy policy)
-
----
-
-## 🚀 Next Steps
-
-After successful setup:
-
-### Week 1
-- ✅ Monitor daily executions in n8n
-- ✅ Check job quality (adjust `scoreThreshold` if needed)
-- ✅ Manually research top companies
-- ✅ Add recruiter emails to high-priority jobs in Sheet
-
-### Week 2-4
-- ✅ Review sent emails (check Gmail Sent folder)
-- ✅ Track responses (update Status column in Sheet)
-- ✅ Refine skills and keywords in User Config
-- ✅ Test Telegram bot for quick stats queries
-
-### Monthly
-- ✅ Re-authorize OAuth if credentials expire
-- ✅ Update target roles and salary expectations
-- ✅ Review and clean old jobs from Sheet
-- ✅ Adjust AI temperature if email quality degrades
-
----
-
-## 🤝 Contributing
-
-This is a single-workflow project, but improvements welcome:
-
-- **Found a bug?** Check execution logs and troubleshooting guide first
-- **Want to add a free job API?** Fork and add a new HTTP Request node
-- **Better AI prompts?** Edit Groq node parameters
-- **UI improvements?** Adjust node positioning
-
----
-
-## 📄 License
-
-This workflow configuration is provided as-is for personal use.
-
-**Underlying Services:**
-- n8n: Fair-code license (Apache 2.0 with Commons Clause)
-- Job APIs: Check respective ToS (all allow personal use)
-- Groq, Google, Telegram: See their service agreements
-
----
-
-## 🎉 Success Metrics
-
-**After 30 days, you should see:**
-- 1,000+ jobs discovered
-- 300+ jobs saved (≥30 score)
-- 50-100 emails sent to recruiters
-- 5-10 recruiter responses
-- 1-3 interviews scheduled
-
-**Adjust configuration if:**
-- Too many irrelevant jobs → Increase `scoreThreshold`
-- Too few jobs → Decrease `scoreThreshold`, broaden `keywords`
-- Low response rate → Review email templates in Groq node
-- System errors → Check `SETUP-INSTRUCTIONS.md` troubleshooting
-
----
-
-## 🙏 Acknowledgments
-
-Built by ruthlessly merging and refactoring 4 original workflows:
-- Job Discovery Engine
-- Email Outreach Sender
-- Job Scraper Fallback (ScraperAPI removed, free APIs added)
-- Telegram Job Assistant
-
-**Philosophy:** Only genuinely free tools. No trials. No hidden costs. Production-grade quality.
-
----
-
-## 📞 Support
-
-**Need help?**
-
-1. Read `SETUP-INSTRUCTIONS.md` (covers 95% of issues)
-2. Check n8n execution logs for specific errors
-3. Consult `FREE-VALIDATION-REPORT.md` for API limits
-4. Visit n8n community: https://community.n8n.io
-5. Check service-specific docs (Groq, Adzuna, Telegram)
-
-**Don't email support** - this is a community workflow template, not a commercial product.
-
----
-
-## ✅ Quick Validation Checklist
-
-Before activating workflow, verify:
-
-- ☐ All 5 credentials added to n8n and authorized
-- ☐ All 8 placeholders replaced with actual IDs
-- ☐ User Config node updated with your profile
-- ☐ Google Sheet created with exact 19-column schema
-- ☐ Test execution of each trigger successful
-- ☐ Telegram bot responding to /start command
-- ☐ Test email received in your inbox
-- ☐ Jobs appearing in Google Sheet
-
-**If all checked, you're ready to activate!** 🚀
-
----
-
-**Good luck with your job search!**
-
-This system will save you 10-15 hours per week by automating discovery, scoring, outreach, and tracking.
-
-Deploy it. Activate it. Let it work for you. 💪
+**Setup time: 45-60 minutes | Cost: $0/month | Skill level: Beginner**
