@@ -40,9 +40,9 @@
 
 ### 1. Import Workflow
 
-**n8n Cloud URL:**
+**Raw URL for n8n:**
 ```
-https://raw.githubusercontent.com/vallakatlaraviteja/Ravi-s_automation/main/ENHANCED-MASTER-workflow.json
+https://raw.githubusercontent.com/vallakatlaraviteja/Ravi-s_automation/main/workflow/ENHANCED-MASTER-workflow.json
 ```
 
 In n8n:
@@ -52,7 +52,7 @@ In n8n:
 
 ### 2. Follow Setup Guide
 
-Open: **[COMPLETE-SETUP-GUIDE.md](COMPLETE-SETUP-GUIDE.md)**
+Open: **[guides/COMPLETE-SETUP-GUIDE.md](guides/COMPLETE-SETUP-GUIDE.md)**
 
 This guide walks you through:
 - Creating 7 free accounts (Groq, Google Cloud, Telegram, Adzuna, etc.)
@@ -65,16 +65,32 @@ This guide walks you through:
 
 ---
 
-## Files in This Repo
+## Repository Structure
+
+```
+Ravi-s_automation/
+├── README.md                          ← Start here
+├── workflow/
+│   └── ENHANCED-MASTER-workflow.json  ← Import this into n8n
+├── guides/
+│   ├── COMPLETE-SETUP-GUIDE.md        ← Follow step-by-step (45 min)
+│   └── EMAIL-SETUP-GUIDE.md           ← Gmail OAuth for 2 accounts
+└── docs/
+    ├── ACCOUNTS-CHECKLIST.json        ← Requirements list
+    ├── ACCOUNTS-CREDENTIALS-TEMPLATE.txt  ← Track IDs during setup
+    └── FREE-VALIDATION-REPORT.md      ← Proof all services are free
+```
+
+### Quick Access
 
 | File | Purpose |
 |------|---------|
-| **ENHANCED-MASTER-workflow.json** | Main workflow (62 nodes) - import this |
-| **COMPLETE-SETUP-GUIDE.md** | Step-by-step setup (beginner-friendly) |
-| **EMAIL-SETUP-GUIDE.md** | Gmail OAuth for dual accounts |
-| **ACCOUNTS-CHECKLIST.json** | What accounts/credentials you need |
-| **ACCOUNTS-CREDENTIALS-TEMPLATE.txt** | Track IDs during setup |
-| **FREE-VALIDATION-REPORT.md** | Proof all services are free |
+| **[workflow/ENHANCED-MASTER-workflow.json](workflow/ENHANCED-MASTER-workflow.json)** | Main workflow (62 nodes) - import this |
+| **[guides/COMPLETE-SETUP-GUIDE.md](guides/COMPLETE-SETUP-GUIDE.md)** | Step-by-step setup (beginner-friendly) |
+| **[guides/EMAIL-SETUP-GUIDE.md](guides/EMAIL-SETUP-GUIDE.md)** | Gmail OAuth for dual accounts |
+| **[docs/ACCOUNTS-CHECKLIST.json](docs/ACCOUNTS-CHECKLIST.json)** | What accounts/credentials you need |
+| **[docs/ACCOUNTS-CREDENTIALS-TEMPLATE.txt](docs/ACCOUNTS-CREDENTIALS-TEMPLATE.txt)** | Track IDs during setup |
+| **[docs/FREE-VALIDATION-REPORT.md](docs/FREE-VALIDATION-REPORT.md)** | Proof all services are free |
 
 ---
 
@@ -217,8 +233,9 @@ After setup, run these 6 tests:
 
 ## Support
 
-- **Setup Guide:** [COMPLETE-SETUP-GUIDE.md](COMPLETE-SETUP-GUIDE.md)
-- **Email Setup:** [EMAIL-SETUP-GUIDE.md](EMAIL-SETUP-GUIDE.md)
+- **Setup Guide:** [guides/COMPLETE-SETUP-GUIDE.md](guides/COMPLETE-SETUP-GUIDE.md)
+- **Email Setup:** [guides/EMAIL-SETUP-GUIDE.md](guides/EMAIL-SETUP-GUIDE.md)
+- **Requirements:** [docs/ACCOUNTS-CHECKLIST.json](docs/ACCOUNTS-CHECKLIST.json)
 - **n8n Community:** [community.n8n.io](https://community.n8n.io)
 - **Groq Docs:** [console.groq.com/docs](https://console.groq.com/docs)
 
