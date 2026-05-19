@@ -1,0 +1,370 @@
+{
+  "name": "Job Discovery Engine (Real APIs Only)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * *"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Schedule Trigger (Daily 8 AM)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [240, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Job search configuration - customize per user\nreturn [{\n  json: {\n    keywords: 'python developer OR backend engineer OR nodejs',\n    location: 'remote',\n    country: 'in',  // for Adzuna: us, gb, in, au, etc.\n    skills: ['python', 'nodejs', 'aws', 'docker', 'kubernetes'],\n    minSalary: 80000,\n    workMode: ['remote', 'hybrid'],\n    experienceLevel: 'mid-level'\n  }\n}];"
+      },
+      "id": "set-search-config",
+      "name": "Set Search Config",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 400]
+    },
+    {
+      "parameters": {
+        "url": "https://remotive.com/api/remote-jobs",
+        "method": "GET",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "search",
+              "value": "={{ $json.keywords }}"
+            },
+            {
+              "name": "limit",
+              "value": "50"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "fetch-remotive",
+      "name": "Fetch Remotive Jobs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [680, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "url": "https://www.arbeitnow.com/api/job-board-api",
+        "method": "GET",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "search",
+              "value": "={{ $json.keywords }}"
+            },
+            {
+              "name": "limit",
+              "value": "50"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "fetch-arbeitnow",
+      "name": "Fetch Arbeitnow Jobs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [680, 400],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "url": "=https://api.adzuna.com/v1/api/jobs/{{ $json.country }}/search/1",
+        "method": "GET",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "app_id",
+              "value": "YOUR_ADZUNA_APP_ID"
+            },
+            {
+              "name": "app_key",
+              "value": "YOUR_ADZUNA_APP_KEY"
+            },
+            {
+              "name": "what",
+              "value": "={{ $json.keywords }}"
+            },
+            {
+              "name": "results_per_page",
+              "value": "50"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "fetch-adzuna",
+      "name": "Fetch Adzuna Jobs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [680, 500],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Remotive API response\nconst response = items[0].json;\nconst jobs = response.jobs || [];\n\nreturn jobs.map(job => ({\n  json: {\n    source: 'Remotive',\n    jobTitle: job.title || 'Unknown',\n    company: job.company_name || 'Unknown',\n    location: job.candidate_required_location || 'Remote',\n    jobType: job.job_type || 'Full-time',\n    workMode: 'Remote',\n    salary: job.salary || 'Not disclosed',\n    applyUrl: job.url || '',\n    description: (job.description || '').substring(0, 500),\n    tags: job.tags || [],\n    postedDate: job.publication_date || new Date().toISOString().split('T')[0],\n    category: job.category || '',\n    jobId: `remotive-${job.id || Date.now()}`,\n    fetchedDate: new Date().toISOString().split('T')[0]\n  }\n}));"
+      },
+      "id": "parse-remotive",
+      "name": "Parse Remotive",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Arbeitnow API response\nconst response = items[0].json;\nconst jobs = response.data || [];\n\nreturn jobs.map(job => ({\n  json: {\n    source: 'Arbeitnow',\n    jobTitle: job.title || 'Unknown',\n    company: job.company_name || 'Unknown',\n    location: job.location || 'Remote',\n    jobType: job.job_types?.[0] || 'Full-time',\n    workMode: job.remote ? 'Remote' : 'Onsite',\n    salary: 'Not disclosed',\n    applyUrl: job.url || '',\n    description: (job.description || '').substring(0, 500),\n    tags: job.tags || [],\n    postedDate: job.created_at ? new Date(job.created_at * 1000).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],\n    category: '',\n    jobId: `arbeitnow-${job.slug || Date.now()}`,\n    fetchedDate: new Date().toISOString().split('T')[0]\n  }\n}));"
+      },
+      "id": "parse-arbeitnow",
+      "name": "Parse Arbeitnow",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 400],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Adzuna API response\nconst response = items[0].json;\nconst jobs = response.results || [];\n\nreturn jobs.map(job => ({\n  json: {\n    source: 'Adzuna',\n    jobTitle: job.title || 'Unknown',\n    company: job.company?.display_name || 'Unknown',\n    location: job.location?.display_name || 'Not specified',\n    jobType: job.contract_time || 'Full-time',\n    workMode: 'Not specified',\n    salary: job.salary_max ? `${job.salary_min || 0} - ${job.salary_max}` : 'Not disclosed',\n    applyUrl: job.redirect_url || '',\n    description: (job.description || '').substring(0, 500),\n    tags: job.category?.tag ? [job.category.tag] : [],\n    postedDate: job.created || new Date().toISOString().split('T')[0],\n    category: job.category?.label || '',\n    jobId: `adzuna-${job.id || Date.now()}`,\n    fetchedDate: new Date().toISOString().split('T')[0]\n  }\n}));"
+      },
+      "id": "parse-adzuna",
+      "name": "Parse Adzuna",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 500],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "mergeByFields": {
+          "fields": [
+            {
+              "fieldName": "jobId"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "merge-all-jobs",
+      "name": "Merge All Jobs",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [1120, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Deduplicate by job URL and title\nconst jobs = items.map(item => item.json);\nconst seen = new Set();\nconst unique = [];\n\nfor (const job of jobs) {\n  const key = `${job.company}-${job.jobTitle}`.toLowerCase().replace(/\\s+/g, '-');\n  if (!seen.has(key) && job.applyUrl) {\n    seen.add(key);\n    unique.push(job);\n  }\n}\n\nreturn unique.map(job => ({ json: job }));"
+      },
+      "id": "deduplicate-jobs",
+      "name": "Deduplicate Jobs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1340, 400]
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {
+          "temperature": 0.3
+        },
+        "text": "=You are a job matching expert. Score this job for relevance (0-100):\n\n**Job:** {{ $json.jobTitle }} at {{ $json.company }}\n**Location:** {{ $json.location }}\n**Tags:** {{ $json.tags.join(', ') }}\n**Work Mode:** {{ $json.workMode }}\n**Description:** {{ $json.description }}\n\n**User's Preferences:**\n- Skills: {{ $('Set Search Config').item.json.skills.join(', ') }}\n- Work Mode: {{ $('Set Search Config').item.json.workMode.join(' or ') }}\n- Experience: {{ $('Set Search Config').item.json.experienceLevel }}\n\nProvide ONLY a JSON object:\n{\"score\": <0-100>, \"priority\": \"high|medium|low\", \"matchReason\": \"<1 sentence>\"}\n\nNo other text."
+      },
+      "id": "groq-score-job",
+      "name": "Groq Score Job",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [1560, 400],
+      "credentials": {
+        "groqApi": {
+          "id": "YOUR_GROQ_CREDENTIAL_ID",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Groq scoring response\nconst jobData = items[0].json;\nconst groqResponse = $node[\"Groq Score Job\"].json.response || $node[\"Groq Score Job\"].json.text || '';\n\nlet score = 50;\nlet priority = 'medium';\nlet matchReason = 'Standard match';\n\ntry {\n  const jsonMatch = groqResponse.match(/\\{[\\s\\S]*\\}/);\n  if (jsonMatch) {\n    const parsed = JSON.parse(jsonMatch[0]);\n    score = parsed.score || 50;\n    priority = parsed.priority || 'medium';\n    matchReason = parsed.matchReason || 'Standard match';\n  }\n} catch (error) {\n  console.error('Failed to parse Groq response, using defaults');\n}\n\nreturn [{\n  json: {\n    ...jobData,\n    score,\n    priority,\n    matchReason,\n    status: 'New'\n  }\n}];"
+      },
+      "id": "parse-score",
+      "name": "Parse Score",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1780, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.score }}",
+              "operation": "largerEqual",
+              "value2": 30
+            }
+          ]
+        }
+      },
+      "id": "filter-by-score",
+      "name": "Filter by Score (≥30)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [2000, 400]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Jobs",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "matchingColumns": [],
+          "schema": [
+            {"id": "jobTitle", "displayName": "Job Title", "type": "string"},
+            {"id": "company", "displayName": "Company", "type": "string"},
+            {"id": "location", "displayName": "Location", "type": "string"},
+            {"id": "workMode", "displayName": "Work Mode", "type": "string"},
+            {"id": "salary", "displayName": "Salary", "type": "string"},
+            {"id": "applyUrl", "displayName": "Apply URL", "type": "string"},
+            {"id": "source", "displayName": "Source", "type": "string"},
+            {"id": "score", "displayName": "Score", "type": "number"},
+            {"id": "priority", "displayName": "Priority", "type": "string"},
+            {"id": "matchReason", "displayName": "Match Reason", "type": "string"},
+            {"id": "status", "displayName": "Status", "type": "string"},
+            {"id": "fetchedDate", "displayName": "Fetched Date", "type": "string"}
+          ]
+        },
+        "options": {}
+      },
+      "id": "append-to-sheet",
+      "name": "Append to Google Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.2,
+      "position": [2220, 400],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Aggregate summary for email\nconst jobs = items.map(item => item.json);\nconst total = jobs.length;\nconst high = jobs.filter(j => j.priority === 'high').length;\nconst medium = jobs.filter(j => j.priority === 'medium').length;\nconst low = jobs.filter(j => j.priority === 'low').length;\n\nconst topJobs = jobs\n  .sort((a, b) => b.score - a.score)\n  .slice(0, 5)\n  .map(j => `• **${j.jobTitle}** at **${j.company}** (${j.location}) - Score: ${j.score} [${j.source}]`);\n\nconst sourceBreakdown = jobs.reduce((acc, j) => {\n  acc[j.source] = (acc[j.source] || 0) + 1;\n  return acc;\n}, {});\n\nconst sourceStats = Object.entries(sourceBreakdown)\n  .map(([source, count]) => `${source}: ${count}`)\n  .join(', ');\n\nreturn [{\n  json: {\n    total,\n    high,\n    medium,\n    low,\n    topJobsList: topJobs.join('\\n'),\n    sourceStats,\n    date: new Date().toISOString().split('T')[0]\n  }\n}];"
+      },
+      "id": "aggregate-summary",
+      "name": "Aggregate Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2440, 400]
+    },
+    {
+      "parameters": {
+        "sendTo": "YOUR_EMAIL@example.com",
+        "subject": "📊 Daily Job Discovery - {{ $json.total }} New Jobs",
+        "message": "=Hello,\n\nYour job discovery engine found **{{ $json.total }}** new relevant jobs!\n\n**Priority Breakdown:**\n🔴 High: {{ $json.high }}\n🟡 Medium: {{ $json.medium }}\n🟢 Low: {{ $json.low }}\n\n**Sources:**\n{{ $json.sourceStats }}\n\n**Top 5 Matches:**\n{{ $json.topJobsList }}\n\nAll jobs have been added to your Google Sheet.\nReview them and add recruiter emails for auto-outreach.\n\n**Date:** {{ $json.date }}\n\nBest regards,\nJob Discovery Engine",
+        "options": {}
+      },
+      "id": "send-summary-email",
+      "name": "Send Summary Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [2660, 400],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_GMAIL_CREDENTIAL_ID",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger (Daily 8 AM)": {
+      "main": [[{"node": "Set Search Config", "type": "main", "index": 0}]]
+    },
+    "Set Search Config": {
+      "main": [[
+        {"node": "Fetch Remotive Jobs", "type": "main", "index": 0},
+        {"node": "Fetch Arbeitnow Jobs", "type": "main", "index": 0},
+        {"node": "Fetch Adzuna Jobs", "type": "main", "index": 0}
+      ]]
+    },
+    "Fetch Remotive Jobs": {
+      "main": [[{"node": "Parse Remotive", "type": "main", "index": 0}]]
+    },
+    "Fetch Arbeitnow Jobs": {
+      "main": [[{"node": "Parse Arbeitnow", "type": "main", "index": 0}]]
+    },
+    "Fetch Adzuna Jobs": {
+      "main": [[{"node": "Parse Adzuna", "type": "main", "index": 0}]]
+    },
+    "Parse Remotive": {
+      "main": [[{"node": "Merge All Jobs", "type": "main", "index": 0}]]
+    },
+    "Parse Arbeitnow": {
+      "main": [[{"node": "Merge All Jobs", "type": "main", "index": 1}]]
+    },
+    "Parse Adzuna": {
+      "main": [[{"node": "Merge All Jobs", "type": "main", "index": 2}]]
+    },
+    "Merge All Jobs": {
+      "main": [[{"node": "Deduplicate Jobs", "type": "main", "index": 0}]]
+    },
+    "Deduplicate Jobs": {
+      "main": [[{"node": "Groq Score Job", "type": "main", "index": 0}]]
+    },
+    "Groq Score Job": {
+      "main": [[{"node": "Parse Score", "type": "main", "index": 0}]]
+    },
+    "Parse Score": {
+      "main": [[{"node": "Filter by Score (≥30)", "type": "main", "index": 0}]]
+    },
+    "Filter by Score (≥30)": {
+      "main": [[{"node": "Append to Google Sheet", "type": "main", "index": 0}]]
+    },
+    "Append to Google Sheet": {
+      "main": [[{"node": "Aggregate Summary", "type": "main", "index": 0}]]
+    },
+    "Aggregate Summary": {
+      "main": [[{"node": "Send Summary Email", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "versionId": "1"
+}
