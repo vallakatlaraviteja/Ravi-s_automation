@@ -4,10 +4,10 @@
 
 ## What This Does
 
-- 🔍 **Discovers jobs** from 3 sources (Remotive, Arbeitnow, Adzuna) daily at 8 AM UTC
-- 🤖 **AI scoring** matches jobs to your resume (0-100 score)
-- ✉️ **Personalized emails** to recruiters with automatic failover between 2 Gmail accounts
-- 📊 **Tracks everything** in Google Sheets
+- 🔍 **Discovers jobs** from 7 sources (Remotive, Arbeitnow, Adzuna, JSearch, The Muse, USAJobs, GitHub Jobs) daily at 8 AM UTC
+- 🤖 **AI scoring** matches jobs to your resume (0-100 score) using 4 Groq API keys
+- ✉️ **Personalized emails** to recruiters with automatic rotation through 4 Gmail accounts
+- 📊 **Tracks everything** in Google Sheets with 4-credential rotation
 - 💬 **Telegram bot** for job stats and queries
 
 ## Features
@@ -18,18 +18,26 @@
 - Job scoring uses actual resume content
 - Emails reference specific projects from your resume
 
-### Dual Email Failover
-- Primary: Your first Gmail (50 emails/day)
-- Secondary: Your second Gmail (50 emails/day)
-- Auto-switch when primary hits limit or errors
-- Total: 100 emails/day with zero manual intervention
+### 4-Way Email Rotation System
+- Account 1: Gmail 1 (50 emails/day)
+- Account 2: Gmail 2 (50 emails/day)
+- Account 3: Gmail 3 (50 emails/day)
+- Account 4: Gmail 4 (50 emails/day)
+- **Total: 200 emails/day** with automatic rotation
+- Zero manual intervention
+
+### Multi-Account Scaling
+- **4 Gmail accounts**: 200 emails/day
+- **4 Groq API keys**: 57,600 AI requests/day
+- **4 Google Sheets credentials**: 1,200 writes/day
+- **7 FREE job API sources** with intelligent fallback
 
 ### 100% Free
-- Groq AI: 14,400 requests/day
-- Gmail: 500/day per account (we use 50 for safety)
-- Google Sheets: 5M cells
+- Groq AI: 57,600 requests/day (4 keys x 14,400 each)
+- Gmail: 200 emails/day (4 accounts x 50 each)
+- Google Sheets: 1,200 writes/day (4 credentials x 300 each)
 - Telegram: Unlimited
-- Adzuna API: 250 requests/day
+- 7 Job APIs: Remotive, Arbeitnow, Adzuna, JSearch, The Muse, USAJobs, GitHub Jobs
 - n8n Cloud: 5,000 executions/month
 
 **Monthly cost: $0**
@@ -69,25 +77,31 @@ This guide walks you through:
 
 ```
 Ravi-s_automation/
-├── README.md                          ← Start here
+├── README.md                                      ← Start here
 ├── workflow/
-│   └── ENHANCED-MASTER-workflow.json  ← Import this into n8n
+│   └── ENHANCED-MASTER-workflow.json              ← Import this into n8n
 ├── guides/
-│   ├── COMPLETE-SETUP-GUIDE.md        ← Follow step-by-step (45 min)
-│   └── EMAIL-SETUP-GUIDE.md           ← Gmail OAuth for 2 accounts
+│   ├── COMPLETE-SETUP-GUIDE.md                    ← Follow step-by-step (45 min)
+│   └── EMAIL-SETUP-GUIDE.md                       ← Gmail OAuth for 4 accounts
 └── docs/
-    ├── ACCOUNTS-CHECKLIST.json        ← Requirements list
-    ├── ACCOUNTS-CREDENTIALS-TEMPLATE.txt  ← Track IDs during setup
-    └── FREE-VALIDATION-REPORT.md      ← Proof all services are free
+    ├── MULTI-ACCOUNT-SETUP-GUIDE.md               ← 4-way rotation setup (NEW!)
+    ├── FREE-APIS-LIST.md                          ← All 7 FREE job APIs (NEW!)
+    ├── ACCOUNTS-CHECKLIST.json                    ← Requirements list
+    ├── ACCOUNTS-CREDENTIALS-TEMPLATE.txt          ← Track IDs during setup
+    ├── GROQ-ROTATION-GUIDE.md                     ← 4-way Groq setup
+    ├── SHEETS-ROTATION-GUIDE.md                   ← 4-way Sheets setup
+    └── FREE-VALIDATION-REPORT.md                  ← Proof all services are free
 ```
 
 ### Quick Access
 
 | File | Purpose |
 |------|---------|
-| **[workflow/ENHANCED-MASTER-workflow.json](workflow/ENHANCED-MASTER-workflow.json)** | Main workflow (62 nodes) - import this |
+| **[workflow/ENHANCED-MASTER-workflow.json](workflow/ENHANCED-MASTER-workflow.json)** | Main workflow (90+ nodes) - import this |
+| **[docs/MULTI-ACCOUNT-SETUP-GUIDE.md](docs/MULTI-ACCOUNT-SETUP-GUIDE.md)** | Complete 4-account setup guide |
+| **[docs/FREE-APIS-LIST.md](docs/FREE-APIS-LIST.md)** | All 7 job APIs with setup instructions |
 | **[guides/COMPLETE-SETUP-GUIDE.md](guides/COMPLETE-SETUP-GUIDE.md)** | Step-by-step setup (beginner-friendly) |
-| **[guides/EMAIL-SETUP-GUIDE.md](guides/EMAIL-SETUP-GUIDE.md)** | Gmail OAuth for dual accounts |
+| **[guides/EMAIL-SETUP-GUIDE.md](guides/EMAIL-SETUP-GUIDE.md)** | Gmail OAuth for 4 accounts |
 | **[docs/ACCOUNTS-CHECKLIST.json](docs/ACCOUNTS-CHECKLIST.json)** | What accounts/credentials you need |
 | **[docs/ACCOUNTS-CREDENTIALS-TEMPLATE.txt](docs/ACCOUNTS-CREDENTIALS-TEMPLATE.txt)** | Track IDs during setup |
 | **[docs/FREE-VALIDATION-REPORT.md](docs/FREE-VALIDATION-REPORT.md)** | Proof all services are free |
@@ -148,23 +162,24 @@ Ravi-s_automation/
 
 ## What You Need to Provide
 
-### Accounts (7 free accounts):
-1. **Groq** - AI scoring and email generation
+### Accounts (12 free accounts):
+1. **Groq** (4 keys) - AI scoring and email generation
 2. **Google Cloud** - OAuth credentials
-3. **Gmail Primary** - Your first email account
-4. **Gmail Secondary** - Your second email account
-5. **Google Sheets** - Job storage
-6. **Telegram** - Bot notifications
-7. **Adzuna** - Job search API
+3. **Gmail** (4 accounts) - Email outreach
+4. **Google Sheets** (4 credentials) - Job storage
+5. **Telegram** - Bot notifications
+6. **Adzuna** - Job search API
+7. **JSearch (RapidAPI)** - Job aggregator (optional)
+8. **USAJobs** - Government jobs API (optional)
 
 ### Information:
 - Your resume (PDF on Google Drive/GitHub/Dropbox)
 - Your skills, experience, target roles
 - Job search keywords
-- Both Gmail addresses
+- All 4 Gmail addresses
 - Telegram chat ID
 
-**See [ACCOUNTS-CHECKLIST.json](ACCOUNTS-CHECKLIST.json) for complete list**
+**See [docs/MULTI-ACCOUNT-SETUP-GUIDE.md](docs/MULTI-ACCOUNT-SETUP-GUIDE.md) for complete setup instructions**
 
 ---
 

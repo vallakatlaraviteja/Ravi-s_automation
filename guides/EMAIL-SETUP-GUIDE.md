@@ -18,21 +18,27 @@
 
 ---
 
-### Why Two Gmail Accounts?
+### Why Two or Four Gmail Accounts?
 
-Gmail's free tier has email sending limits. Using two accounts provides:
+Gmail's free tier has email sending limits. The workflow supports 2 or 4 accounts:
 
-**Benefits:**
-- **Higher daily capacity**: 100 emails/day instead of 50
-- **Automatic failover**: If one account hits its limit, workflow switches to the other
-- **Error resilience**: If one account gets temporary errors, the other takes over
-- **Zero downtime**: Emails keep sending even if one account is blocked
+**2-Account System:**
+- Account 1: 50 emails/day (primary)
+- Account 2: 50 emails/day (backup)
+- Total: 100 emails/day
+
+**4-Account System (Recommended):**
+- Account 1: 50 emails/day (primary)
+- Account 2: 50 emails/day (secondary)
+- Account 3: 50 emails/day (tertiary)
+- Account 4: 50 emails/day (quaternary)
+- **Total: 200 emails/day**
 
 **How it works:**
 1. Workflow starts with primary account
 2. Sends up to 50 emails/day from primary
-3. When limit hit or errors occur: automatically switches to secondary
-4. Sends up to 50 more from secondary
+3. When limit hit or errors occur: automatically switches to next account
+4. Continues rotating through all available accounts
 5. At midnight UTC: resets and goes back to primary
 
 **Daily capacity comparison:**
@@ -40,9 +46,12 @@ Gmail's free tier has email sending limits. Using two accounts provides:
 | Setup | Emails/Day | Annual Capacity |
 |-------|------------|-----------------|
 | Single account | 50 | 18,250 |
-| Dual accounts | 100 | 36,500 |
+| 2 accounts (Dual) | 100 | 36,500 |
+| 4 accounts (Multi) | 200 | 73,000 |
 
 **Note:** Gmail's official limit is 500/day, but we use 50/account as a conservative safety buffer to avoid spam detection.
+
+**This guide covers both 2-account and 4-account setup. Follow the sections relevant to your choice.**
 
 ---
 
@@ -50,13 +59,15 @@ Gmail's free tier has email sending limits. Using two accounts provides:
 
 Before starting, you need:
 
-1. **Two Gmail accounts**:
+1. **2-4 Gmail accounts**:
+   - Minimum: 2 accounts (100 emails/day capacity)
+   - Recommended: 4 accounts (200 emails/day capacity)
    - Primary: Your main Gmail (e.g., `you@gmail.com`)
-   - Secondary: A second Gmail (create free at [gmail.com](https://gmail.com))
+   - Additional: Second, third, fourth Gmail accounts (create free at [gmail.com](https://gmail.com))
 
 2. **Google Cloud project**:
-   - One project can handle both accounts
-   - You'll create OAuth credentials once, use for both
+   - One project can handle all accounts (2 or 4)
+   - You'll create OAuth credentials once, use for all accounts
 
 3. **n8n instance**:
    - n8n Cloud or self-hosted
@@ -337,11 +348,11 @@ Now you'll create the first Gmail OAuth2 credential in n8n for your primary acco
 
 ---
 
-## Part 4: Add Secondary Gmail to n8n
+## Part 4: Add Additional Gmail Accounts to n8n
 
-Now repeat the process for your second Gmail account.
+Now add your remaining Gmail accounts (accounts 2, 3, and 4).
 
-### 4.1 Create Secondary Gmail Credential
+### 4.1 Add Gmail Account 2 (Secondary)
 
 **Steps:**
 
@@ -353,50 +364,130 @@ Now repeat the process for your second Gmail account.
 
 4. Fill in the form:
 
-   **Display name**: `Gmail Secondary OAuth2`
+   **Display name**: `Gmail Account 2 OAuth2`
 
-   **Client ID**: Same as primary (from Part 2.1)
+   **Client ID**: Same as Account 1 (from Part 2.1)
 
-   **Client Secret**: Same as primary (from Part 2.1)
+   **Client Secret**: Same as Account 1 (from Part 2.1)
 
-   **Note:** You use the SAME OAuth credentials for both accounts. The difference is which Google account you authorize in the next step.
+   **Note:** You use the SAME OAuth credentials for all accounts. The difference is which Google account you authorize in the next step.
 
 5. Click **"Connect my account"**
 
 6. In the Google popup:
-   - **CRITICAL**: Select your **SECONDARY** Gmail account
+   - **CRITICAL**: Select your **SECOND** Gmail account
    - If you see your primary account: Click **"Use another account"**
-   - Sign in with your secondary Gmail
+   - Sign in with your second Gmail
 
-7. Grant permissions (same as primary)
+7. Grant permissions (same as Account 1)
 
 8. Return to n8n, see ✅ **"Connected"**
 
 9. Click **"Save"**
 
+10. Copy the credential ID from the URL
+
+**Save this ID** - Gmail Account 2 Credential ID: `_________________`
+
 ---
 
-### 4.2 Get Secondary Credential ID
+### 4.2 Add Gmail Account 3 (Optional for 4-Account System)
+
+**Skip this section if you're only setting up 2 accounts.**
 
 **Steps:**
 
-1. Click on the credential: **"Gmail Secondary OAuth2"**
+1. In n8n Credentials page, click **"Add Credential"**
 
-2. Copy the credential ID from the URL
+2. Search for: `gmail oauth2`
 
-3. **Save this ID** separately from primary
+3. Click: **"Gmail OAuth2 API"**
+
+4. Fill in the form:
+
+   **Display name**: `Gmail Account 3 OAuth2`
+
+   **Client ID**: Same as Accounts 1 and 2 (from Part 2.1)
+
+   **Client Secret**: Same as Accounts 1 and 2 (from Part 2.1)
+
+5. Click **"Connect my account"**
+
+6. In the Google popup:
+   - **SELECT YOUR THIRD GMAIL ACCOUNT** (different from Accounts 1 and 2)
+   - If needed: Click **"Use another account"**
+   - Sign in with your third Gmail
+
+7. Grant permissions
+
+8. Return to n8n, see ✅ **"Connected"**
+
+9. Click **"Save"**
+
+10. Copy the credential ID from the URL
+
+**Save this ID** - Gmail Account 3 Credential ID: `_________________`
 
 ---
 
-### 4.3 Verify Both Credentials
+### 4.3 Add Gmail Account 4 (Optional for 4-Account System)
 
-**Checklist:**
+**Skip this section if you're only setting up 2 or 3 accounts.**
 
-- [ ] Primary Gmail credential saved with name "Gmail Primary OAuth2"
-- [ ] Secondary Gmail credential saved with name "Gmail Secondary OAuth2"
+**Steps:**
+
+1. In n8n Credentials page, click **"Add Credential"**
+
+2. Search for: `gmail oauth2`
+
+3. Click: **"Gmail OAuth2 API"**
+
+4. Fill in the form:
+
+   **Display name**: `Gmail Account 4 OAuth2`
+
+   **Client ID**: Same as all previous accounts (from Part 2.1)
+
+   **Client Secret**: Same as all previous accounts (from Part 2.1)
+
+5. Click **"Connect my account"**
+
+6. In the Google popup:
+   - **SELECT YOUR FOURTH GMAIL ACCOUNT** (different from Accounts 1-3)
+   - If needed: Click **"Use another account"**
+   - Sign in with your fourth Gmail
+
+7. Grant permissions
+
+8. Return to n8n, see ✅ **"Connected"**
+
+9. Click **"Save"**
+
+10. Copy the credential ID from the URL
+
+**Save this ID** - Gmail Account 4 Credential ID: `_________________`
+
+---
+
+### 4.4 Verify All Credentials
+
+**Checklist for 4-Account System:**
+
+- [ ] Gmail Account 1 credential saved with name "Gmail Account 1 OAuth2"
+- [ ] Gmail Account 2 credential saved with name "Gmail Account 2 OAuth2"
+- [ ] Gmail Account 3 credential saved with name "Gmail Account 3 OAuth2"
+- [ ] Gmail Account 4 credential saved with name "Gmail Account 4 OAuth2"
+- [ ] All show green ✅ "Connected" status
+- [ ] You have ALL credential IDs saved (4 different IDs)
+- [ ] Credential IDs are different (each credential gets unique ID)
+
+**Checklist for 2-Account System:**
+
+- [ ] Gmail Account 1 credential saved with name "Gmail Account 1 OAuth2" (or "Gmail Primary OAuth2")
+- [ ] Gmail Account 2 credential saved with name "Gmail Account 2 OAuth2" (or "Gmail Secondary OAuth2")
 - [ ] Both show green ✅ "Connected" status
 - [ ] You have BOTH credential IDs saved
-- [ ] Credential IDs are different (each credential gets unique ID)
+- [ ] Credential IDs are different
 
 ---
 
@@ -777,6 +868,63 @@ Time: 2024-01-20T09:15:00.000Z
    - "Send Email via Gmail Primary" uses primary credential
    - "Send Email via Gmail Secondary" uses secondary credential
 3. Test by checking sender address in received emails
+
+---
+
+### What if I only have 2 Gmail accounts?
+
+**Can the workflow still work?** YES! The workflow is flexible.
+
+**How to configure for 2 accounts:**
+
+1. In User Config node, use only 2 entries in `gmailAccounts` array:
+```javascript
+gmailAccounts: [
+  {
+    email: 'your-account1@gmail.com',
+    credentialId: 'YOUR_GMAIL_1_CREDENTIAL_ID',
+    dailyLimit: 50,
+    currentCount: 0,
+    errors: 0
+  },
+  {
+    email: 'your-account2@gmail.com',
+    credentialId: 'YOUR_GMAIL_2_CREDENTIAL_ID',
+    dailyLimit: 50,
+    currentCount: 0,
+    errors: 0
+  }
+],
+currentGmailIndex: 0,
+totalEmailCapacity: 100,  // Reduced from 200
+```
+
+2. Leave Gmail Account 3 and 4 credential IDs empty in tracking template
+
+3. The workflow will automatically adapt:
+   - Rotate between 2 accounts instead of 4
+   - Total capacity: 100 emails/day (50 per account)
+   - All other features work normally (Groq, Sheets, APIs)
+
+**Capacity comparison:**
+- 2 Gmail accounts: 100 emails/day
+- 4 Gmail accounts: 200 emails/day
+
+**Note:** Groq and Google Sheets still benefit from 4 credentials. You only need 2 Gmail accounts for emails, but you can still use 4 Groq keys and 4 Sheets credentials.
+
+**What if I have 3 Gmail accounts?**
+
+Configure for 3 accounts:
+```javascript
+gmailAccounts: [
+  { email: 'account1@gmail.com', credentialId: 'ID1', dailyLimit: 50, ... },
+  { email: 'account2@gmail.com', credentialId: 'ID2', dailyLimit: 50, ... },
+  { email: 'account3@gmail.com', credentialId: 'ID3', dailyLimit: 50, ... }
+],
+totalEmailCapacity: 150,  // 3 x 50
+```
+
+Total capacity: 150 emails/day.
 
 ---
 

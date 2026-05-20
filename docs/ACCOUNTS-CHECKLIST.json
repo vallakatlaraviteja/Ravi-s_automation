@@ -8,18 +8,7 @@
   },
 
   "accounts_to_create": [
-    {
-      "service": "Groq AI",
-      "url": "https://console.groq.com",
-      "signup_method": "GitHub or Google sign-in",
-      "purpose": "AI-powered job scoring and personalized email generation",
-      "what_you_get": "API key (format: gsk_...)",
-      "free_tier": "14,400 requests/day (30 requests/min)",
-      "where_to_save": "n8n Credentials page as 'Groq API' credential",
-      "cost": "$0/month",
-      "required": true,
-      "setup_time": "2 minutes"
-    },
+
     {
       "service": "Google Cloud Console",
       "url": "https://console.cloud.google.com",
@@ -34,29 +23,157 @@
       "notes": "One project handles both Gmail accounts"
     },
     {
-      "service": "Gmail Primary Account",
+      "service": "Gmail Account 1 (Primary)",
       "url": "https://gmail.com",
-      "signup_method": "Use your existing primary Gmail",
-      "purpose": "Main email account for sending job outreach emails",
+      "signup_method": "Use existing Gmail or create new (e.g., raviintouch2@gmail.com)",
+      "purpose": "Primary email account for job outreach (first 50 emails/day)",
       "what_you_get": "Gmail OAuth2 credential in n8n",
       "free_tier": "500 emails/day (we use 50 for safety)",
-      "where_to_save": "n8n credential: 'Gmail Primary OAuth2'",
+      "where_to_save": "n8n credential: 'Gmail Account 1 OAuth2'",
       "cost": "$0/month",
       "required": true,
       "setup_time": "3 minutes"
     },
     {
-      "service": "Gmail Secondary Account",
+      "service": "Gmail Account 2",
       "url": "https://gmail.com",
-      "signup_method": "Create a new free Gmail account",
-      "purpose": "Backup email account for automatic failover",
+      "signup_method": "Use existing Gmail or create new (e.g., ravitejavallakatla7@gmail.com)",
+      "purpose": "Second email account for job outreach (next 50 emails/day)",
       "what_you_get": "Gmail OAuth2 credential in n8n",
       "free_tier": "500 emails/day (we use 50 for safety)",
-      "where_to_save": "n8n credential: 'Gmail Secondary OAuth2'",
+      "where_to_save": "n8n credential: 'Gmail Account 2 OAuth2'",
       "cost": "$0/month",
       "required": true,
       "setup_time": "3 minutes",
-      "notes": "Can use same OAuth client as primary"
+      "notes": "Can use same OAuth client as Account 1"
+    },
+    {
+      "service": "Gmail Account 3",
+      "url": "https://gmail.com",
+      "signup_method": "Use existing Gmail or create new (e.g., ravitejav081@gmail.com)",
+      "purpose": "Third email account for job outreach (next 50 emails/day)",
+      "what_you_get": "Gmail OAuth2 credential in n8n",
+      "free_tier": "500 emails/day (we use 50 for safety)",
+      "where_to_save": "n8n credential: 'Gmail Account 3 OAuth2'",
+      "cost": "$0/month",
+      "required": true,
+      "setup_time": "3 minutes",
+      "notes": "Can use same OAuth client as Accounts 1 & 2"
+    },
+    {
+      "service": "Gmail Account 4",
+      "url": "https://gmail.com",
+      "signup_method": "Use existing Gmail or create new (e.g., ravitejav0801@gmail.com)",
+      "purpose": "Fourth email account for job outreach (final 50 emails/day)",
+      "what_you_get": "Gmail OAuth2 credential in n8n",
+      "free_tier": "500 emails/day (we use 50 for safety)",
+      "where_to_save": "n8n credential: 'Gmail Account 4 OAuth2'",
+      "cost": "$0/month",
+      "required": true,
+      "setup_time": "3 minutes",
+      "notes": "Can use same OAuth client as Accounts 1-3. Total capacity: 200 emails/day"
+    },
+    {
+      "service": "Groq API Key 1",
+      "url": "https://console.groq.com",
+      "signup_method": "Sign up with email+groq1@gmail.com alias",
+      "purpose": "Primary AI key for job scoring and email generation",
+      "what_you_get": "API key (format: gsk_...)",
+      "free_tier": "14,400 requests/day",
+      "where_to_save": "n8n credential: 'Groq API Key 1'",
+      "cost": "$0/month",
+      "required": true,
+      "setup_time": "2 minutes"
+    },
+    {
+      "service": "Groq API Key 2",
+      "url": "https://console.groq.com",
+      "signup_method": "Sign up with email+groq2@gmail.com alias",
+      "purpose": "Second AI key for rotation",
+      "what_you_get": "API key (format: gsk_...)",
+      "free_tier": "14,400 requests/day",
+      "where_to_save": "n8n credential: 'Groq API Key 2'",
+      "cost": "$0/month",
+      "required": true,
+      "setup_time": "2 minutes",
+      "notes": "Use email alias trick (yourname+groq2@gmail.com)"
+    },
+    {
+      "service": "Groq API Key 3",
+      "url": "https://console.groq.com",
+      "signup_method": "Sign up with email+groq3@gmail.com alias",
+      "purpose": "Third AI key for rotation",
+      "what_you_get": "API key (format: gsk_...)",
+      "free_tier": "14,400 requests/day",
+      "where_to_save": "n8n credential: 'Groq API Key 3'",
+      "cost": "$0/month",
+      "required": true,
+      "setup_time": "2 minutes",
+      "notes": "Use email alias trick (yourname+groq3@gmail.com)"
+    },
+    {
+      "service": "Groq API Key 4",
+      "url": "https://console.groq.com",
+      "signup_method": "Sign up with email+groq4@gmail.com alias",
+      "purpose": "Fourth AI key for rotation (total: 57,600 requests/day)",
+      "what_you_get": "API key (format: gsk_...)",
+      "free_tier": "14,400 requests/day",
+      "where_to_save": "n8n credential: 'Groq API Key 4'",
+      "cost": "$0/month",
+      "required": true,
+      "setup_time": "2 minutes",
+      "notes": "Use email alias trick (yourname+groq4@gmail.com)"
+    },
+    {
+      "service": "Google Sheets OAuth2 Credential 1",
+      "url": "https://sheets.google.com",
+      "signup_method": "Use your Google account, authorize in n8n",
+      "purpose": "Primary Sheets credential (300 writes/day)",
+      "what_you_get": "OAuth2 credential ID",
+      "free_tier": "300 writes/day per credential",
+      "where_to_save": "n8n credential: 'Google Sheets OAuth2 - Credential 1'",
+      "cost": "$0/month",
+      "required": true,
+      "setup_time": "2 minutes"
+    },
+    {
+      "service": "Google Sheets OAuth2 Credential 2",
+      "url": "https://sheets.google.com",
+      "signup_method": "Same Google account, authorize again in n8n",
+      "purpose": "Second Sheets credential for rotation",
+      "what_you_get": "OAuth2 credential ID",
+      "free_tier": "300 writes/day per credential",
+      "where_to_save": "n8n credential: 'Google Sheets OAuth2 - Credential 2'",
+      "cost": "$0/month",
+      "required": true,
+      "setup_time": "2 minutes",
+      "notes": "Can use same Google account as Credential 1"
+    },
+    {
+      "service": "Google Sheets OAuth2 Credential 3",
+      "url": "https://sheets.google.com",
+      "signup_method": "Same Google account, authorize again in n8n",
+      "purpose": "Third Sheets credential for rotation",
+      "what_you_get": "OAuth2 credential ID",
+      "free_tier": "300 writes/day per credential",
+      "where_to_save": "n8n credential: 'Google Sheets OAuth2 - Credential 3'",
+      "cost": "$0/month",
+      "required": true,
+      "setup_time": "2 minutes",
+      "notes": "Can use same Google account as Credentials 1 & 2"
+    },
+    {
+      "service": "Google Sheets OAuth2 Credential 4",
+      "url": "https://sheets.google.com",
+      "signup_method": "Same Google account, authorize again in n8n",
+      "purpose": "Fourth Sheets credential for rotation (total: 1,200 writes/day)",
+      "what_you_get": "OAuth2 credential ID",
+      "free_tier": "300 writes/day per credential",
+      "where_to_save": "n8n credential: 'Google Sheets OAuth2 - Credential 4'",
+      "cost": "$0/month",
+      "required": true,
+      "setup_time": "2 minutes",
+      "notes": "Can use same Google account as Credentials 1-3"
     },
     {
       "service": "Google Sheets",
@@ -107,6 +224,58 @@
       "required": true,
       "setup_time": "3 minutes",
       "notes": "Must be publicly accessible without login"
+    },
+    {
+      "service": "JSearch (RapidAPI)",
+      "url": "https://rapidapi.com/letscrape-6bRBa3QguO5/api/jsearch",
+      "signup_method": "RapidAPI registration (Google/GitHub or email)",
+      "purpose": "Additional job API source (4th API in cascading fallback)",
+      "what_you_get": "RapidAPI key",
+      "free_tier": "500 requests/month",
+      "where_to_save": "Directly in 'Fetch JSearch API' node headers",
+      "cost": "$0/month",
+      "required": false,
+      "setup_time": "3 minutes",
+      "notes": "Part of 7-API system with intelligent fallback"
+    },
+    {
+      "service": "The Muse",
+      "url": "https://www.themuse.com/developers/api/v2",
+      "signup_method": "No signup required (open API)",
+      "purpose": "Additional job API source (5th API in cascading fallback)",
+      "what_you_get": "None (no API key needed)",
+      "free_tier": "500 requests/hour",
+      "where_to_save": "N/A (workflow pre-configured)",
+      "cost": "$0/month",
+      "required": false,
+      "setup_time": "0 minutes",
+      "notes": "Already configured, works out of the box"
+    },
+    {
+      "service": "USAJobs",
+      "url": "https://developer.usajobs.gov",
+      "signup_method": "Email registration, request API key",
+      "purpose": "Additional job API source (6th API in cascading fallback)",
+      "what_you_get": "USAJobs API key",
+      "free_tier": "Unlimited requests",
+      "where_to_save": "Directly in 'Fetch USAJobs API' node headers",
+      "cost": "$0/month",
+      "required": false,
+      "setup_time": "5 minutes",
+      "notes": "U.S. government jobs only"
+    },
+    {
+      "service": "GitHub Jobs",
+      "url": "https://jobs.github.com",
+      "signup_method": "No signup required (open API)",
+      "purpose": "Additional job API source (7th API in cascading fallback)",
+      "what_you_get": "None (no API key needed)",
+      "free_tier": "Unlimited",
+      "where_to_save": "N/A (workflow pre-configured)",
+      "cost": "$0/month",
+      "required": false,
+      "setup_time": "0 minutes",
+      "notes": "Deprecated but still works; may stop in future"
     }
   ],
 
@@ -337,80 +506,99 @@
     "purpose": "Helps you understand why each credential is needed and where it's used",
     "mappings": [
       {
-        "credential": "Groq API",
-        "credential_id_placeholder": "YOUR_GROQ_CREDENTIAL_ID",
-        "total_nodes": 4,
+        "credential": "Groq API Keys (4 total)",
+        "credential_id_placeholders": [
+          "YOUR_GROQ_KEY_1_CREDENTIAL_ID",
+          "YOUR_GROQ_KEY_2_CREDENTIAL_ID",
+          "YOUR_GROQ_KEY_3_CREDENTIAL_ID",
+          "YOUR_GROQ_KEY_4_CREDENTIAL_ID"
+        ],
+        "total_nodes": 16,
         "nodes": [
           {
+            "node_name": "Groq: Score Job (Key 1-4)",
+            "purpose": "Analyzes job descriptions and scores match against your profile (0-100), rotates through 4 keys"
+          },
+          {
+            "node_name": "Groq: Generate Email (Key 1-4)",
+            "purpose": "Creates customized outreach emails for each job and recruiter, rotates through 4 keys"
+          },
+          {
+            "node_name": "Groq Agent (Telegram Bot)",
+            "purpose": "Powers Telegram bot to answer questions about jobs, uses Key 1 primarily"
+          },
+          {
             "node_name": "Parse Resume with Groq AI",
-            "purpose": "Extracts skills, experience, and education from your resume PDF"
-          },
-          {
-            "node_name": "Groq AI: Score Job Match",
-            "purpose": "Analyzes job description and scores match against your profile (0-100)"
-          },
-          {
-            "node_name": "Groq AI: Generate Personalized Email",
-            "purpose": "Creates customized outreach email for each job and recruiter"
-          },
-          {
-            "node_name": "Groq Agent (Llama 3.3 70B)",
-            "purpose": "Powers Telegram bot to answer your questions about jobs"
+            "purpose": "Extracts skills, experience, and education from resume PDF, uses Key 1 primarily"
           }
-        ]
+        ],
+        "daily_capacity": "57,600 requests/day total (14,400 per key)"
       },
       {
-        "credential": "Google Sheets OAuth2",
-        "credential_id_placeholder": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+        "credential": "Google Sheets OAuth2 (4 total)",
+        "credential_id_placeholders": [
+          "YOUR_SHEETS_CREDENTIAL_1_ID",
+          "YOUR_SHEETS_CREDENTIAL_2_ID",
+          "YOUR_SHEETS_CREDENTIAL_3_ID",
+          "YOUR_SHEETS_CREDENTIAL_4_ID"
+        ],
+        "total_nodes": 20,
+        "nodes": [
+          {
+            "node_name": "Read Existing Jobs from Sheet (Credential 1-4)",
+            "purpose": "Checks for duplicate jobs before adding new ones, rotates credentials"
+          },
+          {
+            "node_name": "Append to Google Sheets (Credential 1-4)",
+            "purpose": "Adds newly discovered jobs to tracking sheet, rotates credentials"
+          },
+          {
+            "node_name": "Read Jobs from Sheet for Outreach (Credential 1-4)",
+            "purpose": "Retrieves jobs with 'New' status and recruiter emails, rotates credentials"
+          },
+          {
+            "node_name": "Update Sheet: Mark Email Sent (Credential 1-4)",
+            "purpose": "Updates job status to 'Email Sent' after outreach, rotates credentials"
+          },
+          {
+            "node_name": "Query Google Sheet for Stats (Credential 1-4)",
+            "purpose": "Reads job data for Telegram /stats command, rotates credentials"
+          }
+        ],
+        "daily_capacity": "1,200 writes/day total (300 per credential)"
+      },
+      {
+        "credential": "Gmail OAuth2 (4 total)",
+        "credential_id_placeholders": [
+          "YOUR_GMAIL_ACCOUNT_1_CREDENTIAL_ID",
+          "YOUR_GMAIL_ACCOUNT_2_CREDENTIAL_ID",
+          "YOUR_GMAIL_ACCOUNT_3_CREDENTIAL_ID",
+          "YOUR_GMAIL_ACCOUNT_4_CREDENTIAL_ID"
+        ],
         "total_nodes": 5,
         "nodes": [
           {
-            "node_name": "Read Existing Jobs from Sheet",
-            "purpose": "Checks for duplicate jobs before adding new ones"
+            "node_name": "Send Email via Gmail Account 1",
+            "purpose": "Sends outreach emails using first Gmail account (first 50/day)"
           },
           {
-            "node_name": "Append to Google Sheets: Jobs Tab",
-            "purpose": "Adds newly discovered jobs to your tracking sheet"
+            "node_name": "Send Email via Gmail Account 2",
+            "purpose": "Backup email sender when Account 1 hits limit (next 50/day)"
           },
           {
-            "node_name": "Read Jobs from Sheet for Outreach",
-            "purpose": "Retrieves jobs with 'New' status and recruiter emails for outreach"
+            "node_name": "Send Email via Gmail Account 3",
+            "purpose": "Third email sender when Accounts 1-2 exhausted (next 50/day)"
           },
           {
-            "node_name": "Update Sheet: Mark Email Sent",
-            "purpose": "Updates job status to 'Email Sent' after successful outreach"
-          },
-          {
-            "node_name": "Query Google Sheet for Stats",
-            "purpose": "Reads job data for Telegram /stats command"
-          }
-        ]
-      },
-      {
-        "credential": "Gmail Primary OAuth2",
-        "credential_id_placeholder": "YOUR_PRIMARY_GMAIL_CREDENTIAL_ID",
-        "total_nodes": 2,
-        "nodes": [
-          {
-            "node_name": "Send Email via Gmail Primary",
-            "purpose": "Sends outreach emails using your primary Gmail account (first 50/day)"
+            "node_name": "Send Email via Gmail Account 4",
+            "purpose": "Fourth email sender when Accounts 1-3 exhausted (final 50/day)"
           },
           {
             "node_name": "Send Gmail: Job Discovery Digest",
-            "purpose": "Sends daily summary of discovered jobs to your email"
+            "purpose": "Sends daily summary of discovered jobs to your email, uses Account 1"
           }
-        ]
-      },
-      {
-        "credential": "Gmail Secondary OAuth2",
-        "credential_id_placeholder": "YOUR_SECONDARY_GMAIL_CREDENTIAL_ID",
-        "total_nodes": 1,
-        "nodes": [
-          {
-            "node_name": "Send Email via Gmail Secondary",
-            "purpose": "Backup email sender when primary hits daily limit or errors (failover)"
-          }
-        ]
+        ],
+        "daily_capacity": "200 emails/day total (50 per account)"
       },
       {
         "credential": "Telegram Bot API",
