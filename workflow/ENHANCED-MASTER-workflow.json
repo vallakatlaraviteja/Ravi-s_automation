@@ -73,7 +73,7 @@
         300
       ],
       "parameters": {
-        "jsCode": "// USER PREFERENCES & METADATA (not a replacement for resume!)\n// This config provides: location preferences, visa status, email settings, and URLs\n// Your actual resume data (skills, projects, experience) is parsed from resumeUrl by Groq AI\n// The parsed resume data is merged with this config to create your complete profile\nreturn [{\n  json: {\n    name: 'Your Name',\n    currentRole: 'Senior Backend Engineer',\n    targetRole: 'Staff Engineer',\n    experience: '5 years',\n    skills: ['Python', 'Node.js', 'AWS', 'Docker', 'Kubernetes', 'PostgreSQL'],\n    location: 'Hyderabad, India',\n    workMode: ['remote', 'hybrid'],\n    minSalary: 80000,\n    targetRoles: ['Backend Engineer', 'Full Stack Engineer', 'DevOps Engineer'],\n    keywords: 'python developer OR backend engineer OR nodejs',\n    country: 'in',\n    githubUrl: 'https://github.com/yourusername',\n    linkedinUrl: 'https://linkedin.com/in/yourprofile',\n    portfolioUrl: 'https://yourportfolio.com',\n    resumeUrl: 'https://drive.google.com/file/d/YOUR_RESUME_ID/view',\n    resumeParsingEnabled: true,\n    userEmail: 'YOUR_EMAIL@example.com',\n    dailyLimit: 10,\n    scoreThreshold: 30,\n    sheetId: 'YOUR_SPREADSHEET_ID',\n    account1Email: 'raviintouch2@gmail.com',\n    account2Email: 'ravitejavallakatla7@gmail.com',\n    account3Email: 'ravitejav081@gmail.com',\n    account4Email: 'ravitejav0801@gmail.com',\n    account1CredentialId: 'YOUR_GMAIL_ACCOUNT_1_CREDENTIAL_ID',\n    account2CredentialId: 'YOUR_GMAIL_ACCOUNT_2_CREDENTIAL_ID',\n    account3CredentialId: 'YOUR_GMAIL_ACCOUNT_3_CREDENTIAL_ID',\n    account4CredentialId: 'YOUR_GMAIL_ACCOUNT_4_CREDENTIAL_ID',\n    maxEmailsPerAccount: 50,\n    errorThreshold: 3,\n    sheetsAccount1CredentialId: 'YOUR_SHEETS_ACCOUNT_1_CREDENTIAL_ID',\n    sheetsAccount2CredentialId: 'YOUR_SHEETS_ACCOUNT_2_CREDENTIAL_ID',\n    sheetsAccount3CredentialId: 'YOUR_SHEETS_ACCOUNT_3_CREDENTIAL_ID',\n    sheetsAccount4CredentialId: 'YOUR_SHEETS_ACCOUNT_4_CREDENTIAL_ID',\n    maxSheetsWritesPerAccount: 300,\n    groqKey1CredentialId: 'YOUR_GROQ_KEY_1_CREDENTIAL_ID',\n    groqKey2CredentialId: 'YOUR_GROQ_KEY_2_CREDENTIAL_ID',\n    groqKey3CredentialId: 'YOUR_GROQ_KEY_3_CREDENTIAL_ID',\n    groqKey4CredentialId: 'YOUR_GROQ_KEY_4_CREDENTIAL_ID',\n    maxGroqRequestsPerKey: 14400,\n    // Setup: Create 4 Groq accounts using email alias trick:\n    // raviintouch2+groq1@gmail.com, ravitejavallakatla7+groq2@gmail.com,\n    // ravitejav081+groq3@gmail.com, ravitejav0801+groq4@gmail.com\n  }\n}];"
+        "jsCode": "// USER PREFERENCES & METADATA (not a replacement for resume!)\n// This config provides: location preferences, visa status, email settings, and URLs\n// Your actual resume data (skills, projects, experience) is parsed from resumeUrl by Groq AI\n// The parsed resume data is merged with this config to create your complete profile\nreturn [{\n  json: {\n    name: 'Your Name',\n    currentRole: 'Senior Backend Engineer',\n    targetRole: 'Staff Engineer',\n    experience: '5 years',\n    skills: ['Python', 'Node.js', 'AWS', 'Docker', 'Kubernetes', 'PostgreSQL'],\n    location: 'Hyderabad, India',\n    workMode: ['remote', 'hybrid'],\n    minSalary: 80000,\n    targetRoles: ['Backend Engineer', 'Full Stack Engineer', 'DevOps Engineer'],\n    keywords: 'python developer OR backend engineer OR nodejs',\n    country: 'in',\n    githubUrl: 'https://github.com/yourusername',\n    linkedinUrl: 'https://linkedin.com/in/yourprofile',\n    portfolioUrl: 'https://yourportfolio.com',\n    resumeUrl: 'https://drive.google.com/file/d/YOUR_RESUME_ID/view',\n    resumeParsingEnabled: true,\n    userEmail: 'YOUR_EMAIL@example.com',\n    dailyLimit: 10,\n    scoreThreshold: 30,\n    sheetId: 'YOUR_SPREADSHEET_ID',\n    account1Email: 'raviintouch2@gmail.com',\n    account2Email: 'ravitejavallakatla7@gmail.com',\n    account3Email: 'ravitejav081@gmail.com',\n    account4Email: 'ravitejav0801@gmail.com',\n    account1CredentialId: 'YOUR_GMAIL_ACCOUNT_1_CREDENTIAL_ID',\n    account2CredentialId: 'YOUR_GMAIL_ACCOUNT_2_CREDENTIAL_ID',\n    account3CredentialId: 'YOUR_GMAIL_ACCOUNT_3_CREDENTIAL_ID',\n    account4CredentialId: 'YOUR_GMAIL_ACCOUNT_4_CREDENTIAL_ID',\n    maxEmailsPerAccount: 50,\n    errorThreshold: 3,\n    sheetsAccount1CredentialId: 'YOUR_SHEETS_ACCOUNT_1_CREDENTIAL_ID',\n    sheetsAccount2CredentialId: 'YOUR_SHEETS_ACCOUNT_2_CREDENTIAL_ID',\n    sheetsAccount3CredentialId: 'YOUR_SHEETS_ACCOUNT_3_CREDENTIAL_ID',\n    sheetsAccount4CredentialId: 'YOUR_SHEETS_ACCOUNT_4_CREDENTIAL_ID',\n    maxSheetsWritesPerAccount: 300,\n    groqKey1CredentialId: 'YOUR_GROQ_KEY_1_CREDENTIAL_ID',\n    groqKey2CredentialId: 'YOUR_GROQ_KEY_2_CREDENTIAL_ID',\n    groqKey3CredentialId: 'YOUR_GROQ_KEY_3_CREDENTIAL_ID',\n    groqKey4CredentialId: 'YOUR_GROQ_KEY_4_CREDENTIAL_ID',\n    maxGroqRequestsPerKey: 14400,\n    // Setup: Create 4 Groq accounts using email alias trick:\n    // raviintouch2+groq1@gmail.com, ravitejavallakatla7+groq2@gmail.com,\n    // ravitejav081+groq3@gmail.com, ravitejav0801+groq4@gmail.com,\n    rapidapiKey: 'YOUR_RAPIDAPI_KEY_HERE',\n    usajobsApiKey: 'YOUR_USAJOBS_API_KEY_HERE'\n  }\n}];"
       }
     },
     {
@@ -471,7 +471,7 @@
         360
       ],
       "parameters": {
-        "jsCode": "// Aggregate job discovery summary\nconst jobs = items.map(item => item.json);\nconst total = jobs.length;\nconst high = jobs.filter(j => j.priority === 'high').length;\nconst medium = jobs.filter(j => j.priority === 'medium').length;\nconst low = jobs.filter(j => j.priority === 'low').length;\n\nconst topJobs = jobs\n  .sort((a, b) => b.score - a.score)\n  .slice(0, 5)\n  .map(j => `\u2022 **${j.jobTitle}** at **${j.company}** (${j.location}) - Score: ${j.score} [${j.source}]`);\n\nconst sourceBreakdown = jobs.reduce((acc, j) => {\n  acc[j.source] = (acc[j.source] || 0) + 1;\n  return acc;\n}, {});\n\nconst sourceStats = Object.entries(sourceBreakdown)\n  .map(([source, count]) => `${source}: ${count}`)\n  .join(', ');\n\nreturn [{\n  json: {\n    total,\n    high,\n    medium,\n    low,\n    topJobsList: topJobs.join('\\n'),\n    sourceStats,\n    date: new Date().toISOString().split('T')[0]\n  }\n}];"
+        "jsCode": "// Aggregate job discovery summary with API health status\nconst jobs = items.map(item => item.json);\nconst total = jobs.length;\nconst high = jobs.filter(j => j.priority === 'high').length;\nconst medium = jobs.filter(j => j.priority === 'medium').length;\nconst low = jobs.filter(j => j.priority === 'low').length;\n\nconst topJobs = jobs\n  .sort((a, b) => b.score - a.score)\n  .slice(0, 5)\n  .map(j => `\u2022 **${j.jobTitle}** at **${j.company}** (${j.location}) - Score: ${j.score} [${j.source}]`);\n\nconst sourceBreakdown = jobs.reduce((acc, j) => {\n  acc[j.source] = (acc[j.source] || 0) + 1;\n  return acc;\n}, {});\n\nconst sourceStats = Object.entries(sourceBreakdown)\n  .map(([source, count]) => `${source}: ${count}`)\n  .join(', ');\n\n// Get API health status\nconst apiHealthData = $('Update API Health Status').item.json;\nconst apiHealth = apiHealthData.apiState || {};\nconst healthStatus = Object.entries(apiHealth)\n  .map(([name, state]) => `${name}: ${state.status} (${state.consecutiveFailures} failures)`)\n  .join(', ');\n\nreturn [{\n  json: {\n    total,\n    high,\n    medium,\n    low,\n    topJobsList: topJobs.join('\\n'),\n    sourceStats,\n    apiHealthStatus: healthStatus,\n    unhealthyApis: apiHealthData.unhealthySummary || 'None',\n    date: new Date().toISOString().split('T')[0]\n  }\n}];"
       }
     },
     {
@@ -485,7 +485,7 @@
       ],
       "parameters": {
         "chatId": "YOUR_TELEGRAM_CHAT_ID",
-        "text": "=\ud83d\udcca **Daily Job Discovery Complete**\n\n\u2705 Found **{{ $json.total }}** new relevant jobs!\n\n**Priority Breakdown:**\n\ud83d\udd34 High: {{ $json.high }}\n\ud83d\udfe1 Medium: {{ $json.medium }}\n\ud83d\udfe2 Low: {{ $json.low }}\n\n**Sources:** {{ $json.sourceStats }}\n\n**Top 5 Matches:**\n{{ $json.topJobsList }}\n\nAll jobs saved to Google Sheet. Add recruiter emails for auto-outreach!\n\n**Date:** {{ $json.date }}",
+        "text": "=\ud83d\udcca **Daily Job Discovery Complete**\n\n\u2705 Found **{{ $json.total }}** new relevant jobs!\n\n**Priority Breakdown:**\n\ud83d\udd34 High: {{ $json.high }}\n\ud83d\udfe1 Medium: {{ $json.medium }}\n\ud83d\udfe2 Low: {{ $json.low }}\n\n**Sources:** {{ $json.sourceStats }}\n\n**API Health Status:**\n{{ $json.apiHealthStatus }}\n\u26a0\ufe0f Unhealthy APIs: {{ $json.unhealthyApis }}\n\n**Top 5 Matches:**\n{{ $json.topJobsList }}\n\nAll jobs saved to Google Sheet. Add recruiter emails for auto-outreach!\n\n**Date:** {{ $json.date }}",
         "additionalFields": {}
       },
       "credentials": {
@@ -1540,6 +1540,246 @@
           ]
         }
       }
+    },
+    {
+      "id": "job-api-state-manager",
+      "name": "Job API State Manager",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        460,
+        200
+      ],
+      "parameters": {
+        "jsCode": "// Job API State Manager - Track health status of all 7 APIs\n// Initialize or retrieve from workflow static data\nconst staticData = this.getWorkflowStaticData('global');\n\nif (!staticData.jobApiState) {\n  staticData.jobApiState = {\n    remotive: {\n      status: 'healthy',\n      lastSuccess: null,\n      consecutiveFailures: 0\n    },\n    arbeitnow: {\n      status: 'healthy',\n      lastSuccess: null,\n      consecutiveFailures: 0\n    },\n    adzuna: {\n      status: 'healthy',\n      lastSuccess: null,\n      consecutiveFailures: 0\n    },\n    jsearch: {\n      status: 'healthy',\n      lastSuccess: null,\n      consecutiveFailures: 0\n    },\n    themuse: {\n      status: 'healthy',\n      lastSuccess: null,\n      consecutiveFailures: 0\n    },\n    usajobs: {\n      status: 'healthy',\n      lastSuccess: null,\n      consecutiveFailures: 0\n    },\n    githubjobs: {\n      status: 'healthy',\n      lastSuccess: null,\n      consecutiveFailures: 0\n    }\n  };\n}\n\nreturn [{\n  json: staticData.jobApiState\n}];"
+      }
+    },
+    {
+      "id": "fetch-jsearch",
+      "name": "Fetch JSearch API (RapidAPI)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        680,
+        480
+      ],
+      "parameters": {
+        "url": "https://jsearch.p.rapidapi.com/search",
+        "method": "GET",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-key",
+              "value": "={{ $('User Config (Master Profile)').item.json.rapidapiKey }}"
+            },
+            {
+              "name": "x-rapidapi-host",
+              "value": "jsearch.p.rapidapi.com"
+            }
+          ]
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "={{ $('User Config (Master Profile)').item.json.keywords }}"
+            },
+            {
+              "name": "num_pages",
+              "value": "1"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "id": "parse-jsearch",
+      "name": "Parse JSearch Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        480
+      ],
+      "parameters": {
+        "jsCode": "// Parse JSearch API response\nconst response = items[0].json;\nconst jobs = response.data || [];\n\nreturn jobs.map(job => ({\n  json: {\n    source: 'JSearch',\n    jobTitle: job.job_title || 'Unknown',\n    company: job.employer_name || 'Unknown',\n    location: job.job_city && job.job_country ? `${job.job_city}, ${job.job_country}` : 'Remote',\n    jobType: job.job_employment_type || 'Full-time',\n    workMode: job.job_is_remote ? 'Remote' : 'Onsite',\n    salary: job.job_salary || 'Not disclosed',\n    applyUrl: job.job_apply_link || '',\n    description: (job.job_description || '').substring(0, 500),\n    tags: [],\n    postedDate: job.job_posted_at_datetime_utc ? new Date(job.job_posted_at_datetime_utc).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],\n    category: '',\n    jobId: `jsearch-${job.job_id || Date.now()}`,\n    fetchedDate: new Date().toISOString().split('T')[0],\n    recruiterEmail: '',\n    recruiterName: ''\n  }\n}));"
+      },
+      "continueOnFail": true
+    },
+    {
+      "id": "fetch-themuse",
+      "name": "Fetch The Muse API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        680,
+        600
+      ],
+      "parameters": {
+        "url": "https://www.themuse.com/api/public/jobs",
+        "method": "GET",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "page",
+              "value": "1"
+            },
+            {
+              "name": "category",
+              "value": "={{ $('User Config (Master Profile)').item.json.keywords }}"
+            },
+            {
+              "name": "location",
+              "value": "={{ $('User Config (Master Profile)').item.json.location }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "id": "parse-themuse",
+      "name": "Parse The Muse Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        600
+      ],
+      "parameters": {
+        "jsCode": "// Parse The Muse API response\nconst response = items[0].json;\nconst jobs = response.results || [];\n\nreturn jobs.map(job => ({\n  json: {\n    source: 'The Muse',\n    jobTitle: job.name || 'Unknown',\n    company: job.company?.name || 'Unknown',\n    location: job.locations?.[0]?.name || 'Remote',\n    jobType: job.type || 'Full-time',\n    workMode: 'Remote',\n    salary: 'Not disclosed',\n    applyUrl: job.refs?.landing_page || '',\n    description: (job.contents || '').substring(0, 500),\n    tags: job.categories || [],\n    postedDate: job.publication_date ? new Date(job.publication_date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],\n    category: job.categories?.[0] || '',\n    jobId: `themuse-${job.id || Date.now()}`,\n    fetchedDate: new Date().toISOString().split('T')[0],\n    recruiterEmail: '',\n    recruiterName: ''\n  }\n}));"
+      },
+      "continueOnFail": true
+    },
+    {
+      "id": "fetch-usajobs",
+      "name": "Fetch USAJobs API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        680,
+        720
+      ],
+      "parameters": {
+        "url": "https://data.usajobs.gov/api/search",
+        "method": "GET",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Host",
+              "value": "data.usajobs.gov"
+            },
+            {
+              "name": "User-Agent",
+              "value": "={{ $('User Config (Master Profile)').item.json.userEmail }}"
+            },
+            {
+              "name": "Authorization-Key",
+              "value": "={{ $('User Config (Master Profile)').item.json.usajobsApiKey }}"
+            }
+          ]
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "Keyword",
+              "value": "={{ $('User Config (Master Profile)').item.json.keywords }}"
+            },
+            {
+              "name": "ResultsPerPage",
+              "value": "50"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "id": "parse-usajobs",
+      "name": "Parse USAJobs Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        720
+      ],
+      "parameters": {
+        "jsCode": "// Parse USAJobs API response\nconst response = items[0].json;\nconst jobResults = response.SearchResult?.SearchResultItems || [];\n\nreturn jobResults.map(item => {\n  const job = item.MatchedObjectDescriptor || {};\n  return {\n    json: {\n      source: 'USAJobs',\n      jobTitle: job.PositionTitle || 'Unknown',\n      company: job.OrganizationName || 'Unknown',\n      location: job.PositionLocationDisplay || 'USA',\n      jobType: 'Full-time',\n      workMode: job.TeleworkEligible ? 'Remote' : 'Onsite',\n      salary: job.PositionRemuneration?.[0]?.MinimumRange || 'Not disclosed',\n      applyUrl: job.PositionURI || '',\n      description: (job.QualificationSummary || '').substring(0, 500),\n      tags: [],\n      postedDate: job.PublicationStartDate ? new Date(job.PublicationStartDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],\n      category: job.JobCategory?.[0]?.Name || '',\n      jobId: `usajobs-${job.PositionID || Date.now()}`,\n      fetchedDate: new Date().toISOString().split('T')[0],\n      recruiterEmail: '',\n      recruiterName: ''\n    }\n  };\n});"
+      },
+      "continueOnFail": true
+    },
+    {
+      "id": "fetch-github-jobs",
+      "name": "Fetch GitHub Jobs API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        680,
+        840
+      ],
+      "parameters": {
+        "url": "https://jobs.github.com/positions.json",
+        "method": "GET",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "description",
+              "value": "={{ $('User Config (Master Profile)').item.json.keywords }}"
+            },
+            {
+              "name": "location",
+              "value": "={{ $('User Config (Master Profile)').item.json.location }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "id": "parse-github-jobs",
+      "name": "Parse GitHub Jobs Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        840
+      ],
+      "parameters": {
+        "jsCode": "// Parse GitHub Jobs API response\nconst jobs = items[0].json;\n\n// GitHub Jobs API returns array directly\nif (!Array.isArray(jobs)) {\n  return [];\n}\n\nreturn jobs.map(job => ({\n  json: {\n    source: 'GitHub Jobs',\n    jobTitle: job.title || 'Unknown',\n    company: job.company || 'Unknown',\n    location: job.location || 'Remote',\n    jobType: job.type || 'Full-time',\n    workMode: 'Remote',\n    salary: 'Not disclosed',\n    applyUrl: job.url || '',\n    description: (job.description || '').substring(0, 500),\n    tags: [],\n    postedDate: job.created_at ? new Date(job.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],\n    category: '',\n    jobId: `github-${job.id || Date.now()}`,\n    fetchedDate: new Date().toISOString().split('T')[0],\n    recruiterEmail: '',\n    recruiterName: ''\n  }\n}));"
+      },
+      "continueOnFail": true
+    },
+    {
+      "id": "update-api-health",
+      "name": "Update API Health Status",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1340,
+        200
+      ],
+      "parameters": {
+        "jsCode": "// Update API Health Status - Track successes and failures\nconst staticData = this.getWorkflowStaticData('global');\nconst apiState = staticData.jobApiState || {};\n\n// Get results from all API parsers\nconst apiResults = {\n  remotive: $('Parse Remotive Response').all(),\n  arbeitnow: $('Parse Arbeitnow Response').all(),\n  jsearch: $('Parse JSearch Response').all(),\n  themuse: $('Parse The Muse Response').all(),\n  usajobs: $('Parse USAJobs Response').all(),\n  githubjobs: $('Parse GitHub Jobs Response').all()\n};\n\nconst now = new Date().toISOString();\nconst unhealthyApis = [];\n\n// Update status for each API\nfor (const [apiName, results] of Object.entries(apiResults)) {\n  if (!apiState[apiName]) {\n    apiState[apiName] = { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 };\n  }\n  \n  const state = apiState[apiName];\n  \n  // Check if API returned results\n  if (results && results.length > 0 && !results[0].json.error) {\n    // Success - reset failures\n    state.consecutiveFailures = 0;\n    state.lastSuccess = now;\n    state.status = 'healthy';\n  } else {\n    // Failure - increment counter\n    state.consecutiveFailures++;\n    \n    // Mark unhealthy if 5+ consecutive failures\n    if (state.consecutiveFailures >= 5 && state.status !== 'unhealthy') {\n      state.status = 'unhealthy';\n      unhealthyApis.push({\n        name: apiName,\n        failures: state.consecutiveFailures,\n        lastSuccess: state.lastSuccess\n      });\n    }\n  }\n}\n\n// Save updated state\nstaticData.jobApiState = apiState;\n\nreturn [{\n  json: {\n    apiState,\n    unhealthyApis,\n    timestamp: now,\n    healthySummary: Object.entries(apiState).filter(([_, s]) => s.status === 'healthy').map(([name]) => name).join(', '),\n    unhealthySummary: Object.entries(apiState).filter(([_, s]) => s.status === 'unhealthy').map(([name]) => name).join(', ')\n  }\n}];"
+      }
     }
   ],
   "connections": {
@@ -1569,6 +1809,31 @@
           },
           {
             "node": "Download Resume",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch JSearch API (RapidAPI)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch The Muse API",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch USAJobs API",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch GitHub Jobs API",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Job API State Manager",
             "type": "main",
             "index": 0
           }
@@ -1624,6 +1889,11 @@
         [
           {
             "node": "Deduplicate Jobs",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update API Health Status",
             "type": "main",
             "index": 0
           }
@@ -2212,6 +2482,105 @@
     "Email Account Switch Notification": {
       "main": [
         []
+      ]
+    },
+    "Fetch JSearch API (RapidAPI)": {
+      "main": [
+        [
+          {
+            "node": "Parse JSearch Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch The Muse API": {
+      "main": [
+        [
+          {
+            "node": "Parse The Muse Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch USAJobs API": {
+      "main": [
+        [
+          {
+            "node": "Parse USAJobs Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch GitHub Jobs API": {
+      "main": [
+        [
+          {
+            "node": "Parse GitHub Jobs Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse JSearch Response": {
+      "main": [
+        [
+          {
+            "node": "Merge All API Results",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Parse The Muse Response": {
+      "main": [
+        [
+          {
+            "node": "Merge All API Results",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Parse USAJobs Response": {
+      "main": [
+        [
+          {
+            "node": "Merge All API Results",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Parse GitHub Jobs Response": {
+      "main": [
+        [
+          {
+            "node": "Merge All API Results",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "Update API Health Status": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Job Discovery Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
