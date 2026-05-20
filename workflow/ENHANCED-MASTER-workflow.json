@@ -64,7 +64,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// USER PREFERENCES & METADATA (not a replacement for resume!)\n// \n// HOW EMAIL OUTREACH WORKS:\n// Job APIs find jobs but do NOT provide recruiter emails.\n// After 8 AM job discovery populates your Sheet, YOU manually add\n// recruiter emails (from LinkedIn, company sites, Hunter.io free tier).\n// The 9 AM outreach trigger emails only rows where you've filled\n// 'Recruiter Email'. This keeps it targeted, not spammy.\n//\n// ROTATION PURPOSE: 4 Gmail accounts = 200 emails/day free-tier capacity.\n// All 4 accounts should have the same display name in Google Account settings.\n// This config provides: location preferences, visa status, email settings, and URLs\n// Your actual resume data (skills, projects, experience) is parsed from resumeUrl by Groq AI\n// The parsed resume data is merged with this config to create your complete profile\nreturn [{\n  json: {\n    name: 'Your Name',\n    currentRole: 'Senior Backend Engineer',\n    targetRole: 'Staff Engineer',\n    experience: '5 years',\n    skills: ['Python', 'Node.js', 'AWS', 'Docker', 'Kubernetes', 'PostgreSQL'],\n    location: 'Hyderabad, India',\n    workMode: ['remote', 'hybrid'],\n    minSalary: 80000,\n    targetRoles: ['Backend Engineer', 'Full Stack Engineer', 'DevOps Engineer'],\n    keywords: 'python developer OR backend engineer OR nodejs',\n    country: 'in',\n    githubUrl: 'https://github.com/yourusername',\n    linkedinUrl: 'https://linkedin.com/in/yourprofile',\n    portfolioUrl: 'https://yourportfolio.com',\n    resumeUrl: 'https://drive.google.com/file/d/YOUR_RESUME_ID/view',\n    resumeParsingEnabled: true,\n    userEmail: 'YOUR_EMAIL@example.com',\n    dailyLimit: 50,\n    scoreThreshold: 60,\n    sheetId: 'YOUR_SPREADSHEET_ID',\n    account1Email: 'raviintouch2@gmail.com',\n    account2Email: 'ravitejavallakatla7@gmail.com',\n    account3Email: 'ravitejav081@gmail.com',\n    account4Email: 'ravitejav0801@gmail.com',\n    account1CredentialId: 'YOUR_GMAIL_ACCOUNT_1_CREDENTIAL_ID',\n    account2CredentialId: 'YOUR_GMAIL_ACCOUNT_2_CREDENTIAL_ID',\n    account3CredentialId: 'YOUR_GMAIL_ACCOUNT_3_CREDENTIAL_ID',\n    account4CredentialId: 'YOUR_GMAIL_ACCOUNT_4_CREDENTIAL_ID',\n    maxEmailsPerAccount: 50,\n    errorThreshold: 3,\n    sheetsAccount1CredentialId: 'YOUR_SHEETS_ACCOUNT_1_CREDENTIAL_ID',\n    sheetsAccount2CredentialId: 'YOUR_SHEETS_ACCOUNT_2_CREDENTIAL_ID',\n    sheetsAccount3CredentialId: 'YOUR_SHEETS_ACCOUNT_3_CREDENTIAL_ID',\n    sheetsAccount4CredentialId: 'YOUR_SHEETS_ACCOUNT_4_CREDENTIAL_ID',\n    maxSheetsWritesPerAccount: 300,\n    groqKey1CredentialId: 'YOUR_GROQ_KEY_1_CREDENTIAL_ID',\n    groqKey2CredentialId: 'YOUR_GROQ_KEY_2_CREDENTIAL_ID',\n    groqKey3CredentialId: 'YOUR_GROQ_KEY_3_CREDENTIAL_ID',\n    groqKey4CredentialId: 'YOUR_GROQ_KEY_4_CREDENTIAL_ID',\n    maxGroqRequestsPerKey: 14400,\n    // Setup: Create 4 Groq accounts using email alias trick:\n    // raviintouch2+groq1@gmail.com, ravitejavallakatla7+groq2@gmail.com,\n    // ravitejav081+groq3@gmail.com, ravitejav0801+groq4@gmail.com,\n    rapidapiKey: 'YOUR_RAPIDAPI_KEY_HERE',\n    groqApiKey: 'YOUR_GROQ_API_KEY_HERE',\n  }\n}];",
+        "jsCode": "// USER PREFERENCES & METADATA (not a replacement for resume!)\n// \n// HOW EMAIL OUTREACH WORKS:\n// Job APIs find jobs but do NOT provide recruiter emails.\n// After 8 AM job discovery populates your Sheet, YOU manually add\n// recruiter emails (from LinkedIn, company sites, Hunter.io free tier).\n// The 9 AM outreach trigger emails only rows where you've filled\n// 'Recruiter Email'. This keeps it targeted, not spammy.\n//\n// ROTATION PURPOSE: 4 Gmail accounts = 200 emails/day free-tier capacity.\n// All 4 accounts should have the same display name in Google Account settings.\n// This config provides: location preferences, visa status, email settings, and URLs\n// Your actual resume data (skills, projects, experience) is parsed from resumeUrl by Groq AI\n// The parsed resume data is merged with this config to create your complete profile\nreturn [{\n  json: {\n    name: 'Your Name',\n    currentRole: 'Senior Backend Engineer',\n    targetRole: 'Staff Engineer',\n    experience: '5 years',\n    skills: ['Python', 'Node.js', 'AWS', 'Docker', 'Kubernetes', 'PostgreSQL'],\n    location: 'Hyderabad, India',\n    workMode: ['remote', 'hybrid'],\n    minSalary: 80000,\n    targetRoles: ['Backend Engineer', 'Full Stack Engineer', 'DevOps Engineer'],\n    keywords: 'python developer OR backend engineer OR nodejs',\n    country: 'in',\n    githubUrl: 'https://github.com/yourusername',\n    linkedinUrl: 'https://linkedin.com/in/yourprofile',\n    portfolioUrl: 'https://yourportfolio.com',\n    resumeUrl: 'https://drive.google.com/file/d/YOUR_RESUME_ID/view',\n    resumeParsingEnabled: true,\n    userEmail: 'YOUR_EMAIL@example.com',\n    dailyLimit: 50,\n    scoreThreshold: 60,\n    sheetId: 'YOUR_SPREADSHEET_ID',\n    account1Email: 'raviintouch2@gmail.com',\n    account2Email: 'ravitejavallakatla7@gmail.com',\n    account3Email: 'ravitejav081@gmail.com',\n    account4Email: 'ravitejav0801@gmail.com',\n    account1CredentialId: 'YOUR_GMAIL_ACCOUNT_1_CREDENTIAL_ID',\n    account2CredentialId: 'YOUR_GMAIL_ACCOUNT_2_CREDENTIAL_ID',\n    account3CredentialId: 'YOUR_GMAIL_ACCOUNT_3_CREDENTIAL_ID',\n    account4CredentialId: 'YOUR_GMAIL_ACCOUNT_4_CREDENTIAL_ID',\n    maxEmailsPerAccount: 50,\n    errorThreshold: 3,\n    sheetsAccount1CredentialId: 'YOUR_SHEETS_ACCOUNT_1_CREDENTIAL_ID',\n    sheetsAccount2CredentialId: 'YOUR_SHEETS_ACCOUNT_2_CREDENTIAL_ID',\n    sheetsAccount3CredentialId: 'YOUR_SHEETS_ACCOUNT_3_CREDENTIAL_ID',\n    sheetsAccount4CredentialId: 'YOUR_SHEETS_ACCOUNT_4_CREDENTIAL_ID',\n    maxSheetsWritesPerAccount: 300,\n    groqKey1CredentialId: 'YOUR_GROQ_KEY_1_CREDENTIAL_ID',\n    groqKey2CredentialId: 'YOUR_GROQ_KEY_2_CREDENTIAL_ID',\n    groqKey3CredentialId: 'YOUR_GROQ_KEY_3_CREDENTIAL_ID',\n    groqKey4CredentialId: 'YOUR_GROQ_KEY_4_CREDENTIAL_ID',\n    maxGroqRequestsPerKey: 14400,\n    // Setup: Create 4 Groq accounts using email alias trick:\n    // raviintouch2+groq1@gmail.com, ravitejavallakatla7+groq2@gmail.com,\n    // ravitejav081+groq3@gmail.com, ravitejav0801+groq4@gmail.com,\n    rapidapiKey: 'YOUR_RAPIDAPI_KEY_HERE',\n    groqApiKey: 'YOUR_GROQ_API_KEY_HERE',\n    telegramChatId: 'YOUR_TELEGRAM_CHAT_ID',\n  }\n}];",
         "mode": "runOnceForAllItems"
       },
       "id": "882919e4-752c-482a-b4ba-cd80aea52ad7",
@@ -1804,6 +1804,127 @@
         3000,
         100
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Categorize jobs into Direct Apply vs Cold Email candidates\nconst jobs = items.map(item => {\n  const job = item.json;\n  const hasApplyUrl = !!(job['Apply URL'] || job.applyUrl);\n  const hasRecruiterEmail = !!(job['Recruiter Email'] || job.recruiterEmail);\n  const isNew = (job.Status || job.status || '').toLowerCase() === 'new';\n  \n  return {\n    json: {\n      ...job,\n      hasApplyUrl,\n      hasRecruiterEmail,\n      isNew,\n      applicationRoute: hasApplyUrl ? 'direct_apply' : (hasRecruiterEmail ? 'cold_email' : 'waiting')\n    }\n  };\n});\n\nreturn jobs;",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "0dd45ac0-b528-40e5-ac49-b3374a730755",
+      "name": "Categorize: Apply Route",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        1800
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.applicationRoute }}",
+              "operation": "equals",
+              "value2": "direct_apply"
+            }
+          ]
+        },
+        "combineOperation": "all"
+      },
+      "id": "13ee0b5f-a0e6-4795-ae0c-b724a4b199e6",
+      "name": "Route: Direct Apply?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        900,
+        1800
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare direct-apply jobs list and route for follow-up emails\nconst directApplyJobs = items.filter(i => i.json.isNew && i.json.hasApplyUrl);\n\nif (directApplyJobs.length === 0) {\n  return [{ json: { message: 'No new direct-apply jobs today', count: 0, hasFollowUps: false } }];\n}\n\nconst jobList = directApplyJobs.map((item, i) => {\n  const j = item.json;\n  const title = j['Job Title'] || j.jobTitle;\n  const company = j.Company || j.company;\n  const score = j.Score || j.score || '?';\n  const url = j['Apply URL'] || j.applyUrl;\n  const hasEmail = j.hasRecruiterEmail ? ' \u2709\ufe0f (follow-up email will be sent)' : '';\n  return `${i+1}. **${title}** at ${company} (Score: ${score})${hasEmail}\\n   \u2192 ${url}`;\n}).join('\\n\\n');\n\nconst withEmail = directApplyJobs.filter(i => i.json.hasRecruiterEmail).length;\n\nconst message = `\ud83c\udfaf **Apply Directly + Follow Up** (${directApplyJobs.length} jobs)\n\nApply through their portal FIRST, then we send follow-up emails to ${withEmail} recruiters saying you've applied:\n\n${jobList}\n\n\ud83d\udca1 Strategy: Portal application + follow-up email = 3x response rate vs either alone.`;\n\nreturn [{ json: { message, count: directApplyJobs.length, followUpCount: withEmail, hasFollowUps: withEmail > 0 } }];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "3d28efa8-a5d5-496f-aaa3-03473315741b",
+      "name": "Prepare Direct Apply List",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        1700
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('User Config (Master Profile)').item.json.telegramChatId || '' }}",
+        "text": "={{ $json.message }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "9b7c3bfe-8e39-47a1-9c62-723ad1d0a755",
+      "name": "Telegram: Apply These Directly",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1340,
+        1700
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_TELEGRAM_CREDENTIAL_ID",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.hasFollowUps }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "c5870db2-f40a-4da3-a161-4aec4318b6c7",
+      "name": "Has Follow-up Emails?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        1700
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get direct-apply jobs that also have recruiter emails\n// These get a \"I've applied, please consider\" follow-up email\nconst config = $('User Config (Master Profile)').item.json;\nconst allJobs = $('Categorize: Apply Route').all();\n\nconst followUpJobs = allJobs.filter(item => \n  item.json.hasApplyUrl && item.json.hasRecruiterEmail && item.json.isNew\n);\n\nreturn followUpJobs.map(item => ({\n  json: {\n    ...item.json,\n    emailType: 'follow_up_after_apply'\n  }\n}));",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "e0a098cb-8425-44c8-8fe0-b59a68d5d37a",
+      "name": "Get Follow-up Candidates",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1780,
+        1600
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate follow-up email: \"I applied through your portal, please consider me\"\nconst config = $('Merge User Config with Resume Data').item.json;\nconst job = items[0].json;\n\nconst prompt = `You are a professional email writer. Generate a SHORT follow-up email to a recruiter.\n\nCONTEXT: The candidate has ALREADY APPLIED through the company's official application portal. This email is a polite follow-up to increase visibility.\n\n**Job Details:**\n- Title: ${job['Job Title'] || job.jobTitle}\n- Company: ${job.Company || job.company}\n- Recruiter: ${job['Recruiter Name'] || job.recruiterName || 'Hiring Manager'}\n- Apply URL used: ${job['Apply URL'] || job.applyUrl}\n\n**Candidate:**\n- Name: ${config.name}\n- Current Role: ${config.currentRole}\n- Key Skills: ${(config.skills || []).slice(0, 5).join(', ')}\n- Top Project: ${((config.resumeData || {}).projects || []).slice(0, 1).map(p => p.name + ' (' + (p.technologies || []).join(', ') + ')').join('')}\n\n**Requirements:**\n1. VERY SHORT (80-120 words max)\n2. Open with: \"I recently submitted my application for [role] through your portal\"\n3. Mention ONE specific skill/project that makes you a strong fit\n4. Politely ask them to review your application\n5. End with \"Best regards, ${config.name}\"\n6. Tone: Professional, confident, not desperate\n\n**Format:**\nSubject: [Short subject - e.g., \"Following up: Application for [Role]\"]\n\n[Short email body]\n\nProvide ONLY the subject and body.`;\n\nconst response = await this.helpers.httpRequest({\n  method: 'POST',\n  url: 'https://api.groq.com/openai/v1/chat/completions',\n  headers: {\n    'Authorization': 'Bearer ' + (config.groqApiKey || ''),\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({\n    model: 'llama-3.3-70b-versatile',\n    messages: [{ role: 'user', content: prompt }],\n    temperature: 0.6\n  }),\n  json: true,\n  timeout: 60000\n});\n\nconst aiText = response.choices[0].message.content;\n\n// Parse subject and body\nlet subject = 'Following up: Application for ' + (job['Job Title'] || job.jobTitle);\nlet body = aiText;\n\nconst subjectMatch = aiText.match(/Subject:\\s*(.+?)\\n/i);\nif (subjectMatch) {\n  subject = subjectMatch[1].trim();\n  body = aiText.replace(/Subject:\\s*.+?\\n/i, '').trim();\n}\n\n// Add signature links\nbody += '\\n\\nLinkedIn: ' + (config.linkedinUrl || '');\nbody += '\\nPortfolio: ' + (config.portfolioUrl || '');\n\nreturn [{\n  json: {\n    ...job,\n    emailSubject: subject,\n    emailBody: body,\n    emailType: 'follow_up'\n  }\n}];",
+        "mode": "runOnceForEachItem"
+      },
+      "id": "3cd586c9-b25e-429d-8770-f35ee52b6a5f",
+      "name": "AI: Generate Follow-up Email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2000,
+        1600
+      ]
     }
   ],
   "connections": {
@@ -2026,7 +2147,7 @@
       "main": [
         [
           {
-            "node": "Filter: Status=New AND Has Recruiter Email",
+            "node": "Categorize: Apply Route",
             "type": "main",
             "index": 0
           }
@@ -2808,6 +2929,90 @@
           }
         ],
         []
+      ]
+    },
+    "Categorize: Apply Route": {
+      "main": [
+        [
+          {
+            "node": "Route: Direct Apply?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route: Direct Apply?": {
+      "main": [
+        [
+          {
+            "node": "Prepare Direct Apply List",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Filter: Status=New AND Has Recruiter Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Direct Apply List": {
+      "main": [
+        [
+          {
+            "node": "Telegram: Apply These Directly",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram: Apply These Directly": {
+      "main": [
+        [
+          {
+            "node": "Has Follow-up Emails?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Follow-up Emails?": {
+      "main": [
+        [
+          {
+            "node": "Get Follow-up Candidates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Follow-up Candidates": {
+      "main": [
+        [
+          {
+            "node": "AI: Generate Follow-up Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI: Generate Follow-up Email": {
+      "main": [
+        [
+          {
+            "node": "Check Email Account Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
