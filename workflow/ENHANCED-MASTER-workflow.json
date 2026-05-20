@@ -82,7 +82,7 @@
         300
       ],
       "parameters": {
-        "jsCode": "// USER PREFERENCES & METADATA (not a replacement for resume!)\n// \n// HOW EMAIL OUTREACH WORKS:\n// Job APIs find jobs but do NOT provide recruiter emails.\n// After 8 AM job discovery populates your Sheet, YOU manually add\n// recruiter emails (from LinkedIn, company sites, Hunter.io free tier).\n// The 9 AM outreach trigger emails only rows where you've filled\n// 'Recruiter Email'. This keeps it targeted, not spammy.\n//\n// ROTATION PURPOSE: 4 Gmail accounts = 200 emails/day free-tier capacity.\n// All 4 accounts should have the same display name in Google Account settings.\n// This config provides: location preferences, visa status, email settings, and URLs\n// Your actual resume data (skills, projects, experience) is parsed from resumeUrl by Groq AI\n// The parsed resume data is merged with this config to create your complete profile\nreturn [{\n  json: {\n    name: 'Your Name',\n    currentRole: 'Senior Backend Engineer',\n    targetRole: 'Staff Engineer',\n    experience: '5 years',\n    skills: ['Python', 'Node.js', 'AWS', 'Docker', 'Kubernetes', 'PostgreSQL'],\n    location: 'Hyderabad, India',\n    workMode: ['remote', 'hybrid'],\n    minSalary: 80000,\n    targetRoles: ['Backend Engineer', 'Full Stack Engineer', 'DevOps Engineer'],\n    keywords: 'python developer OR backend engineer OR nodejs',\n    country: 'in',\n    githubUrl: 'https://github.com/yourusername',\n    linkedinUrl: 'https://linkedin.com/in/yourprofile',\n    portfolioUrl: 'https://yourportfolio.com',\n    resumeUrl: 'https://drive.google.com/file/d/YOUR_RESUME_ID/view',\n    resumeParsingEnabled: true,\n    userEmail: 'YOUR_EMAIL@example.com',\n    dailyLimit: 50,\n    scoreThreshold: 60,\n    sheetId: 'YOUR_SPREADSHEET_ID',\n    account1Email: 'raviintouch2@gmail.com',\n    account2Email: 'ravitejavallakatla7@gmail.com',\n    account3Email: 'ravitejav081@gmail.com',\n    account4Email: 'ravitejav0801@gmail.com',\n    account1CredentialId: 'YOUR_GMAIL_ACCOUNT_1_CREDENTIAL_ID',\n    account2CredentialId: 'YOUR_GMAIL_ACCOUNT_2_CREDENTIAL_ID',\n    account3CredentialId: 'YOUR_GMAIL_ACCOUNT_3_CREDENTIAL_ID',\n    account4CredentialId: 'YOUR_GMAIL_ACCOUNT_4_CREDENTIAL_ID',\n    maxEmailsPerAccount: 50,\n    errorThreshold: 3,\n    sheetsAccount1CredentialId: 'YOUR_SHEETS_ACCOUNT_1_CREDENTIAL_ID',\n    sheetsAccount2CredentialId: 'YOUR_SHEETS_ACCOUNT_2_CREDENTIAL_ID',\n    sheetsAccount3CredentialId: 'YOUR_SHEETS_ACCOUNT_3_CREDENTIAL_ID',\n    sheetsAccount4CredentialId: 'YOUR_SHEETS_ACCOUNT_4_CREDENTIAL_ID',\n    maxSheetsWritesPerAccount: 300,\n    groqKey1CredentialId: 'YOUR_GROQ_KEY_1_CREDENTIAL_ID',\n    groqKey2CredentialId: 'YOUR_GROQ_KEY_2_CREDENTIAL_ID',\n    groqKey3CredentialId: 'YOUR_GROQ_KEY_3_CREDENTIAL_ID',\n    groqKey4CredentialId: 'YOUR_GROQ_KEY_4_CREDENTIAL_ID',\n    maxGroqRequestsPerKey: 14400,\n    // Setup: Create 4 Groq accounts using email alias trick:\n    // raviintouch2+groq1@gmail.com, ravitejavallakatla7+groq2@gmail.com,\n    // ravitejav081+groq3@gmail.com, ravitejav0801+groq4@gmail.com,\n    rapidapiKey: 'YOUR_RAPIDAPI_KEY_HERE',\n  }\n}];"
+        "jsCode": "// USER PREFERENCES & METADATA (not a replacement for resume!)\n// \n// HOW EMAIL OUTREACH WORKS:\n// Job APIs find jobs but do NOT provide recruiter emails.\n// After 8 AM job discovery populates your Sheet, YOU manually add\n// recruiter emails (from LinkedIn, company sites, Hunter.io free tier).\n// The 9 AM outreach trigger emails only rows where you've filled\n// 'Recruiter Email'. This keeps it targeted, not spammy.\n//\n// ROTATION PURPOSE: 4 Gmail accounts = 200 emails/day free-tier capacity.\n// All 4 accounts should have the same display name in Google Account settings.\n// This config provides: location preferences, visa status, email settings, and URLs\n// Your actual resume data (skills, projects, experience) is parsed from resumeUrl by Groq AI\n// The parsed resume data is merged with this config to create your complete profile\nreturn [{\n  json: {\n    name: 'Your Name',\n    currentRole: 'Senior Backend Engineer',\n    targetRole: 'Staff Engineer',\n    experience: '5 years',\n    skills: ['Python', 'Node.js', 'AWS', 'Docker', 'Kubernetes', 'PostgreSQL'],\n    location: 'Hyderabad, India',\n    workMode: ['remote', 'hybrid'],\n    minSalary: 80000,\n    targetRoles: ['Backend Engineer', 'Full Stack Engineer', 'DevOps Engineer'],\n    keywords: 'python developer OR backend engineer OR nodejs',\n    country: 'in',\n    githubUrl: 'https://github.com/yourusername',\n    linkedinUrl: 'https://linkedin.com/in/yourprofile',\n    portfolioUrl: 'https://yourportfolio.com',\n    resumeUrl: 'https://drive.google.com/file/d/YOUR_RESUME_ID/view',\n    resumeParsingEnabled: true,\n    userEmail: 'YOUR_EMAIL@example.com',\n    dailyLimit: 50,\n    scoreThreshold: 60,\n    sheetId: 'YOUR_SPREADSHEET_ID',\n    account1Email: 'raviintouch2@gmail.com',\n    account2Email: 'ravitejavallakatla7@gmail.com',\n    account3Email: 'ravitejav081@gmail.com',\n    account4Email: 'ravitejav0801@gmail.com',\n    account1CredentialId: 'YOUR_GMAIL_ACCOUNT_1_CREDENTIAL_ID',\n    account2CredentialId: 'YOUR_GMAIL_ACCOUNT_2_CREDENTIAL_ID',\n    account3CredentialId: 'YOUR_GMAIL_ACCOUNT_3_CREDENTIAL_ID',\n    account4CredentialId: 'YOUR_GMAIL_ACCOUNT_4_CREDENTIAL_ID',\n    maxEmailsPerAccount: 50,\n    errorThreshold: 3,\n    sheetsAccount1CredentialId: 'YOUR_SHEETS_ACCOUNT_1_CREDENTIAL_ID',\n    sheetsAccount2CredentialId: 'YOUR_SHEETS_ACCOUNT_2_CREDENTIAL_ID',\n    sheetsAccount3CredentialId: 'YOUR_SHEETS_ACCOUNT_3_CREDENTIAL_ID',\n    sheetsAccount4CredentialId: 'YOUR_SHEETS_ACCOUNT_4_CREDENTIAL_ID',\n    maxSheetsWritesPerAccount: 300,\n    groqKey1CredentialId: 'YOUR_GROQ_KEY_1_CREDENTIAL_ID',\n    groqKey2CredentialId: 'YOUR_GROQ_KEY_2_CREDENTIAL_ID',\n    groqKey3CredentialId: 'YOUR_GROQ_KEY_3_CREDENTIAL_ID',\n    groqKey4CredentialId: 'YOUR_GROQ_KEY_4_CREDENTIAL_ID',\n    maxGroqRequestsPerKey: 14400,\n    // Setup: Create 4 Groq accounts using email alias trick:\n    // raviintouch2+groq1@gmail.com, ravitejavallakatla7+groq2@gmail.com,\n    // ravitejav081+groq3@gmail.com, ravitejav0801+groq4@gmail.com,\n    rapidapiKey: 'YOUR_RAPIDAPI_KEY_HERE',\n    groqApiKey: 'YOUR_GROQ_API_KEY_HERE',\n  }\n}];"
       },
       "meta": {
         "instanceId": ""
@@ -293,24 +293,14 @@
     {
       "id": "7fa931d9-d69c-4ea8-b7d6-7fe829df4357",
       "name": "Groq AI: Score Job Match",
-      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
-      "typeVersion": 1,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
         2000,
         360
       ],
       "parameters": {
-        "operation": "text",
-        "options": {
-          "temperature": 0.3
-        },
-        "text": "=You are a job matching expert. Score this job for relevance (0-100):\n\n**Job:** {{ $json.jobTitle }} at {{ $json.company }}\n**Location:** {{ $json.location }}\n**Work Mode:** {{ $json.workMode }}\n**Description:** {{ $json.description }}\n\n**User Profile:**\n- Current Role: {{ $('Merge User Config with Resume Data').item.json.currentRole }}\n- Target Role: {{ $('Merge User Config with Resume Data').item.json.targetRole }}\n- Skills: {{ $('Merge User Config with Resume Data').item.json.skills.join(', ') }}\n- Work Mode: {{ $('Merge User Config with Resume Data').item.json.workMode.join(' or ') }}\n- Location: {{ $('Merge User Config with Resume Data').item.json.location }}\n\n**Resume Data:**\n- Resume Parsed: {{ $('Merge User Config with Resume Data').item.json.resumeParsed ? 'Yes' : 'No (using config)' }}\n- Resume Skills: {{ ($('Merge User Config with Resume Data').item.json.resumeData.skills || []).join(', ') }}\n- Experience: {{ ($('Merge User Config with Resume Data').item.json.resumeData.experience || []).map(e => e.role + ' at ' + e.company).join('; ') }}\n- Key Projects: {{ ($('Merge User Config with Resume Data').item.json.resumeData.projects || []).slice(0, 3).map(p => p.name).join(', ') }}\n\n**Scoring Instructions:**\n- Give +20 points for strong skill overlap with resume\n- Give +15 points for relevant project experience\n- Give +10 points for matching work mode and location\n- Give +10 points for career progression alignment\n\nProvide ONLY a JSON object:\n{\"score\": <0-100>, \"priority\": \"high|medium|low\", \"matchReason\": \"<1 sentence mentioning resume skills if parsed>\"}\n\nNo other text."
-      },
-      "credentials": {
-        "groqApi": {
-          "id": "YOUR_GROQ_CREDENTIAL_ID",
-          "name": "Groq API"
-        }
+        "jsCode": "// Call Groq API to score job match\nconst config = $('Merge User Config with Resume Data').item.json;\nconst job = items[0].json;\n\nconst prompt = `You are a job matching expert. Score this job for relevance (0-100):\n\n**Job:** ${job.jobTitle} at ${job.company}\n**Location:** ${job.location}\n**Work Mode:** ${job.workMode}\n**Description:** ${job.description}\n\n**User Profile:**\n- Current Role: ${config.currentRole}\n- Target Role: ${config.targetRole}\n- Skills: ${(config.skills || []).join(', ')}\n- Work Mode: ${(config.workMode || []).join(' or ')}\n- Location: ${config.location}\n\n**Resume Data:**\n- Resume Parsed: ${config.resumeParsed ? 'Yes' : 'No (using config)'}\n- Resume Skills: ${((config.resumeData || {}).skills || []).join(', ')}\n- Experience: ${((config.resumeData || {}).experience || []).map(e => e.role + ' at ' + e.company).join('; ')}\n- Key Projects: ${((config.resumeData || {}).projects || []).slice(0, 3).map(p => p.name).join(', ')}\n\n**Scoring Instructions:**\n- Give +20 points for strong skill overlap with resume\n- Give +15 points for relevant project experience\n- Give +10 points for matching work mode and location\n- Give +10 points for career progression alignment\n\nProvide ONLY a JSON object:\n{\"score\": <0-100>, \"priority\": \"high|medium|low\", \"matchReason\": \"<1 sentence mentioning resume skills if parsed>\"}\n\nNo other text.`;\n\nconst response = await this.helpers.httpRequest({\n  method: 'POST',\n  url: 'https://api.groq.com/openai/v1/chat/completions',\n  headers: {\n    'Authorization': 'Bearer ' + (config.groqApiKey || $env.GROQ_API_KEY || ''),\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({\n    model: 'llama-3.3-70b-versatile',\n    messages: [{ role: 'user', content: prompt }],\n    temperature: 0.3\n  }),\n  json: true,\n  timeout: 60000\n});\n\nconst aiText = response.choices[0].message.content;\n\nreturn [{\n  json: {\n    ...job,\n    response: aiText,\n    text: aiText\n  }\n}];"
       },
       "meta": {
         "instanceId": ""
@@ -659,24 +649,14 @@
     {
       "id": "0a05d178-ddd0-422a-9068-7b273a9abaea",
       "name": "Groq AI: Generate Personalized Email",
-      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
-      "typeVersion": 1,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
         1340,
         1800
       ],
       "parameters": {
-        "operation": "text",
-        "options": {
-          "temperature": 0.7
-        },
-        "text": "=You are a professional email writer. Generate a personalized cold email to a recruiter.\n\n**Job Details:**\n- Title: {{ $json['Job Title'] || $json.jobTitle }}\n- Company: {{ $json.Company || $json.company }}\n- Recruiter: {{ $json['Recruiter Name'] || $json.recruiterName || 'Hiring Manager' }}\n- Location: {{ $json.Location || $json.location }}\n- Apply URL: {{ $json['Apply URL'] || $json.applyUrl }}\n- Job Description: {{ ($json['Description'] || $json.description || '').substring(0, 800) }}\n- Requirements: {{ ($json['Requirements'] || $json.requirements || '').substring(0, 400) }}\n\n**Candidate Profile:**\n- Name: {{ $('Merge User Config with Resume Data').item.json.name }}\n- Current Role: {{ $('Merge User Config with Resume Data').item.json.currentRole }}\n- Experience: {{ $('Merge User Config with Resume Data').item.json.experience }}\n- Skills: {{ $('Merge User Config with Resume Data').item.json.skills.join(', ') }}\n- Location: {{ $('Merge User Config with Resume Data').item.json.location }}\n\n**Resume Insights (Use to personalize email):**\n- Resume Parsed: {{ $('Merge User Config with Resume Data').item.json.resumeParsed }}\n- Key Projects: {{ ($('Merge User Config with Resume Data').item.json.resumeData.projects || []).slice(0, 3).map(p => p.name + ' (' + (p.technologies || []).join(', ') + ')').join('; ') }}\n- Recent Experience: {{ ($('Merge User Config with Resume Data').item.json.resumeData.experience || []).slice(0, 2).map(e => e.role + ' at ' + e.company).join('; ') }}\n- Achievements: {{ ($('Merge User Config with Resume Data').item.json.resumeData.achievements || []).slice(0, 2).join('; ') }}\n\n**Requirements:**\n1. Professional, concise (150-200 words)\n2. Reference SPECIFIC details from the job description that match your experience\n3. Mention 2-3 specific projects from resume that directly align with job requirements\n4. Reference relevant achievements from resume\n5. Highlight matching technical skills from both resume and job description\n6. Include a clear call-to-action\n7. End with \"Best regards, {{ $('Merge User Config with Resume Data').item.json.name }}\"\n8. DO NOT be generic - every sentence must reference something specific from JD or resume\n\n**Format:**\nSubject: [Compelling subject referencing specific role and one key qualification]\n\n[Email body with specific project references and job description alignment]\n\nProvide ONLY the subject line and email body. No additional commentary."
-      },
-      "credentials": {
-        "groqApi": {
-          "id": "YOUR_GROQ_CREDENTIAL_ID",
-          "name": "Groq API"
-        }
+        "jsCode": "// Call Groq API to generate personalized email\nconst config = $('Merge User Config with Resume Data').item.json;\nconst job = items[0].json;\n\nconst prompt = `You are a professional email writer. Generate a personalized cold email to a recruiter.\n\n**Job Details:**\n- Title: ${job['Job Title'] || job.jobTitle}\n- Company: ${job.Company || job.company}\n- Recruiter: ${job['Recruiter Name'] || job.recruiterName || 'Hiring Manager'}\n- Location: ${job.Location || job.location}\n- Apply URL: ${job['Apply URL'] || job.applyUrl}\n- Job Description: ${(job.Description || job.description || '').substring(0, 800)}\n- Requirements: ${(job.Requirements || job.requirements || '').substring(0, 400)}\n\n**Candidate Profile:**\n- Name: ${config.name}\n- Current Role: ${config.currentRole}\n- Experience: ${config.experience}\n- Skills: ${(config.skills || []).join(', ')}\n- Location: ${config.location}\n\n**Resume Insights:**\n- Key Projects: ${((config.resumeData || {}).projects || []).slice(0, 3).map(p => p.name + ' (' + (p.technologies || []).join(', ') + ')').join('; ')}\n- Recent Experience: ${((config.resumeData || {}).experience || []).slice(0, 2).map(e => e.role + ' at ' + e.company).join('; ')}\n- Achievements: ${((config.resumeData || {}).achievements || []).slice(0, 2).join('; ')}\n\n**Requirements:**\n1. Professional, concise (150-200 words)\n2. Reference SPECIFIC details from the job description\n3. Mention 2-3 specific projects from resume that align with job requirements\n4. Highlight matching technical skills\n5. Include a clear call-to-action\n6. End with \"Best regards, ${config.name}\"\n7. DO NOT be generic - every sentence must reference something specific\n\n**Format:**\nSubject: [Compelling subject referencing specific role and one key qualification]\n\n[Email body]\n\nProvide ONLY the subject line and email body. No additional commentary.`;\n\nconst response = await this.helpers.httpRequest({\n  method: 'POST',\n  url: 'https://api.groq.com/openai/v1/chat/completions',\n  headers: {\n    'Authorization': 'Bearer ' + (config.groqApiKey || $env.GROQ_API_KEY || ''),\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({\n    model: 'llama-3.3-70b-versatile',\n    messages: [{ role: 'user', content: prompt }],\n    temperature: 0.7\n  }),\n  json: true,\n  timeout: 60000\n});\n\nconst aiText = response.choices[0].message.content;\n\nreturn [{\n  json: {\n    ...job,\n    response: aiText,\n    text: aiText\n  }\n}];"
       },
       "meta": {
         "instanceId": ""
@@ -932,24 +912,14 @@
     {
       "id": "a2c8b4c1-4c0a-43ef-a3a7-322dafe29c60",
       "name": "Groq Agent (Llama 3.3 70B)",
-      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
-      "typeVersion": 1,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
         1340,
         3400
       ],
       "parameters": {
-        "operation": "text",
-        "options": {
-          "temperature": 0.7
-        },
-        "text": "={{ $json.systemPrompt }}"
-      },
-      "credentials": {
-        "groqApi": {
-          "id": "YOUR_GROQ_CREDENTIAL_ID",
-          "name": "Groq API"
-        }
+        "jsCode": "// Call Groq API for Telegram AI assistant\nconst input = items[0].json;\nconst systemPrompt = input.systemPrompt || 'You are a helpful job search assistant.';\nconst userMessage = input.userMessage || input.text || '';\n\nconst config = $('User Config (Master Profile)').item.json;\n\nconst response = await this.helpers.httpRequest({\n  method: 'POST',\n  url: 'https://api.groq.com/openai/v1/chat/completions',\n  headers: {\n    'Authorization': 'Bearer ' + (config.groqApiKey || $env.GROQ_API_KEY || ''),\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({\n    model: 'llama-3.3-70b-versatile',\n    messages: [\n      { role: 'system', content: systemPrompt },\n      { role: 'user', content: userMessage }\n    ],\n    temperature: 0.7\n  }),\n  json: true,\n  timeout: 60000\n});\n\nconst aiText = response.choices[0].message.content;\n\nreturn [{\n  json: {\n    ...input,\n    response: aiText,\n    text: aiText\n  }\n}];"
       },
       "meta": {
         "instanceId": ""
@@ -1145,24 +1115,14 @@
     {
       "id": "499b3480-9063-496e-958b-c95d0608d564",
       "name": "Parse Resume with Groq AI",
-      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
-      "typeVersion": 1,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
         1120,
         100
       ],
       "parameters": {
-        "model": "llama-3.3-70b-versatile",
-        "options": {
-          "temperature": 0.1
-        },
-        "text": "=You are a resume parser. Extract structured information from this resume text.\n\n**Resume Content:**\n{{ $('Download Resume').item.json.data }}\n\n**Extract the following in JSON format ONLY:**\n{\n  \"skills\": [\"skill1\", \"skill2\", ...],\n  \"experience\": [\n    {\n      \"role\": \"Job Title\",\n      \"company\": \"Company Name\",\n      \"duration\": \"2020-2023\",\n      \"responsibilities\": \"Key achievements and responsibilities\"\n    }\n  ],\n  \"projects\": [\n    {\n      \"name\": \"Project Name\",\n      \"description\": \"Brief description\",\n      \"technologies\": [\"tech1\", \"tech2\"]\n    }\n  ],\n  \"achievements\": [\"achievement1\", \"achievement2\", ...],\n  \"education\": [\n    {\n      \"degree\": \"Degree Name\",\n      \"institution\": \"University Name\",\n      \"year\": \"2019\"\n    }\n  ]\n}\n\nProvide ONLY valid JSON. No additional text or explanation."
-      },
-      "credentials": {
-        "groqApi": {
-          "id": "YOUR_GROQ_CREDENTIAL_ID",
-          "name": "Groq API"
-        }
+        "jsCode": "// Call Groq API to parse resume\nconst resumeText = $('Download Resume').item.json.data || '';\nconst config = $('User Config (Master Profile)').item.json;\n\nconst prompt = `You are a resume parser. Extract structured information from this resume text.\n\n**Resume Content:**\n${resumeText}\n\n**Extract the following in JSON format ONLY:**\n{\n  \"skills\": [\"skill1\", \"skill2\", ...],\n  \"experience\": [\n    {\n      \"role\": \"Job Title\",\n      \"company\": \"Company Name\",\n      \"duration\": \"2020-2023\",\n      \"responsibilities\": \"Key achievements and responsibilities\"\n    }\n  ],\n  \"projects\": [\n    {\n      \"name\": \"Project Name\",\n      \"description\": \"Brief description\",\n      \"technologies\": [\"tech1\", \"tech2\"]\n    }\n  ],\n  \"achievements\": [\"achievement1\", \"achievement2\", ...],\n  \"education\": [\n    {\n      \"degree\": \"Degree Name\",\n      \"institution\": \"University Name\",\n      \"year\": \"2019\"\n    }\n  ]\n}\n\nProvide ONLY valid JSON. No additional text or explanation.`;\n\nconst response = await this.helpers.httpRequest({\n  method: 'POST',\n  url: 'https://api.groq.com/openai/v1/chat/completions',\n  headers: {\n    'Authorization': 'Bearer ' + (config.groqApiKey || $env.GROQ_API_KEY || ''),\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({\n    model: 'llama-3.3-70b-versatile',\n    messages: [{ role: 'user', content: prompt }],\n    temperature: 0.1\n  }),\n  json: true,\n  timeout: 60000\n});\n\nconst aiText = response.choices[0].message.content;\n\nreturn [{\n  json: {\n    ...items[0].json,\n    response: aiText,\n    text: aiText\n  }\n}];"
       },
       "meta": {
         "instanceId": ""
@@ -1338,18 +1298,7 @@
         "subject": "={{ $json.emailSubject }}",
         "message": "={{ $json.emailBody }}",
         "options": {
-          "ccList": "={{ $('User Config (Master Profile)').item.json.userEmail }}",
-          "attachmentsUi": {
-            "attachmentsBinary": [],
-            "attachmentsFixedCollection": {
-              "values": [
-                {
-                  "fileName": "={{ $('User Config (Master Profile)').item.json.name.replace(/\\s/g, '_') }}_Resume.pdf",
-                  "url": "={{ (() => { const url = $('User Config (Master Profile)').item.json.resumeUrl || ''; if (url.includes('drive.google.com/file/d/')) { const match = url.match(/\\/d\\/([^\\/]+)/); if (match) return 'https://drive.google.com/uc?export=download&id=' + match[1]; } return url; })() }}"
-                }
-              ]
-            }
-          }
+          "ccList": "={{ $('User Config (Master Profile)').item.json.userEmail }}"
         }
       },
       "credentials": {
@@ -1377,18 +1326,7 @@
         "subject": "={{ $json.emailSubject }}",
         "message": "={{ $json.emailBody }}",
         "options": {
-          "ccList": "={{ $('User Config (Master Profile)').item.json.userEmail }}",
-          "attachmentsUi": {
-            "attachmentsBinary": [],
-            "attachmentsFixedCollection": {
-              "values": [
-                {
-                  "fileName": "={{ $('User Config (Master Profile)').item.json.name.replace(/\\s/g, '_') }}_Resume.pdf",
-                  "url": "={{ (() => { const url = $('User Config (Master Profile)').item.json.resumeUrl || ''; if (url.includes('drive.google.com/file/d/')) { const match = url.match(/\\/d\\/([^\\/]+)/); if (match) return 'https://drive.google.com/uc?export=download&id=' + match[1]; } return url; })() }}"
-                }
-              ]
-            }
-          }
+          "ccList": "={{ $('User Config (Master Profile)').item.json.userEmail }}"
         }
       },
       "credentials": {
@@ -1416,18 +1354,7 @@
         "subject": "={{ $json.emailSubject }}",
         "message": "={{ $json.emailBody }}",
         "options": {
-          "ccList": "={{ $('User Config (Master Profile)').item.json.userEmail }}",
-          "attachmentsUi": {
-            "attachmentsBinary": [],
-            "attachmentsFixedCollection": {
-              "values": [
-                {
-                  "fileName": "={{ $('User Config (Master Profile)').item.json.name.replace(/\\s/g, '_') }}_Resume.pdf",
-                  "url": "={{ (() => { const url = $('User Config (Master Profile)').item.json.resumeUrl || ''; if (url.includes('drive.google.com/file/d/')) { const match = url.match(/\\/d\\/([^\\/]+)/); if (match) return 'https://drive.google.com/uc?export=download&id=' + match[1]; } return url; })() }}"
-                }
-              ]
-            }
-          }
+          "ccList": "={{ $('User Config (Master Profile)').item.json.userEmail }}"
         }
       },
       "credentials": {
@@ -1455,18 +1382,7 @@
         "subject": "={{ $json.emailSubject }}",
         "message": "={{ $json.emailBody }}",
         "options": {
-          "ccList": "={{ $('User Config (Master Profile)').item.json.userEmail }}",
-          "attachmentsUi": {
-            "attachmentsBinary": [],
-            "attachmentsFixedCollection": {
-              "values": [
-                {
-                  "fileName": "={{ $('User Config (Master Profile)').item.json.name.replace(/\\s/g, '_') }}_Resume.pdf",
-                  "url": "={{ (() => { const url = $('User Config (Master Profile)').item.json.resumeUrl || ''; if (url.includes('drive.google.com/file/d/')) { const match = url.match(/\\/d\\/([^\\/]+)/); if (match) return 'https://drive.google.com/uc?export=download&id=' + match[1]; } return url; })() }}"
-                }
-              ]
-            }
-          }
+          "ccList": "={{ $('User Config (Master Profile)').item.json.userEmail }}"
         }
       },
       "credentials": {
