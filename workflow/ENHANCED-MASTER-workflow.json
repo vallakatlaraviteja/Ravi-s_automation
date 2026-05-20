@@ -623,30 +623,6 @@
       }
     },
     {
-      "id": "send-gmail-outreach",
-      "name": "Send Email via Gmail",
-      "type": "n8n-nodes-base.gmail",
-      "typeVersion": 2.1,
-      "position": [
-        1780,
-        1800
-      ],
-      "parameters": {
-        "sendTo": "={{ $json['Recruiter Email'] || $json.recruiterEmail }}",
-        "subject": "={{ $json.emailSubject }}",
-        "message": "={{ $json.emailBody }}",
-        "options": {
-          "ccList": "={{ $('User Config (Master Profile)').item.json.userEmail }}"
-        }
-      },
-      "credentials": {
-        "gmailOAuth2": {
-          "id": "YOUR_GMAIL_CREDENTIAL_ID",
-          "name": "Gmail OAuth2"
-        }
-      }
-    },
-    {
       "id": "update-email-metadata",
       "name": "Update Metadata (Status & Application ID)",
       "type": "n8n-nodes-base.code",
@@ -1391,7 +1367,7 @@
         500
       ],
       "parameters": {
-        "jsCode": "// Handle Google Sheets API errors and trigger account switch\nconst staticData = this.getWorkflowStaticData('global');\nconst state = staticData.sheetsAccountState;\nconst item = items[0].json;\n\nif (item.error) {\n  const errorCode = item.error.httpCode || item.error.code;\n  const errorMessage = item.error.message || '';\n  \n  // Detect quota errors (429 rate limit, 403 quota exceeded)\n  if (errorCode === 429 || errorCode === 403 || errorMessage.includes('quota') || errorMessage.includes('rate limit')) {\n    const currentAccount = state.currentActive;\n    state[currentAccount].lastError = { code: errorCode, message: errorMessage, time: new Date().toISOString() };\n    \n    // Switch to next available account\n    const accounts = ['account1', 'account2', 'account3', 'account4'];\n    const currentIndex = accounts.indexOf(currentAccount);\n    \n    for (let i = 1; i <= 4; i++) {\n      const nextIndex = (currentIndex + i) % 4;\n      const nextAccount = accounts[nextIndex];\n      const config = $('User Config (Master Profile)').item.json;\n      const maxWrites = config.maxSheetsWritesPerAccount || 300;\n      \n      if (state[nextAccount].dailyWrites < maxWrites && !state[nextAccount].lastError) {\n        state.currentActive = nextAccount;\n        state.lastSwitchDate = new Date().toISOString();\n        state.lastSwitchReason = `Error ${errorCode}: ${errorMessage}`;\n        console.log(`Sheets account switched from ${currentAccount} to ${nextAccount} due to error`);\n        break;\n      }\n    }\n  }\n}\n\nreturn [{\n  json: {\n    ...item,\n    errorHandled: true,\n    sheetsAccountSwitched: state.currentActive !== (item.sheetsAccountToUse || 'account1')\n  }\n}];"
+        "jsCode": "// Handle Google Sheets API errors and trigger account switch\n// (Centralised state version - reads multiAccountState.sheets)\nconst staticData = this.getWorkflowStaticData('global');\nconst item = items[0].json;\n\n// Pass through if state not initialised yet\nif (!staticData.multiAccountState || !staticData.multiAccountState.sheets) {\n  return [{ json: { ...item, errorHandled: false, reason: 'state not initialised' } }];\n}\n\nconst state = staticData.multiAccountState.sheets;\nlet switched = false;\nlet switchReason = '';\n\nif (item.error) {\n  const errorCode = item.error.httpCode || item.error.code;\n  const errorMessage = item.error.message || '';\n\n  // Detect quota / rate-limit errors\n  if (errorCode === 429 || errorCode === 403 ||\n      errorMessage.includes('quota') || errorMessage.includes('rate limit')) {\n    const currentAccount = state.currentActive;\n    state[currentAccount].lastError = { code: errorCode, message: errorMessage, time: new Date().toISOString() };\n\n    // Find next viable account\n    const accounts = ['account1', 'account2', 'account3', 'account4'];\n    const currentIndex = accounts.indexOf(currentAccount);\n    const config = $('User Config (Master Profile)').item.json;\n    const maxWrites = config.maxSheetsWritesPerAccount || 300;\n\n    for (let i = 1; i <= 4; i++) {\n      const next = accounts[(currentIndex + i) % 4];\n      if (state[next].dailyWrites < maxWrites && !state[next].lastError) {\n        state.currentActive = next;\n        switched = true;\n        switchReason = `Error ${errorCode}: ${errorMessage}`;\n        console.log(`Sheets account switched from ${currentAccount} to ${next} due to error`);\n        break;\n      }\n    }\n  }\n}\n\nreturn [{\n  json: {\n    ...item,\n    errorHandled: true,\n    sheetsAccountSwitched: switched,\n    sheetsSwitchReason: switchReason,\n    sheetsAccount: state.currentActive,\n    sheetsNeedsSwitch: switched\n  }\n}];\n"
       }
     },
     {
@@ -1484,7 +1460,7 @@
         100
       ],
       "parameters": {
-        "jsCode": "// Handle Groq API errors and trigger key switch\nconst staticData = this.getWorkflowStaticData('global');\nconst state = staticData.groqKeyState;\nconst item = items[0].json;\n\nif (item.error) {\n  const errorCode = item.error.httpCode || item.error.code;\n  const errorMessage = item.error.message || '';\n  \n  // Detect rate limit errors (429, quota exceeded messages)\n  if (errorCode === 429 || errorMessage.includes('rate limit') || errorMessage.includes('quota') || errorMessage.includes('exceeded')) {\n    const currentKey = state.currentActive;\n    state[currentKey].lastError = { code: errorCode, message: errorMessage, time: new Date().toISOString() };\n    \n    // Switch to next available key\n    const keys = ['key1', 'key2', 'key3', 'key4'];\n    const currentIndex = keys.indexOf(currentKey);\n    \n    for (let i = 1; i <= 4; i++) {\n      const nextIndex = (currentIndex + i) % 4;\n      const nextKey = keys[nextIndex];\n      const config = $('User Config (Master Profile)').item.json;\n      const maxRequests = config.maxGroqRequestsPerKey || 14400;\n      \n      if (state[nextKey].dailyRequests < maxRequests && !state[nextKey].lastError) {\n        state.currentActive = nextKey;\n        state.lastSwitchDate = new Date().toISOString();\n        state.lastSwitchReason = `Error ${errorCode}: ${errorMessage}`;\n        console.log(`Groq key switched from ${currentKey} to ${nextKey} due to error`);\n        break;\n      }\n    }\n  }\n}\n\nreturn [{\n  json: {\n    ...item,\n    errorHandled: true,\n    groqKeySwitched: state.currentActive !== (item.groqKeyToUse || 'key1')\n  }\n}];"
+        "jsCode": "// Handle Groq API errors and trigger key switch\n// (Centralised state version - reads multiAccountState.groq)\nconst staticData = this.getWorkflowStaticData('global');\nconst item = items[0].json;\n\nif (!staticData.multiAccountState || !staticData.multiAccountState.groq) {\n  return [{ json: { ...item, errorHandled: false, reason: 'state not initialised' } }];\n}\n\nconst state = staticData.multiAccountState.groq;\nlet switched = false;\nlet switchReason = '';\n\nif (item.error) {\n  const errorCode = item.error.httpCode || item.error.code;\n  const errorMessage = item.error.message || '';\n\n  if (errorCode === 429 ||\n      errorMessage.includes('rate limit') ||\n      errorMessage.includes('quota') ||\n      errorMessage.includes('exceeded')) {\n    const currentKey = state.currentActive;\n    state[currentKey].lastError = { code: errorCode, message: errorMessage, time: new Date().toISOString() };\n\n    const keys = ['key1', 'key2', 'key3', 'key4'];\n    const currentIndex = keys.indexOf(currentKey);\n    const config = $('User Config (Master Profile)').item.json;\n    const maxRequests = config.maxGroqRequestsPerKey || 14400;\n\n    for (let i = 1; i <= 4; i++) {\n      const next = keys[(currentIndex + i) % 4];\n      if (state[next].dailyRequests < maxRequests && !state[next].lastError) {\n        state.currentActive = next;\n        switched = true;\n        switchReason = `Error ${errorCode}: ${errorMessage}`;\n        console.log(`Groq key switched from ${currentKey} to ${next} due to error`);\n        break;\n      }\n    }\n  }\n}\n\nreturn [{\n  json: {\n    ...item,\n    errorHandled: true,\n    groqKeySwitched: switched,\n    groqSwitchReason: switchReason,\n    groqKey: state.currentActive,\n    groqNeedsSwitch: switched\n  }\n}];\n"
       }
     },
     {
@@ -1804,7 +1780,7 @@
         50
       ],
       "parameters": {
-        "jsCode": "// Daily Reset Handler - Midnight UTC reset for all accounts\nconst staticData = this.getWorkflowStaticData('global');\nconst today = new Date().toISOString().split('T')[0];\n\nif (!staticData.multiAccountState) {\n  return [{ json: { error: 'multiAccountState not initialized', date: today } }];\n}\n\nconst state = staticData.multiAccountState;\n\n// Check if reset needed\nif (state.lastResetDate !== today) {\n  // Reset Gmail accounts\n  state.gmail.account1.dailyCount = 0;\n  state.gmail.account1.errors = 0;\n  state.gmail.account2.dailyCount = 0;\n  state.gmail.account2.errors = 0;\n  state.gmail.account3.dailyCount = 0;\n  state.gmail.account3.errors = 0;\n  state.gmail.account4.dailyCount = 0;\n  state.gmail.account4.errors = 0;\n  state.gmail.currentActive = 'account1';\n  \n  // Reset Google Sheets accounts\n  state.sheets.account1.dailyWrites = 0;\n  state.sheets.account2.dailyWrites = 0;\n  state.sheets.account3.dailyWrites = 0;\n  state.sheets.account4.dailyWrites = 0;\n  state.sheets.currentActive = 'account1';\n  \n  // Reset Groq API keys\n  state.groq.key1.dailyRequests = 0;\n  state.groq.key2.dailyRequests = 0;\n  state.groq.key3.dailyRequests = 0;\n  state.groq.key4.dailyRequests = 0;\n  state.groq.currentActive = 'key1';\n  \n  // Update last reset date\n  state.lastResetDate = today;\n  \n  console.log(`\u2705 Daily reset performed at midnight UTC for ${today}`);\n  console.log(`   Gmail: All 4 accounts reset to 0 emails, 0 errors`);\n  console.log(`   Sheets: All 4 accounts reset to 0 writes`);\n  console.log(`   Groq: All 4 keys reset to 0 requests`);\n  \n  return [{\n    json: {\n      resetPerformed: true,\n      date: today,\n      timestamp: new Date().toISOString(),\n      message: 'All account counters reset to 0 at midnight UTC'\n    }\n  }];\n} else {\n  return [{\n    json: {\n      resetPerformed: false,\n      date: today,\n      message: 'Reset already performed today',\n      lastResetDate: state.lastResetDate\n    }\n  }];\n}"
+        "jsCode": "// Daily Reset Handler - Midnight UTC reset for all accounts\nconst staticData = this.getWorkflowStaticData('global');\nconst today = new Date().toISOString().split('T')[0];\n\nif (!staticData.multiAccountState) {\n  // Self-initialise state on first run (e.g. when triggered standalone by midnight reset)\n  staticData.multiAccountState = {\n    gmail: {\n      account1: { email: 'raviintouch2@gmail.com', dailyCount: 0, errors: 0, credentialId: '', lastError: null },\n      account2: { email: 'ravitejavallakatla7@gmail.com', dailyCount: 0, errors: 0, credentialId: '', lastError: null },\n      account3: { email: 'ravitejav081@gmail.com', dailyCount: 0, errors: 0, credentialId: '', lastError: null },\n      account4: { email: 'ravitejav0801@gmail.com', dailyCount: 0, errors: 0, credentialId: '', lastError: null },\n      currentActive: 'account1'\n    },\n    sheets: {\n      account1: { email: 'raviintouch2@gmail.com', dailyWrites: 0, errors: 0, credentialId: '', lastError: null },\n      account2: { email: 'ravitejavallakatla7@gmail.com', dailyWrites: 0, errors: 0, credentialId: '', lastError: null },\n      account3: { email: 'ravitejav081@gmail.com', dailyWrites: 0, errors: 0, credentialId: '', lastError: null },\n      account4: { email: 'ravitejav0801@gmail.com', dailyWrites: 0, errors: 0, credentialId: '', lastError: null },\n      currentActive: 'account1'\n    },\n    groq: {\n      key1: { name: 'groq1', dailyRequests: 0, credentialId: '', lastError: null },\n      key2: { name: 'groq2', dailyRequests: 0, credentialId: '', lastError: null },\n      key3: { name: 'groq3', dailyRequests: 0, credentialId: '', lastError: null },\n      key4: { name: 'groq4', dailyRequests: 0, credentialId: '', lastError: null },\n      currentActive: 'key1'\n    },\n    lastResetDate: null,\n    rotationHistory: []\n  };\n}\n\nconst state = staticData.multiAccountState;\n\n// Check if reset needed\nif (state.lastResetDate !== today) {\n  // Reset Gmail accounts\n  state.gmail.account1.dailyCount = 0;\n  state.gmail.account1.errors = 0;\n  state.gmail.account2.dailyCount = 0;\n  state.gmail.account2.errors = 0;\n  state.gmail.account3.dailyCount = 0;\n  state.gmail.account3.errors = 0;\n  state.gmail.account4.dailyCount = 0;\n  state.gmail.account4.errors = 0;\n  state.gmail.currentActive = 'account1';\n  \n  // Reset Google Sheets accounts\n  state.sheets.account1.dailyWrites = 0;\n  state.sheets.account2.dailyWrites = 0;\n  state.sheets.account3.dailyWrites = 0;\n  state.sheets.account4.dailyWrites = 0;\n  state.sheets.currentActive = 'account1';\n  \n  // Reset Groq API keys\n  state.groq.key1.dailyRequests = 0;\n  state.groq.key2.dailyRequests = 0;\n  state.groq.key3.dailyRequests = 0;\n  state.groq.key4.dailyRequests = 0;\n  state.groq.currentActive = 'key1';\n  \n  // Update last reset date\n  state.lastResetDate = today;\n  \n  console.log(`\u2705 Daily reset performed at midnight UTC for ${today}`);\n  console.log(`   Gmail: All 4 accounts reset to 0 emails, 0 errors`);\n  console.log(`   Sheets: All 4 accounts reset to 0 writes`);\n  console.log(`   Groq: All 4 keys reset to 0 requests`);\n  \n  return [{\n    json: {\n      resetPerformed: true,\n      date: today,\n      timestamp: new Date().toISOString(),\n      message: 'All account counters reset to 0 at midnight UTC'\n    }\n  }];\n} else {\n  return [{\n    json: {\n      resetPerformed: false,\n      date: today,\n      message: 'Reset already performed today',\n      lastResetDate: state.lastResetDate\n    }\n  }];\n}"
       }
     },
     {
@@ -2019,6 +1995,11 @@
             "node": "Job API State Manager",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Multi-Account State Manager",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -2123,6 +2104,11 @@
             "node": "Parse AI Score",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Update Groq Request Counter",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -2155,6 +2141,11 @@
         [
           {
             "node": "Aggregate Job Discovery Summary",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update Sheets Write Counter",
             "type": "main",
             "index": 0
           }
@@ -2229,6 +2220,11 @@
             "node": "Parse & Format Email",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Update Groq Request Counter",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -2238,17 +2234,6 @@
         [
           {
             "node": "Check Email Account Status",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Send Email via Gmail": {
-      "main": [
-        [
-          {
-            "node": "Update Metadata (Status & Application ID)",
             "type": "main",
             "index": 0
           }
@@ -2271,6 +2256,11 @@
         [
           {
             "node": "Rate Limit Delay (3 seconds)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update Sheets Write Counter",
             "type": "main",
             "index": 0
           }
@@ -2325,7 +2315,7 @@
       "main": [
         [
           {
-            "node": "Is Quick Command?",
+            "node": "Needs State Report?",
             "type": "main",
             "index": 0
           }
@@ -2366,6 +2356,11 @@
         [
           {
             "node": "Parse Response & Detect Intents",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update Groq Request Counter",
             "type": "main",
             "index": 0
           }
@@ -2459,6 +2454,11 @@
             "node": "Structure Resume Data",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Update Groq Request Counter",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -2503,6 +2503,11 @@
             "node": "Email Account State",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Multi-Account State Manager",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -2512,6 +2517,16 @@
         [
           {
             "node": "Read Jobs from Sheet for Outreach",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Google Sheets Account State",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Groq API Key State",
             "type": "main",
             "index": 0
           }
@@ -2654,7 +2669,7 @@
       "main": [
         [
           {
-            "node": "Email Account Switch Notification",
+            "node": "Log Email Switch",
             "type": "main",
             "index": 0
           }
@@ -2766,7 +2781,7 @@
         ]
       ]
     },
-    "trigger-4-daily-reset": {
+    "Schedule Trigger: Daily Reset (Midnight UTC)": {
       "main": [
         [
           {
@@ -2777,7 +2792,7 @@
         ]
       ]
     },
-    "check-needs-state-report": {
+    "Needs State Report?": {
       "main": [
         [
           {
@@ -2795,7 +2810,7 @@
         ]
       ]
     },
-    "get-full-state-report": {
+    "Get Full State Report": {
       "main": [
         [
           {
@@ -2806,7 +2821,7 @@
         ]
       ]
     },
-    "log-email-switch": {
+    "Log Email Switch": {
       "main": [
         [
           {
@@ -2817,7 +2832,7 @@
         ]
       ]
     },
-    "account-switch-logger": {
+    "Account Switch Logger": {
       "main": [
         [
           {
@@ -2828,7 +2843,7 @@
         ]
       ]
     },
-    "log-sheets-switch": {
+    "Log Sheets Switch": {
       "main": [
         [
           {
@@ -2839,7 +2854,7 @@
         ]
       ]
     },
-    "log-groq-switch": {
+    "Log Groq Switch": {
       "main": [
         [
           {
@@ -2850,7 +2865,7 @@
         ]
       ]
     },
-    "switch-notification-router": {
+    "Route to Appropriate Notification": {
       "main": [
         [
           {
@@ -2869,6 +2884,120 @@
         [
           {
             "node": "Groq Key Switch Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Multi-Account State Manager": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets Account State",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Groq API Key State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets Account State": {
+      "main": [
+        [
+          {
+            "node": "Select Sheets Credential",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq API Key State": {
+      "main": [
+        [
+          {
+            "node": "Select Groq Credential",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Sheets Write Counter": {
+      "main": [
+        [
+          {
+            "node": "Check if Sheets Switch Notification Needed",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Sheets Error Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if Sheets Switch Notification Needed": {
+      "main": [
+        [
+          {
+            "node": "Log Sheets Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Groq Request Counter": {
+      "main": [
+        [
+          {
+            "node": "Check if Groq Switch Notification Needed",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Groq Error Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if Groq Switch Notification Needed": {
+      "main": [
+        [
+          {
+            "node": "Log Groq Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sheets Error Handler": {
+      "main": [
+        [
+          {
+            "node": "Check if Sheets Switch Notification Needed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Error Handler": {
+      "main": [
+        [
+          {
+            "node": "Check if Groq Switch Notification Needed",
             "type": "main",
             "index": 0
           }
