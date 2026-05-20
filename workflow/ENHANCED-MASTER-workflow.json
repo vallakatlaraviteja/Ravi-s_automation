@@ -73,7 +73,7 @@
         300
       ],
       "parameters": {
-        "jsCode": "// User profile configuration - single source of truth\nreturn [{\n  json: {\n    name: 'Your Name',\n    currentRole: 'Senior Backend Engineer',\n    targetRole: 'Staff Engineer',\n    experience: '5 years',\n    skills: ['Python', 'Node.js', 'AWS', 'Docker', 'Kubernetes', 'PostgreSQL'],\n    location: 'Hyderabad, India',\n    workMode: ['remote', 'hybrid'],\n    minSalary: 80000,\n    targetRoles: ['Backend Engineer', 'Full Stack Engineer', 'DevOps Engineer'],\n    keywords: 'python developer OR backend engineer OR nodejs',\n    country: 'in',\n    githubUrl: 'https://github.com/yourusername',\n    linkedinUrl: 'https://linkedin.com/in/yourprofile',\n    portfolioUrl: 'https://yourportfolio.com',\n    resumeUrl: 'https://drive.google.com/file/d/YOUR_RESUME_ID/view',\n    resumeParsingEnabled: true,\n    userEmail: 'YOUR_EMAIL@example.com',\n    dailyLimit: 10,\n    scoreThreshold: 30,\n    sheetId: 'YOUR_SPREADSHEET_ID',\n    primaryEmail: 'raviintouch2@gmail.com',\n    secondaryEmail: 'ravitejavallakatla7@gmail.com',\n    primaryGmailCredentialId: 'YOUR_PRIMARY_GMAIL_CREDENTIAL_ID',\n    secondaryGmailCredentialId: 'YOUR_SECONDARY_GMAIL_CREDENTIAL_ID',\n    maxEmailsPerAccount: 50,\n    errorThreshold: 3\n  }\n}];"
+        "jsCode": "// USER PREFERENCES & METADATA (not a replacement for resume!)\n// This config provides: location preferences, visa status, email settings, and URLs\n// Your actual resume data (skills, projects, experience) is parsed from resumeUrl by Groq AI\n// The parsed resume data is merged with this config to create your complete profile\nreturn [{\n  json: {\n    name: 'Your Name',\n    currentRole: 'Senior Backend Engineer',\n    targetRole: 'Staff Engineer',\n    experience: '5 years',\n    skills: ['Python', 'Node.js', 'AWS', 'Docker', 'Kubernetes', 'PostgreSQL'],\n    location: 'Hyderabad, India',\n    workMode: ['remote', 'hybrid'],\n    minSalary: 80000,\n    targetRoles: ['Backend Engineer', 'Full Stack Engineer', 'DevOps Engineer'],\n    keywords: 'python developer OR backend engineer OR nodejs',\n    country: 'in',\n    githubUrl: 'https://github.com/yourusername',\n    linkedinUrl: 'https://linkedin.com/in/yourprofile',\n    portfolioUrl: 'https://yourportfolio.com',\n    resumeUrl: 'https://drive.google.com/file/d/YOUR_RESUME_ID/view',\n    resumeParsingEnabled: true,\n    userEmail: 'YOUR_EMAIL@example.com',\n    dailyLimit: 10,\n    scoreThreshold: 30,\n    sheetId: 'YOUR_SPREADSHEET_ID',\n    primaryEmail: 'raviintouch2@gmail.com',\n    secondaryEmail: 'ravitejavallakatla7@gmail.com',\n    primaryGmailCredentialId: 'YOUR_PRIMARY_GMAIL_CREDENTIAL_ID',\n    secondaryGmailCredentialId: 'YOUR_SECONDARY_GMAIL_CREDENTIAL_ID',\n    maxEmailsPerAccount: 50,\n    errorThreshold: 3\n  }\n}];"
       }
     },
     {
@@ -139,45 +139,6 @@
       "continueOnFail": true
     },
     {
-      "id": "fetch-adzuna",
-      "name": "Fetch Adzuna API",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.1,
-      "position": [
-        680,
-        480
-      ],
-      "parameters": {
-        "url": "=https://api.adzuna.com/v1/api/jobs/{{ $('User Config (Master Profile)').item.json.country }}/search/1",
-        "method": "GET",
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "app_id",
-              "value": "YOUR_ADZUNA_APP_ID"
-            },
-            {
-              "name": "app_key",
-              "value": "YOUR_ADZUNA_APP_KEY"
-            },
-            {
-              "name": "what",
-              "value": "={{ $('User Config (Master Profile)').item.json.keywords }}"
-            },
-            {
-              "name": "results_per_page",
-              "value": "50"
-            }
-          ]
-        },
-        "options": {
-          "timeout": 30000
-        }
-      },
-      "continueOnFail": true
-    },
-    {
       "id": "parse-remotive",
       "name": "Parse Remotive Response",
       "type": "n8n-nodes-base.code",
@@ -202,20 +163,6 @@
       ],
       "parameters": {
         "jsCode": "// Parse Arbeitnow API response\nconst response = items[0].json;\nconst jobs = response.data || [];\n\nreturn jobs.map(job => ({\n  json: {\n    source: 'Arbeitnow',\n    jobTitle: job.title || 'Unknown',\n    company: job.company_name || 'Unknown',\n    location: job.location || 'Remote',\n    jobType: job.job_types?.[0] || 'Full-time',\n    workMode: job.remote ? 'Remote' : 'Onsite',\n    salary: 'Not disclosed',\n    applyUrl: job.url || '',\n    description: (job.description || '').substring(0, 500),\n    tags: job.tags || [],\n    postedDate: job.created_at ? new Date(job.created_at * 1000).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],\n    category: '',\n    jobId: `arbeitnow-${job.slug || Date.now()}`,\n    fetchedDate: new Date().toISOString().split('T')[0],\n    recruiterEmail: '',\n    recruiterName: ''\n  }\n}));"
-      },
-      "continueOnFail": true
-    },
-    {
-      "id": "parse-adzuna",
-      "name": "Parse Adzuna Response",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        900,
-        480
-      ],
-      "parameters": {
-        "jsCode": "// Parse Adzuna API response\nconst response = items[0].json;\nconst jobs = response.results || [];\n\nreturn jobs.map(job => ({\n  json: {\n    source: 'Adzuna',\n    jobTitle: job.title || 'Unknown',\n    company: job.company?.display_name || 'Unknown',\n    location: job.location?.display_name || 'Not specified',\n    jobType: job.contract_time || 'Full-time',\n    workMode: 'Not specified',\n    salary: job.salary_max ? `${job.salary_min || 0} - ${job.salary_max}` : 'Not disclosed',\n    applyUrl: job.redirect_url || '',\n    description: (job.description || '').substring(0, 500),\n    tags: job.category?.tag ? [job.category.tag] : [],\n    postedDate: job.created || new Date().toISOString().split('T')[0],\n    category: job.category?.label || '',\n    jobId: `adzuna-${job.id || Date.now()}`,\n    fetchedDate: new Date().toISOString().split('T')[0],\n    recruiterEmail: '',\n    recruiterName: ''\n  }\n}));"
       },
       "continueOnFail": true
     },
@@ -329,7 +276,7 @@
     },
     {
       "id": "filter-by-score",
-      "name": "Filter by Score Threshold (\u226530)",
+      "name": "Filter by Score Threshold (≥30)",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
@@ -511,7 +458,7 @@
         360
       ],
       "parameters": {
-        "jsCode": "// Aggregate job discovery summary\nconst jobs = items.map(item => item.json);\nconst total = jobs.length;\nconst high = jobs.filter(j => j.priority === 'high').length;\nconst medium = jobs.filter(j => j.priority === 'medium').length;\nconst low = jobs.filter(j => j.priority === 'low').length;\n\nconst topJobs = jobs\n  .sort((a, b) => b.score - a.score)\n  .slice(0, 5)\n  .map(j => `\u2022 **${j.jobTitle}** at **${j.company}** (${j.location}) - Score: ${j.score} [${j.source}]`);\n\nconst sourceBreakdown = jobs.reduce((acc, j) => {\n  acc[j.source] = (acc[j.source] || 0) + 1;\n  return acc;\n}, {});\n\nconst sourceStats = Object.entries(sourceBreakdown)\n  .map(([source, count]) => `${source}: ${count}`)\n  .join(', ');\n\nreturn [{\n  json: {\n    total,\n    high,\n    medium,\n    low,\n    topJobsList: topJobs.join('\\n'),\n    sourceStats,\n    date: new Date().toISOString().split('T')[0]\n  }\n}];"
+        "jsCode": "// Aggregate job discovery summary\nconst jobs = items.map(item => item.json);\nconst total = jobs.length;\nconst high = jobs.filter(j => j.priority === 'high').length;\nconst medium = jobs.filter(j => j.priority === 'medium').length;\nconst low = jobs.filter(j => j.priority === 'low').length;\n\nconst topJobs = jobs\n  .sort((a, b) => b.score - a.score)\n  .slice(0, 5)\n  .map(j => `• **${j.jobTitle}** at **${j.company}** (${j.location}) - Score: ${j.score} [${j.source}]`);\n\nconst sourceBreakdown = jobs.reduce((acc, j) => {\n  acc[j.source] = (acc[j.source] || 0) + 1;\n  return acc;\n}, {});\n\nconst sourceStats = Object.entries(sourceBreakdown)\n  .map(([source, count]) => `${source}: ${count}`)\n  .join(', ');\n\nreturn [{\n  json: {\n    total,\n    high,\n    medium,\n    low,\n    topJobsList: topJobs.join('\\n'),\n    sourceStats,\n    date: new Date().toISOString().split('T')[0]\n  }\n}];"
       }
     },
     {
@@ -525,7 +472,7 @@
       ],
       "parameters": {
         "chatId": "YOUR_TELEGRAM_CHAT_ID",
-        "text": "=\ud83d\udcca **Daily Job Discovery Complete**\n\n\u2705 Found **{{ $json.total }}** new relevant jobs!\n\n**Priority Breakdown:**\n\ud83d\udd34 High: {{ $json.high }}\n\ud83d\udfe1 Medium: {{ $json.medium }}\n\ud83d\udfe2 Low: {{ $json.low }}\n\n**Sources:** {{ $json.sourceStats }}\n\n**Top 5 Matches:**\n{{ $json.topJobsList }}\n\nAll jobs saved to Google Sheet. Add recruiter emails for auto-outreach!\n\n**Date:** {{ $json.date }}",
+        "text": "=📊 **Daily Job Discovery Complete**\n\n✅ Found **{{ $json.total }}** new relevant jobs!\n\n**Priority Breakdown:**\n🔴 High: {{ $json.high }}\n🟡 Medium: {{ $json.medium }}\n🟢 Low: {{ $json.low }}\n\n**Sources:** {{ $json.sourceStats }}\n\n**Top 5 Matches:**\n{{ $json.topJobsList }}\n\nAll jobs saved to Google Sheet. Add recruiter emails for auto-outreach!\n\n**Date:** {{ $json.date }}",
         "additionalFields": {}
       },
       "credentials": {
@@ -546,8 +493,8 @@
       ],
       "parameters": {
         "sendTo": "={{ $('User Config (Master Profile)').item.json.userEmail }}",
-        "subject": "\ud83d\udcca Daily Job Discovery - {{ $json.total }} New Jobs",
-        "message": "=Hello {{ $('User Config (Master Profile)').item.json.name }},\n\nYour job discovery engine found **{{ $json.total }}** new relevant jobs!\n\n**Priority Breakdown:**\n\ud83d\udd34 High: {{ $json.high }}\n\ud83d\udfe1 Medium: {{ $json.medium }}\n\ud83d\udfe2 Low: {{ $json.low }}\n\n**Sources:**\n{{ $json.sourceStats }}\n\n**Top 5 Matches:**\n{{ $json.topJobsList }}\n\nAll jobs have been added to your Google Sheet.\nReview them and add recruiter emails for auto-outreach.\n\n**Date:** {{ $json.date }}\n\nBest regards,\nJob Discovery Engine",
+        "subject": "📊 Daily Job Discovery - {{ $json.total }} New Jobs",
+        "message": "=Hello {{ $('User Config (Master Profile)').item.json.name }},\n\nYour job discovery engine found **{{ $json.total }}** new relevant jobs!\n\n**Priority Breakdown:**\n🔴 High: {{ $json.high }}\n🟡 Medium: {{ $json.medium }}\n🟢 Low: {{ $json.low }}\n\n**Sources:**\n{{ $json.sourceStats }}\n\n**Top 5 Matches:**\n{{ $json.topJobsList }}\n\nAll jobs have been added to your Google Sheet.\nReview them and add recruiter emails for auto-outreach.\n\n**Date:** {{ $json.date }}\n\nBest regards,\nJob Discovery Engine",
         "options": {}
       },
       "credentials": {
@@ -782,7 +729,7 @@
         1800
       ],
       "parameters": {
-        "jsCode": "// Aggregate sending summary\nconst jobs = items.map(item => item.json);\nconst total = jobs.length;\n\nconst sentList = jobs.map(j => \n  `\u2022 **${j['Job Title'] || j.jobTitle}** at **${j.Company || j.company}** \u2192 ${j['Recruiter Email'] || j.recruiterEmail}`\n);\n\nreturn [{\n  json: {\n    total,\n    sentList: sentList.join('\\n'),\n    date: new Date().toISOString().split('T')[0]\n  }\n}];"
+        "jsCode": "// Aggregate sending summary\nconst jobs = items.map(item => item.json);\nconst total = jobs.length;\n\nconst sentList = jobs.map(j => \n  `• **${j['Job Title'] || j.jobTitle}** at **${j.Company || j.company}** → ${j['Recruiter Email'] || j.recruiterEmail}`\n);\n\nreturn [{\n  json: {\n    total,\n    sentList: sentList.join('\\n'),\n    date: new Date().toISOString().split('T')[0]\n  }\n}];"
       }
     },
     {
@@ -796,8 +743,8 @@
       ],
       "parameters": {
         "sendTo": "={{ $('User Config (Master Profile)').item.json.userEmail }}",
-        "subject": "\u2705 Email Outreach Complete - {{ $json.total }} Emails Sent",
-        "message": "=Hello {{ $('User Config (Master Profile)').item.json.name }},\n\nYour daily email outreach campaign has completed!\n\n**Email Account Status:**\n\ud83d\udce7 Primary (raviintouch2@gmail.com): {{ $('Email Send Result Handler').first().json.primaryDailyCount || 0 }} sent today\n\ud83d\udce7 Secondary (ravitejavallakatla7@gmail.com): {{ $('Email Send Result Handler').first().json.secondaryDailyCount || 0 }} sent today\n\u2705 Active Account: {{ $('Email Send Result Handler').first().json.currentActive || 'primary' }}\n\n**Total Emails Sent:** {{ $json.total }}\n\n**Sent To:**\n{{ $json.sentList }}\n\nAll applications have been logged in your Google Sheet with status \"Email Sent\".\n\nCheck your Gmail Sent folder for copies (you were CC'd on all emails).\n\n**Date:** {{ $json.date }}\n\nBest regards,\nEmail Outreach System",
+        "subject": "✅ Email Outreach Complete - {{ $json.total }} Emails Sent",
+        "message": "=Hello {{ $('User Config (Master Profile)').item.json.name }},\n\nYour daily email outreach campaign has completed!\n\n**Email Account Status:**\n📧 Primary (raviintouch2@gmail.com): {{ $('Email Send Result Handler').first().json.primaryDailyCount || 0 }} sent today\n📧 Secondary (ravitejavallakatla7@gmail.com): {{ $('Email Send Result Handler').first().json.secondaryDailyCount || 0 }} sent today\n✅ Active Account: {{ $('Email Send Result Handler').first().json.currentActive || 'primary' }}\n\n**Total Emails Sent:** {{ $json.total }}\n\n**Sent To:**\n{{ $json.sentList }}\n\nAll applications have been logged in your Google Sheet with status \"Email Sent\".\n\nCheck your Gmail Sent folder for copies (you were CC'd on all emails).\n\n**Date:** {{ $json.date }}\n\nBest regards,\nEmail Outreach System",
         "options": {}
       },
       "credentials": {
@@ -830,7 +777,7 @@
         3300
       ],
       "parameters": {
-        "jsCode": "// Quick command handler\nconst text = items[0].json.text.toLowerCase();\nconst config = $('User Config (Master Profile)').item.json;\n\nlet quickResponse = '';\nlet isQuickCommand = false;\n\nif (text === '/start' || text === '/help') {\n  isQuickCommand = true;\n  quickResponse = `**Job Hunt Assistant**\n\nWelcome ${config.name}! \n\n**Commands:**\n\u2022 /stats - View your application stats\n\u2022 /resume - View your resume\n\u2022 /help - Show this help message\n\nAsk me anything about your job search!`;\n} else if (text === '/resume') {\n  isQuickCommand = true;\n  quickResponse = `**Your Resume:**\n${config.resumeUrl}\n\n**Profile:**\n\u2022 ${config.currentRole}\n\u2022 ${config.experience}\n\u2022 Skills: ${config.skills.join(', ')}\n\u2022 Location: ${config.location}\n\n**Links:**\nLinkedIn: ${config.linkedinUrl}\nGitHub: ${config.githubUrl}\nPortfolio: ${config.portfolioUrl}`;\n} else if (text === '/stats') {\n  isQuickCommand = false; // Will need sheet query\n  quickResponse = '';\n}\n\nreturn [{\n  json: {\n    ...items[0].json,\n    quickResponse,\n    isQuickCommand\n  }\n}];"
+        "jsCode": "// Quick command handler\nconst text = items[0].json.text.toLowerCase();\nconst config = $('User Config (Master Profile)').item.json;\n\nlet quickResponse = '';\nlet isQuickCommand = false;\n\nif (text === '/start' || text === '/help') {\n  isQuickCommand = true;\n  quickResponse = `**Job Hunt Assistant**\n\nWelcome ${config.name}! \n\n**Commands:**\n• /stats - View your application stats\n• /resume - View your resume\n• /help - Show this help message\n\nAsk me anything about your job search!`;\n} else if (text === '/resume') {\n  isQuickCommand = true;\n  quickResponse = `**Your Resume:**\n${config.resumeUrl}\n\n**Profile:**\n• ${config.currentRole}\n• ${config.experience}\n• Skills: ${config.skills.join(', ')}\n• Location: ${config.location}\n\n**Links:**\nLinkedIn: ${config.linkedinUrl}\nGitHub: ${config.githubUrl}\nPortfolio: ${config.portfolioUrl}`;\n} else if (text === '/stats') {\n  isQuickCommand = false; // Will need sheet query\n  quickResponse = '';\n}\n\nreturn [{\n  json: {\n    ...items[0].json,\n    quickResponse,\n    isQuickCommand\n  }\n}];"
       }
     },
     {
@@ -983,7 +930,7 @@
         3300
       ],
       "parameters": {
-        "jsCode": "// Aggregate sheet stats\nconst jobs = items.map(item => item.json);\n\nconst total = jobs.length;\nconst statusCounts = jobs.reduce((acc, j) => {\n  const status = j.Status || j.status || 'Unknown';\n  acc[status] = (acc[status] || 0) + 1;\n  return acc;\n}, {});\n\nconst priorityCounts = jobs.reduce((acc, j) => {\n  const priority = j.Priority || j.priority || 'unknown';\n  acc[priority] = (acc[priority] || 0) + 1;\n  return acc;\n}, {});\n\nconst stats = `**Your Job Tracker Stats:**\n\u2022 Total jobs: ${total}\n\n**Status Breakdown:**\n` + Object.entries(statusCounts).map(([status, count]) => \n  `\u2022 ${status}: ${count}`\n).join('\\n') + `\n\n**Priority Breakdown:**\n` + Object.entries(priorityCounts).map(([priority, count]) => \n  `\u2022 ${priority}: ${count}`\n).join('\\n');\n\nreturn [{\n  json: {\n    ...items[0].json,\n    stats\n  }\n}];"
+        "jsCode": "// Aggregate sheet stats\nconst jobs = items.map(item => item.json);\n\nconst total = jobs.length;\nconst statusCounts = jobs.reduce((acc, j) => {\n  const status = j.Status || j.status || 'Unknown';\n  acc[status] = (acc[status] || 0) + 1;\n  return acc;\n}, {});\n\nconst priorityCounts = jobs.reduce((acc, j) => {\n  const priority = j.Priority || j.priority || 'unknown';\n  acc[priority] = (acc[priority] || 0) + 1;\n  return acc;\n}, {});\n\nconst stats = `**Your Job Tracker Stats:**\n• Total jobs: ${total}\n\n**Status Breakdown:**\n` + Object.entries(statusCounts).map(([status, count]) => \n  `• ${status}: ${count}`\n).join('\\n') + `\n\n**Priority Breakdown:**\n` + Object.entries(priorityCounts).map(([priority, count]) => \n  `• ${priority}: ${count}`\n).join('\\n');\n\nreturn [{\n  json: {\n    ...items[0].json,\n    stats\n  }\n}];"
       }
     },
     {
@@ -1318,7 +1265,7 @@
       ],
       "parameters": {
         "chatId": "YOUR_TELEGRAM_CHAT_ID",
-        "text": "=\u26a0\ufe0f **Email Account Switched**\n\n**Reason:** {{ $json.switchReason }}\n\n**Previous Account:** {{ $json.accountUsed === 'primary' ? 'Primary (raviintouch2@gmail.com)' : 'Secondary (ravitejavallakatla7@gmail.com)' }}\n**New Active Account:** {{ $json.currentActive === 'primary' ? 'Primary (raviintouch2@gmail.com)' : 'Secondary (ravitejavallakatla7@gmail.com)' }}\n\n**Status:**\n\ud83d\udce7 Primary: {{ $json.primaryDailyCount }} sent today, {{ $json.primaryErrors }} errors\n\ud83d\udce7 Secondary: {{ $json.secondaryDailyCount }} sent today, {{ $json.secondaryErrors }} errors\n\n**Time:** {{ $json.timestamp }}",
+        "text": "=⚠️ **Email Account Switched**\n\n**Reason:** {{ $json.switchReason }}\n\n**Previous Account:** {{ $json.accountUsed === 'primary' ? 'Primary (raviintouch2@gmail.com)' : 'Secondary (ravitejavallakatla7@gmail.com)' }}\n**New Active Account:** {{ $json.currentActive === 'primary' ? 'Primary (raviintouch2@gmail.com)' : 'Secondary (ravitejavallakatla7@gmail.com)' }}\n\n**Status:**\n📧 Primary: {{ $json.primaryDailyCount }} sent today, {{ $json.primaryErrors }} errors\n📧 Secondary: {{ $json.secondaryDailyCount }} sent today, {{ $json.secondaryErrors }} errors\n\n**Time:** {{ $json.timestamp }}",
         "additionalFields": {}
       },
       "credentials": {
@@ -1375,11 +1322,6 @@
             "index": 0
           },
           {
-            "node": "Fetch Adzuna API",
-            "type": "main",
-            "index": 0
-          },
-          {
             "node": "Download Resume",
             "type": "main",
             "index": 0
@@ -1409,17 +1351,6 @@
         ]
       ]
     },
-    "Fetch Adzuna API": {
-      "main": [
-        [
-          {
-            "node": "Parse Adzuna Response",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Parse Remotive Response": {
       "main": [
         [
@@ -1438,17 +1369,6 @@
             "node": "Merge All API Results",
             "type": "main",
             "index": 1
-          }
-        ]
-      ]
-    },
-    "Parse Adzuna Response": {
-      "main": [
-        [
-          {
-            "node": "Merge All API Results",
-            "type": "main",
-            "index": 2
           }
         ]
       ]
@@ -1519,7 +1439,7 @@
         ]
       ]
     },
-    "Filter by Score Threshold (\u226530)": {
+    "Filter by Score Threshold (≥30)": {
       "main": [
         [
           {
@@ -1870,7 +1790,7 @@
       "main": [
         [
           {
-            "node": "Filter by Score Threshold (\u226530)",
+            "node": "Filter by Score Threshold (≥30)",
             "type": "main",
             "index": 0
           }
