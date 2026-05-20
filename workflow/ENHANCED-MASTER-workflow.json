@@ -73,7 +73,7 @@
         300
       ],
       "parameters": {
-        "jsCode": "// USER PREFERENCES & METADATA (not a replacement for resume!)\n// This config provides: location preferences, visa status, email settings, and URLs\n// Your actual resume data (skills, projects, experience) is parsed from resumeUrl by Groq AI\n// The parsed resume data is merged with this config to create your complete profile\nreturn [{\n  json: {\n    name: 'Your Name',\n    currentRole: 'Senior Backend Engineer',\n    targetRole: 'Staff Engineer',\n    experience: '5 years',\n    skills: ['Python', 'Node.js', 'AWS', 'Docker', 'Kubernetes', 'PostgreSQL'],\n    location: 'Hyderabad, India',\n    workMode: ['remote', 'hybrid'],\n    minSalary: 80000,\n    targetRoles: ['Backend Engineer', 'Full Stack Engineer', 'DevOps Engineer'],\n    keywords: 'python developer OR backend engineer OR nodejs',\n    country: 'in',\n    githubUrl: 'https://github.com/yourusername',\n    linkedinUrl: 'https://linkedin.com/in/yourprofile',\n    portfolioUrl: 'https://yourportfolio.com',\n    resumeUrl: 'https://drive.google.com/file/d/YOUR_RESUME_ID/view',\n    resumeParsingEnabled: true,\n    userEmail: 'YOUR_EMAIL@example.com',\n    dailyLimit: 10,\n    scoreThreshold: 30,\n    sheetId: 'YOUR_SPREADSHEET_ID',\n    account1Email: 'raviintouch2@gmail.com',\n    account2Email: 'ravitejavallakatla7@gmail.com',\n    account3Email: 'ravitejav081@gmail.com',\n    account4Email: 'ravitejav0801@gmail.com',\n    account1CredentialId: 'YOUR_GMAIL_ACCOUNT_1_CREDENTIAL_ID',\n    account2CredentialId: 'YOUR_GMAIL_ACCOUNT_2_CREDENTIAL_ID',\n    account3CredentialId: 'YOUR_GMAIL_ACCOUNT_3_CREDENTIAL_ID',\n    account4CredentialId: 'YOUR_GMAIL_ACCOUNT_4_CREDENTIAL_ID',\n    maxEmailsPerAccount: 50,\n    errorThreshold: 3,\n    sheetsAccount1CredentialId: 'YOUR_SHEETS_ACCOUNT_1_CREDENTIAL_ID',\n    sheetsAccount2CredentialId: 'YOUR_SHEETS_ACCOUNT_2_CREDENTIAL_ID',\n    sheetsAccount3CredentialId: 'YOUR_SHEETS_ACCOUNT_3_CREDENTIAL_ID',\n    sheetsAccount4CredentialId: 'YOUR_SHEETS_ACCOUNT_4_CREDENTIAL_ID',\n    maxSheetsWritesPerAccount: 300,\n    groqKey1CredentialId: 'YOUR_GROQ_KEY_1_CREDENTIAL_ID',\n    groqKey2CredentialId: 'YOUR_GROQ_KEY_2_CREDENTIAL_ID',\n    groqKey3CredentialId: 'YOUR_GROQ_KEY_3_CREDENTIAL_ID',\n    groqKey4CredentialId: 'YOUR_GROQ_KEY_4_CREDENTIAL_ID',\n    maxGroqRequestsPerKey: 14400,\n    // Setup: Create 4 Groq accounts using email alias trick:\n    // raviintouch2+groq1@gmail.com, ravitejavallakatla7+groq2@gmail.com,\n    // ravitejav081+groq3@gmail.com, ravitejav0801+groq4@gmail.com,\n    rapidapiKey: 'YOUR_RAPIDAPI_KEY_HERE',\n    usajobsApiKey: 'YOUR_USAJOBS_API_KEY_HERE'\n  }\n}];"
+        "jsCode": "// USER PREFERENCES & METADATA (not a replacement for resume!)\n// \n// HOW EMAIL OUTREACH WORKS:\n// Job APIs find jobs but do NOT provide recruiter emails.\n// After 8 AM job discovery populates your Sheet, YOU manually add\n// recruiter emails (from LinkedIn, company sites, Hunter.io free tier).\n// The 9 AM outreach trigger emails only rows where you've filled\n// 'Recruiter Email'. This keeps it targeted, not spammy.\n//\n// ROTATION PURPOSE: 4 Gmail accounts = 200 emails/day free-tier capacity.\n// All 4 accounts should have the same display name in Google Account settings.\n// This config provides: location preferences, visa status, email settings, and URLs\n// Your actual resume data (skills, projects, experience) is parsed from resumeUrl by Groq AI\n// The parsed resume data is merged with this config to create your complete profile\nreturn [{\n  json: {\n    name: 'Your Name',\n    currentRole: 'Senior Backend Engineer',\n    targetRole: 'Staff Engineer',\n    experience: '5 years',\n    skills: ['Python', 'Node.js', 'AWS', 'Docker', 'Kubernetes', 'PostgreSQL'],\n    location: 'Hyderabad, India',\n    workMode: ['remote', 'hybrid'],\n    minSalary: 80000,\n    targetRoles: ['Backend Engineer', 'Full Stack Engineer', 'DevOps Engineer'],\n    keywords: 'python developer OR backend engineer OR nodejs',\n    country: 'in',\n    githubUrl: 'https://github.com/yourusername',\n    linkedinUrl: 'https://linkedin.com/in/yourprofile',\n    portfolioUrl: 'https://yourportfolio.com',\n    resumeUrl: 'https://drive.google.com/file/d/YOUR_RESUME_ID/view',\n    resumeParsingEnabled: true,\n    userEmail: 'YOUR_EMAIL@example.com',\n    dailyLimit: 50,\n    scoreThreshold: 60,\n    sheetId: 'YOUR_SPREADSHEET_ID',\n    account1Email: 'raviintouch2@gmail.com',\n    account2Email: 'ravitejavallakatla7@gmail.com',\n    account3Email: 'ravitejav081@gmail.com',\n    account4Email: 'ravitejav0801@gmail.com',\n    account1CredentialId: 'YOUR_GMAIL_ACCOUNT_1_CREDENTIAL_ID',\n    account2CredentialId: 'YOUR_GMAIL_ACCOUNT_2_CREDENTIAL_ID',\n    account3CredentialId: 'YOUR_GMAIL_ACCOUNT_3_CREDENTIAL_ID',\n    account4CredentialId: 'YOUR_GMAIL_ACCOUNT_4_CREDENTIAL_ID',\n    maxEmailsPerAccount: 50,\n    errorThreshold: 3,\n    sheetsAccount1CredentialId: 'YOUR_SHEETS_ACCOUNT_1_CREDENTIAL_ID',\n    sheetsAccount2CredentialId: 'YOUR_SHEETS_ACCOUNT_2_CREDENTIAL_ID',\n    sheetsAccount3CredentialId: 'YOUR_SHEETS_ACCOUNT_3_CREDENTIAL_ID',\n    sheetsAccount4CredentialId: 'YOUR_SHEETS_ACCOUNT_4_CREDENTIAL_ID',\n    maxSheetsWritesPerAccount: 300,\n    groqKey1CredentialId: 'YOUR_GROQ_KEY_1_CREDENTIAL_ID',\n    groqKey2CredentialId: 'YOUR_GROQ_KEY_2_CREDENTIAL_ID',\n    groqKey3CredentialId: 'YOUR_GROQ_KEY_3_CREDENTIAL_ID',\n    groqKey4CredentialId: 'YOUR_GROQ_KEY_4_CREDENTIAL_ID',\n    maxGroqRequestsPerKey: 14400,\n    // Setup: Create 4 Groq accounts using email alias trick:\n    // raviintouch2+groq1@gmail.com, ravitejavallakatla7+groq2@gmail.com,\n    // ravitejav081+groq3@gmail.com, ravitejav0801+groq4@gmail.com,\n    rapidapiKey: 'YOUR_RAPIDAPI_KEY_HERE',\n  }\n}];"
       }
     },
     {
@@ -289,7 +289,7 @@
     },
     {
       "id": "filter-by-score",
-      "name": "Filter by Score Threshold (\u226530)",
+      "name": "Filter by Score Threshold (\u226560)",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
@@ -571,7 +571,8 @@
           ]
         },
         "combineOperation": "all"
-      }
+      },
+      "notes": "HOW RECRUITER EMAILS WORK:\n\nJob APIs do NOT provide recruiter emails. You must manually fill the \n'Recruiter Email' column in your Google Sheet for jobs you want to apply to.\n\nWorkflow: \n1. Job Discovery (8 AM) populates jobs with scores\n2. YOU review the Sheet, find recruiter emails (LinkedIn, company site, Hunter.io)\n3. YOU fill 'Recruiter Email' column for good matches\n4. Email Outreach (9 AM) picks up rows with Status=New AND Recruiter Email filled\n5. AI generates personalized email with resume attached and sends\n\nThis is intentional: targeted emails to researched contacts = professional networking."
     },
     {
       "id": "limit-daily-emails",
@@ -600,7 +601,7 @@
         "options": {
           "temperature": 0.7
         },
-        "text": "=You are a professional email writer. Generate a personalized cold email to a recruiter.\n\n**Job Details:**\n- Title: {{ $json['Job Title'] || $json.jobTitle }}\n- Company: {{ $json.Company || $json.company }}\n- Recruiter: {{ $json['Recruiter Name'] || $json.recruiterName || 'Hiring Manager' }}\n- Location: {{ $json.Location || $json.location }}\n- Apply URL: {{ $json['Apply URL'] || $json.applyUrl }}\n\n**Candidate Profile:**\n- Name: {{ $('Merge User Config with Resume Data').item.json.name }}\n- Current Role: {{ $('Merge User Config with Resume Data').item.json.currentRole }}\n- Experience: {{ $('Merge User Config with Resume Data').item.json.experience }}\n- Skills: {{ $('Merge User Config with Resume Data').item.json.skills.join(', ') }}\n- Location: {{ $('Merge User Config with Resume Data').item.json.location }}\n\n**Resume Insights (Use to personalize email):**\n- Resume Parsed: {{ $('Merge User Config with Resume Data').item.json.resumeParsed }}\n- Key Projects: {{ ($('Merge User Config with Resume Data').item.json.resumeData.projects || []).slice(0, 3).map(p => p.name + ' (' + (p.technologies || []).join(', ') + ')').join('; ') }}\n- Recent Experience: {{ ($('Merge User Config with Resume Data').item.json.resumeData.experience || []).slice(0, 2).map(e => e.role + ' at ' + e.company).join('; ') }}\n- Achievements: {{ ($('Merge User Config with Resume Data').item.json.resumeData.achievements || []).slice(0, 2).join('; ') }}\n\n**Requirements:**\n1. Professional, concise (150-200 words)\n2. Show genuine interest in the company/role\n3. Mention 2-3 specific projects from resume that align with job requirements\n4. Reference relevant achievements from resume\n5. Highlight matching technical skills\n6. Include a clear call-to-action\n7. End with \"Best regards, {{ $('Merge User Config with Resume Data').item.json.name }}\"\n\n**Format:**\nSubject: [Generate compelling subject line]\n\n[Email body with specific resume project references]\n\nProvide ONLY the subject line and email body. No additional commentary."
+        "text": "=You are a professional email writer. Generate a personalized cold email to a recruiter.\n\n**Job Details:**\n- Title: {{ $json['Job Title'] || $json.jobTitle }}\n- Company: {{ $json.Company || $json.company }}\n- Recruiter: {{ $json['Recruiter Name'] || $json.recruiterName || 'Hiring Manager' }}\n- Location: {{ $json.Location || $json.location }}\n- Apply URL: {{ $json['Apply URL'] || $json.applyUrl }}\n- Job Description: {{ ($json['Description'] || $json.description || '').substring(0, 800) }}\n- Requirements: {{ ($json['Requirements'] || $json.requirements || '').substring(0, 400) }}\n\n**Candidate Profile:**\n- Name: {{ $('Merge User Config with Resume Data').item.json.name }}\n- Current Role: {{ $('Merge User Config with Resume Data').item.json.currentRole }}\n- Experience: {{ $('Merge User Config with Resume Data').item.json.experience }}\n- Skills: {{ $('Merge User Config with Resume Data').item.json.skills.join(', ') }}\n- Location: {{ $('Merge User Config with Resume Data').item.json.location }}\n\n**Resume Insights (Use to personalize email):**\n- Resume Parsed: {{ $('Merge User Config with Resume Data').item.json.resumeParsed }}\n- Key Projects: {{ ($('Merge User Config with Resume Data').item.json.resumeData.projects || []).slice(0, 3).map(p => p.name + ' (' + (p.technologies || []).join(', ') + ')').join('; ') }}\n- Recent Experience: {{ ($('Merge User Config with Resume Data').item.json.resumeData.experience || []).slice(0, 2).map(e => e.role + ' at ' + e.company).join('; ') }}\n- Achievements: {{ ($('Merge User Config with Resume Data').item.json.resumeData.achievements || []).slice(0, 2).join('; ') }}\n\n**Requirements:**\n1. Professional, concise (150-200 words)\n2. Reference SPECIFIC details from the job description that match your experience\n3. Mention 2-3 specific projects from resume that directly align with job requirements\n4. Reference relevant achievements from resume\n5. Highlight matching technical skills from both resume and job description\n6. Include a clear call-to-action\n7. End with \"Best regards, {{ $('Merge User Config with Resume Data').item.json.name }}\"\n8. DO NOT be generic - every sentence must reference something specific from JD or resume\n\n**Format:**\nSubject: [Compelling subject referencing specific role and one key qualification]\n\n[Email body with specific project references and job description alignment]\n\nProvide ONLY the subject line and email body. No additional commentary."
       },
       "credentials": {
         "groqApi": {
@@ -620,30 +621,6 @@
       ],
       "parameters": {
         "jsCode": "// Parse Groq email response\nconst jobData = items[0].json;\nconst groqResponse = $node[\"Groq AI: Generate Personalized Email\"].json.response || $node[\"Groq AI: Generate Personalized Email\"].json.text || '';\n\nlet subject = `Application for ${jobData['Job Title'] || jobData.jobTitle} at ${jobData.Company || jobData.company}`;\nlet body = groqResponse;\n\n// Try to extract subject line\nconst subjectMatch = groqResponse.match(/Subject:\\s*(.+?)\\n/i);\nif (subjectMatch) {\n  subject = subjectMatch[1].trim();\n  body = groqResponse.replace(/Subject:\\s*.+?\\n/i, '').trim();\n}\n\nconst config = $('Merge User Config with Resume Data').item.json;\n\n// Add signature if not present\nif (!body.includes(config.name)) {\n  body += `\\n\\nBest regards,\\n${config.name}`;\n}\n\n// Add profile links\nbody += `\\n\\nPortfolio: ${config.portfolioUrl}`;\nbody += `\\nLinkedIn: ${config.linkedinUrl}`;\nbody += `\\nGitHub: ${config.githubUrl}`;\nbody += `\\nResume: ${config.resumeUrl}`;\n\nreturn [{\n  json: {\n    ...jobData,\n    emailSubject: subject,\n    emailBody: body,\n    sentDate: new Date().toISOString().split('T')[0]\n  }\n}];"
-      }
-    },
-    {
-      "id": "send-gmail-outreach",
-      "name": "Send Email via Gmail",
-      "type": "n8n-nodes-base.gmail",
-      "typeVersion": 2.1,
-      "position": [
-        1780,
-        1800
-      ],
-      "parameters": {
-        "sendTo": "={{ $json['Recruiter Email'] || $json.recruiterEmail }}",
-        "subject": "={{ $json.emailSubject }}",
-        "message": "={{ $json.emailBody }}",
-        "options": {
-          "ccList": "={{ $('User Config (Master Profile)').item.json.userEmail }}"
-        }
-      },
-      "credentials": {
-        "gmailOAuth2": {
-          "id": "YOUR_GMAIL_CREDENTIAL_ID",
-          "name": "Gmail OAuth2"
-        }
       }
     },
     {
@@ -1202,7 +1179,18 @@
         "subject": "={{ $json.emailSubject }}",
         "message": "={{ $json.emailBody }}",
         "options": {
-          "ccList": "={{ $('User Config (Master Profile)').item.json.userEmail }}"
+          "ccList": "={{ $('User Config (Master Profile)').item.json.userEmail }}",
+          "attachmentsUi": {
+            "attachmentsBinary": [],
+            "attachmentsFixedCollection": {
+              "values": [
+                {
+                  "fileName": "={{ $('User Config (Master Profile)').item.json.name.replace(/\\s/g, '_') }}_Resume.pdf",
+                  "url": "={{ (() => { const url = $('User Config (Master Profile)').item.json.resumeUrl || ''; if (url.includes('drive.google.com/file/d/')) { const match = url.match(/\\/d\\/([^\\/]+)/); if (match) return 'https://drive.google.com/uc?export=download&id=' + match[1]; } return url; })() }}"
+                }
+              ]
+            }
+          }
         }
       },
       "credentials": {
@@ -1227,7 +1215,18 @@
         "subject": "={{ $json.emailSubject }}",
         "message": "={{ $json.emailBody }}",
         "options": {
-          "ccList": "={{ $('User Config (Master Profile)').item.json.userEmail }}"
+          "ccList": "={{ $('User Config (Master Profile)').item.json.userEmail }}",
+          "attachmentsUi": {
+            "attachmentsBinary": [],
+            "attachmentsFixedCollection": {
+              "values": [
+                {
+                  "fileName": "={{ $('User Config (Master Profile)').item.json.name.replace(/\\s/g, '_') }}_Resume.pdf",
+                  "url": "={{ (() => { const url = $('User Config (Master Profile)').item.json.resumeUrl || ''; if (url.includes('drive.google.com/file/d/')) { const match = url.match(/\\/d\\/([^\\/]+)/); if (match) return 'https://drive.google.com/uc?export=download&id=' + match[1]; } return url; })() }}"
+                }
+              ]
+            }
+          }
         }
       },
       "credentials": {
@@ -1252,7 +1251,18 @@
         "subject": "={{ $json.emailSubject }}",
         "message": "={{ $json.emailBody }}",
         "options": {
-          "ccList": "={{ $('User Config (Master Profile)').item.json.userEmail }}"
+          "ccList": "={{ $('User Config (Master Profile)').item.json.userEmail }}",
+          "attachmentsUi": {
+            "attachmentsBinary": [],
+            "attachmentsFixedCollection": {
+              "values": [
+                {
+                  "fileName": "={{ $('User Config (Master Profile)').item.json.name.replace(/\\s/g, '_') }}_Resume.pdf",
+                  "url": "={{ (() => { const url = $('User Config (Master Profile)').item.json.resumeUrl || ''; if (url.includes('drive.google.com/file/d/')) { const match = url.match(/\\/d\\/([^\\/]+)/); if (match) return 'https://drive.google.com/uc?export=download&id=' + match[1]; } return url; })() }}"
+                }
+              ]
+            }
+          }
         }
       },
       "credentials": {
@@ -1277,7 +1287,18 @@
         "subject": "={{ $json.emailSubject }}",
         "message": "={{ $json.emailBody }}",
         "options": {
-          "ccList": "={{ $('User Config (Master Profile)').item.json.userEmail }}"
+          "ccList": "={{ $('User Config (Master Profile)').item.json.userEmail }}",
+          "attachmentsUi": {
+            "attachmentsBinary": [],
+            "attachmentsFixedCollection": {
+              "values": [
+                {
+                  "fileName": "={{ $('User Config (Master Profile)').item.json.name.replace(/\\s/g, '_') }}_Resume.pdf",
+                  "url": "={{ (() => { const url = $('User Config (Master Profile)').item.json.resumeUrl || ''; if (url.includes('drive.google.com/file/d/')) { const match = url.match(/\\/d\\/([^\\/]+)/); if (match) return 'https://drive.google.com/uc?export=download&id=' + match[1]; } return url; })() }}"
+                }
+              ]
+            }
+          }
         }
       },
       "credentials": {
@@ -1391,7 +1412,7 @@
         500
       ],
       "parameters": {
-        "jsCode": "// Handle Google Sheets API errors and trigger account switch\nconst staticData = this.getWorkflowStaticData('global');\nconst state = staticData.sheetsAccountState;\nconst item = items[0].json;\n\nif (item.error) {\n  const errorCode = item.error.httpCode || item.error.code;\n  const errorMessage = item.error.message || '';\n  \n  // Detect quota errors (429 rate limit, 403 quota exceeded)\n  if (errorCode === 429 || errorCode === 403 || errorMessage.includes('quota') || errorMessage.includes('rate limit')) {\n    const currentAccount = state.currentActive;\n    state[currentAccount].lastError = { code: errorCode, message: errorMessage, time: new Date().toISOString() };\n    \n    // Switch to next available account\n    const accounts = ['account1', 'account2', 'account3', 'account4'];\n    const currentIndex = accounts.indexOf(currentAccount);\n    \n    for (let i = 1; i <= 4; i++) {\n      const nextIndex = (currentIndex + i) % 4;\n      const nextAccount = accounts[nextIndex];\n      const config = $('User Config (Master Profile)').item.json;\n      const maxWrites = config.maxSheetsWritesPerAccount || 300;\n      \n      if (state[nextAccount].dailyWrites < maxWrites && !state[nextAccount].lastError) {\n        state.currentActive = nextAccount;\n        state.lastSwitchDate = new Date().toISOString();\n        state.lastSwitchReason = `Error ${errorCode}: ${errorMessage}`;\n        console.log(`Sheets account switched from ${currentAccount} to ${nextAccount} due to error`);\n        break;\n      }\n    }\n  }\n}\n\nreturn [{\n  json: {\n    ...item,\n    errorHandled: true,\n    sheetsAccountSwitched: state.currentActive !== (item.sheetsAccountToUse || 'account1')\n  }\n}];"
+        "jsCode": "// Handle Google Sheets API errors and trigger account switch\n// (Centralised state version - reads multiAccountState.sheets)\nconst staticData = this.getWorkflowStaticData('global');\nconst item = items[0].json;\n\n// Pass through if state not initialised yet\nif (!staticData.multiAccountState || !staticData.multiAccountState.sheets) {\n  return [{ json: { ...item, errorHandled: false, reason: 'state not initialised' } }];\n}\n\nconst state = staticData.multiAccountState.sheets;\nlet switched = false;\nlet switchReason = '';\n\nif (item.error) {\n  const errorCode = item.error.httpCode || item.error.code;\n  const errorMessage = item.error.message || '';\n\n  // Detect quota / rate-limit errors\n  if (errorCode === 429 || errorCode === 403 ||\n      errorMessage.includes('quota') || errorMessage.includes('rate limit')) {\n    const currentAccount = state.currentActive;\n    state[currentAccount].lastError = { code: errorCode, message: errorMessage, time: new Date().toISOString() };\n\n    // Find next viable account\n    const accounts = ['account1', 'account2', 'account3', 'account4'];\n    const currentIndex = accounts.indexOf(currentAccount);\n    const config = $('User Config (Master Profile)').item.json;\n    const maxWrites = config.maxSheetsWritesPerAccount || 300;\n\n    for (let i = 1; i <= 4; i++) {\n      const next = accounts[(currentIndex + i) % 4];\n      if (state[next].dailyWrites < maxWrites && !state[next].lastError) {\n        state.currentActive = next;\n        switched = true;\n        switchReason = `Error ${errorCode}: ${errorMessage}`;\n        console.log(`Sheets account switched from ${currentAccount} to ${next} due to error`);\n        break;\n      }\n    }\n  }\n}\n\nreturn [{\n  json: {\n    ...item,\n    errorHandled: true,\n    sheetsAccountSwitched: switched,\n    sheetsSwitchReason: switchReason,\n    sheetsAccount: state.currentActive,\n    sheetsNeedsSwitch: switched\n  }\n}];\n"
       }
     },
     {
@@ -1484,7 +1505,7 @@
         100
       ],
       "parameters": {
-        "jsCode": "// Handle Groq API errors and trigger key switch\nconst staticData = this.getWorkflowStaticData('global');\nconst state = staticData.groqKeyState;\nconst item = items[0].json;\n\nif (item.error) {\n  const errorCode = item.error.httpCode || item.error.code;\n  const errorMessage = item.error.message || '';\n  \n  // Detect rate limit errors (429, quota exceeded messages)\n  if (errorCode === 429 || errorMessage.includes('rate limit') || errorMessage.includes('quota') || errorMessage.includes('exceeded')) {\n    const currentKey = state.currentActive;\n    state[currentKey].lastError = { code: errorCode, message: errorMessage, time: new Date().toISOString() };\n    \n    // Switch to next available key\n    const keys = ['key1', 'key2', 'key3', 'key4'];\n    const currentIndex = keys.indexOf(currentKey);\n    \n    for (let i = 1; i <= 4; i++) {\n      const nextIndex = (currentIndex + i) % 4;\n      const nextKey = keys[nextIndex];\n      const config = $('User Config (Master Profile)').item.json;\n      const maxRequests = config.maxGroqRequestsPerKey || 14400;\n      \n      if (state[nextKey].dailyRequests < maxRequests && !state[nextKey].lastError) {\n        state.currentActive = nextKey;\n        state.lastSwitchDate = new Date().toISOString();\n        state.lastSwitchReason = `Error ${errorCode}: ${errorMessage}`;\n        console.log(`Groq key switched from ${currentKey} to ${nextKey} due to error`);\n        break;\n      }\n    }\n  }\n}\n\nreturn [{\n  json: {\n    ...item,\n    errorHandled: true,\n    groqKeySwitched: state.currentActive !== (item.groqKeyToUse || 'key1')\n  }\n}];"
+        "jsCode": "// Handle Groq API errors and trigger key switch\n// (Centralised state version - reads multiAccountState.groq)\nconst staticData = this.getWorkflowStaticData('global');\nconst item = items[0].json;\n\nif (!staticData.multiAccountState || !staticData.multiAccountState.groq) {\n  return [{ json: { ...item, errorHandled: false, reason: 'state not initialised' } }];\n}\n\nconst state = staticData.multiAccountState.groq;\nlet switched = false;\nlet switchReason = '';\n\nif (item.error) {\n  const errorCode = item.error.httpCode || item.error.code;\n  const errorMessage = item.error.message || '';\n\n  if (errorCode === 429 ||\n      errorMessage.includes('rate limit') ||\n      errorMessage.includes('quota') ||\n      errorMessage.includes('exceeded')) {\n    const currentKey = state.currentActive;\n    state[currentKey].lastError = { code: errorCode, message: errorMessage, time: new Date().toISOString() };\n\n    const keys = ['key1', 'key2', 'key3', 'key4'];\n    const currentIndex = keys.indexOf(currentKey);\n    const config = $('User Config (Master Profile)').item.json;\n    const maxRequests = config.maxGroqRequestsPerKey || 14400;\n\n    for (let i = 1; i <= 4; i++) {\n      const next = keys[(currentIndex + i) % 4];\n      if (state[next].dailyRequests < maxRequests && !state[next].lastError) {\n        state.currentActive = next;\n        switched = true;\n        switchReason = `Error ${errorCode}: ${errorMessage}`;\n        console.log(`Groq key switched from ${currentKey} to ${next} due to error`);\n        break;\n      }\n    }\n  }\n}\n\nreturn [{\n  json: {\n    ...item,\n    errorHandled: true,\n    groqKeySwitched: switched,\n    groqSwitchReason: switchReason,\n    groqKey: state.currentActive,\n    groqNeedsSwitch: switched\n  }\n}];\n"
       }
     },
     {
@@ -1662,113 +1683,6 @@
       "continueOnFail": true
     },
     {
-      "id": "fetch-usajobs",
-      "name": "Fetch USAJobs API",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.1,
-      "position": [
-        680,
-        720
-      ],
-      "parameters": {
-        "url": "https://data.usajobs.gov/api/search",
-        "method": "GET",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Host",
-              "value": "data.usajobs.gov"
-            },
-            {
-              "name": "User-Agent",
-              "value": "={{ $('User Config (Master Profile)').item.json.userEmail }}"
-            },
-            {
-              "name": "Authorization-Key",
-              "value": "={{ $('User Config (Master Profile)').item.json.usajobsApiKey }}"
-            }
-          ]
-        },
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "Keyword",
-              "value": "={{ $('User Config (Master Profile)').item.json.keywords }}"
-            },
-            {
-              "name": "ResultsPerPage",
-              "value": "50"
-            }
-          ]
-        },
-        "options": {
-          "timeout": 30000
-        }
-      },
-      "continueOnFail": true
-    },
-    {
-      "id": "parse-usajobs",
-      "name": "Parse USAJobs Response",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        900,
-        720
-      ],
-      "parameters": {
-        "jsCode": "// Parse USAJobs API response\nconst response = items[0].json;\nconst jobResults = response.SearchResult?.SearchResultItems || [];\n\nreturn jobResults.map(item => {\n  const job = item.MatchedObjectDescriptor || {};\n  return {\n    json: {\n      source: 'USAJobs',\n      jobTitle: job.PositionTitle || 'Unknown',\n      company: job.OrganizationName || 'Unknown',\n      location: job.PositionLocationDisplay || 'USA',\n      jobType: 'Full-time',\n      workMode: job.TeleworkEligible ? 'Remote' : 'Onsite',\n      salary: job.PositionRemuneration?.[0]?.MinimumRange || 'Not disclosed',\n      applyUrl: job.PositionURI || '',\n      description: (job.QualificationSummary || '').substring(0, 500),\n      tags: [],\n      postedDate: job.PublicationStartDate ? new Date(job.PublicationStartDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],\n      category: job.JobCategory?.[0]?.Name || '',\n      jobId: `usajobs-${job.PositionID || Date.now()}`,\n      fetchedDate: new Date().toISOString().split('T')[0],\n      recruiterEmail: '',\n      recruiterName: ''\n    }\n  };\n});"
-      },
-      "continueOnFail": true
-    },
-    {
-      "id": "fetch-github-jobs",
-      "name": "Fetch GitHub Jobs API",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.1,
-      "position": [
-        680,
-        840
-      ],
-      "parameters": {
-        "url": "https://jobs.github.com/positions.json",
-        "method": "GET",
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "description",
-              "value": "={{ $('User Config (Master Profile)').item.json.keywords }}"
-            },
-            {
-              "name": "location",
-              "value": "={{ $('User Config (Master Profile)').item.json.location }}"
-            }
-          ]
-        },
-        "options": {
-          "timeout": 30000
-        }
-      },
-      "continueOnFail": true
-    },
-    {
-      "id": "parse-github-jobs",
-      "name": "Parse GitHub Jobs Response",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        900,
-        840
-      ],
-      "parameters": {
-        "jsCode": "// Parse GitHub Jobs API response\nconst jobs = items[0].json;\n\n// GitHub Jobs API returns array directly\nif (!Array.isArray(jobs)) {\n  return [];\n}\n\nreturn jobs.map(job => ({\n  json: {\n    source: 'GitHub Jobs',\n    jobTitle: job.title || 'Unknown',\n    company: job.company || 'Unknown',\n    location: job.location || 'Remote',\n    jobType: job.type || 'Full-time',\n    workMode: 'Remote',\n    salary: 'Not disclosed',\n    applyUrl: job.url || '',\n    description: (job.description || '').substring(0, 500),\n    tags: [],\n    postedDate: job.created_at ? new Date(job.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],\n    category: '',\n    jobId: `github-${job.id || Date.now()}`,\n    fetchedDate: new Date().toISOString().split('T')[0],\n    recruiterEmail: '',\n    recruiterName: ''\n  }\n}));"
-      },
-      "continueOnFail": true
-    },
-    {
       "id": "update-api-health",
       "name": "Update API Health Status",
       "type": "n8n-nodes-base.code",
@@ -1804,7 +1718,7 @@
         50
       ],
       "parameters": {
-        "jsCode": "// Daily Reset Handler - Midnight UTC reset for all accounts\nconst staticData = this.getWorkflowStaticData('global');\nconst today = new Date().toISOString().split('T')[0];\n\nif (!staticData.multiAccountState) {\n  return [{ json: { error: 'multiAccountState not initialized', date: today } }];\n}\n\nconst state = staticData.multiAccountState;\n\n// Check if reset needed\nif (state.lastResetDate !== today) {\n  // Reset Gmail accounts\n  state.gmail.account1.dailyCount = 0;\n  state.gmail.account1.errors = 0;\n  state.gmail.account2.dailyCount = 0;\n  state.gmail.account2.errors = 0;\n  state.gmail.account3.dailyCount = 0;\n  state.gmail.account3.errors = 0;\n  state.gmail.account4.dailyCount = 0;\n  state.gmail.account4.errors = 0;\n  state.gmail.currentActive = 'account1';\n  \n  // Reset Google Sheets accounts\n  state.sheets.account1.dailyWrites = 0;\n  state.sheets.account2.dailyWrites = 0;\n  state.sheets.account3.dailyWrites = 0;\n  state.sheets.account4.dailyWrites = 0;\n  state.sheets.currentActive = 'account1';\n  \n  // Reset Groq API keys\n  state.groq.key1.dailyRequests = 0;\n  state.groq.key2.dailyRequests = 0;\n  state.groq.key3.dailyRequests = 0;\n  state.groq.key4.dailyRequests = 0;\n  state.groq.currentActive = 'key1';\n  \n  // Update last reset date\n  state.lastResetDate = today;\n  \n  console.log(`\u2705 Daily reset performed at midnight UTC for ${today}`);\n  console.log(`   Gmail: All 4 accounts reset to 0 emails, 0 errors`);\n  console.log(`   Sheets: All 4 accounts reset to 0 writes`);\n  console.log(`   Groq: All 4 keys reset to 0 requests`);\n  \n  return [{\n    json: {\n      resetPerformed: true,\n      date: today,\n      timestamp: new Date().toISOString(),\n      message: 'All account counters reset to 0 at midnight UTC'\n    }\n  }];\n} else {\n  return [{\n    json: {\n      resetPerformed: false,\n      date: today,\n      message: 'Reset already performed today',\n      lastResetDate: state.lastResetDate\n    }\n  }];\n}"
+        "jsCode": "// Daily Reset Handler - Midnight UTC reset for all accounts\nconst staticData = this.getWorkflowStaticData('global');\nconst today = new Date().toISOString().split('T')[0];\n\nif (!staticData.multiAccountState) {\n  // Self-initialise state on first run (e.g. when triggered standalone by midnight reset)\n  staticData.multiAccountState = {\n    gmail: {\n      account1: { email: 'raviintouch2@gmail.com', dailyCount: 0, errors: 0, credentialId: '', lastError: null },\n      account2: { email: 'ravitejavallakatla7@gmail.com', dailyCount: 0, errors: 0, credentialId: '', lastError: null },\n      account3: { email: 'ravitejav081@gmail.com', dailyCount: 0, errors: 0, credentialId: '', lastError: null },\n      account4: { email: 'ravitejav0801@gmail.com', dailyCount: 0, errors: 0, credentialId: '', lastError: null },\n      currentActive: 'account1'\n    },\n    sheets: {\n      account1: { email: 'raviintouch2@gmail.com', dailyWrites: 0, errors: 0, credentialId: '', lastError: null },\n      account2: { email: 'ravitejavallakatla7@gmail.com', dailyWrites: 0, errors: 0, credentialId: '', lastError: null },\n      account3: { email: 'ravitejav081@gmail.com', dailyWrites: 0, errors: 0, credentialId: '', lastError: null },\n      account4: { email: 'ravitejav0801@gmail.com', dailyWrites: 0, errors: 0, credentialId: '', lastError: null },\n      currentActive: 'account1'\n    },\n    groq: {\n      key1: { name: 'groq1', dailyRequests: 0, credentialId: '', lastError: null },\n      key2: { name: 'groq2', dailyRequests: 0, credentialId: '', lastError: null },\n      key3: { name: 'groq3', dailyRequests: 0, credentialId: '', lastError: null },\n      key4: { name: 'groq4', dailyRequests: 0, credentialId: '', lastError: null },\n      currentActive: 'key1'\n    },\n    lastResetDate: null,\n    rotationHistory: []\n  };\n}\n\nconst state = staticData.multiAccountState;\n\n// Check if reset needed\nif (state.lastResetDate !== today) {\n  // Reset Gmail accounts\n  state.gmail.account1.dailyCount = 0;\n  state.gmail.account1.errors = 0;\n  state.gmail.account2.dailyCount = 0;\n  state.gmail.account2.errors = 0;\n  state.gmail.account3.dailyCount = 0;\n  state.gmail.account3.errors = 0;\n  state.gmail.account4.dailyCount = 0;\n  state.gmail.account4.errors = 0;\n  state.gmail.currentActive = 'account1';\n  \n  // Reset Google Sheets accounts\n  state.sheets.account1.dailyWrites = 0;\n  state.sheets.account2.dailyWrites = 0;\n  state.sheets.account3.dailyWrites = 0;\n  state.sheets.account4.dailyWrites = 0;\n  state.sheets.currentActive = 'account1';\n  \n  // Reset Groq API keys\n  state.groq.key1.dailyRequests = 0;\n  state.groq.key2.dailyRequests = 0;\n  state.groq.key3.dailyRequests = 0;\n  state.groq.key4.dailyRequests = 0;\n  state.groq.currentActive = 'key1';\n  \n  // Update last reset date\n  state.lastResetDate = today;\n  \n  console.log(`\u2705 Daily reset performed at midnight UTC for ${today}`);\n  console.log(`   Gmail: All 4 accounts reset to 0 emails, 0 errors`);\n  console.log(`   Sheets: All 4 accounts reset to 0 writes`);\n  console.log(`   Groq: All 4 keys reset to 0 requests`);\n  \n  return [{\n    json: {\n      resetPerformed: true,\n      date: today,\n      timestamp: new Date().toISOString(),\n      message: 'All account counters reset to 0 at midnight UTC'\n    }\n  }];\n} else {\n  return [{\n    json: {\n      resetPerformed: false,\n      date: today,\n      message: 'Reset already performed today',\n      lastResetDate: state.lastResetDate\n    }\n  }];\n}"
       }
     },
     {
@@ -2006,17 +1920,12 @@
             "index": 0
           },
           {
-            "node": "Fetch USAJobs API",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Fetch GitHub Jobs API",
-            "type": "main",
-            "index": 0
-          },
-          {
             "node": "Job API State Manager",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Multi-Account State Manager",
             "type": "main",
             "index": 0
           }
@@ -2123,6 +2032,11 @@
             "node": "Parse AI Score",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Update Groq Request Counter",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -2138,23 +2052,16 @@
         ]
       ]
     },
-    "Filter by Score Threshold (\u226530)": {
-      "main": [
-        [
-          {
-            "node": "Append to Google Sheets: Jobs Tab",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        []
-      ]
-    },
     "Append to Google Sheets: Jobs Tab": {
       "main": [
         [
           {
             "node": "Aggregate Job Discovery Summary",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update Sheets Write Counter",
             "type": "main",
             "index": 0
           }
@@ -2229,6 +2136,11 @@
             "node": "Parse & Format Email",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Update Groq Request Counter",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -2238,17 +2150,6 @@
         [
           {
             "node": "Check Email Account Status",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Send Email via Gmail": {
-      "main": [
-        [
-          {
-            "node": "Update Metadata (Status & Application ID)",
             "type": "main",
             "index": 0
           }
@@ -2271,6 +2172,11 @@
         [
           {
             "node": "Rate Limit Delay (3 seconds)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update Sheets Write Counter",
             "type": "main",
             "index": 0
           }
@@ -2325,7 +2231,7 @@
       "main": [
         [
           {
-            "node": "Is Quick Command?",
+            "node": "Needs State Report?",
             "type": "main",
             "index": 0
           }
@@ -2366,6 +2272,11 @@
         [
           {
             "node": "Parse Response & Detect Intents",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update Groq Request Counter",
             "type": "main",
             "index": 0
           }
@@ -2459,6 +2370,11 @@
             "node": "Structure Resume Data",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Update Groq Request Counter",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -2489,7 +2405,7 @@
       "main": [
         [
           {
-            "node": "Filter by Score Threshold (\u226530)",
+            "node": "Filter by Score Threshold (\u226560)",
             "type": "main",
             "index": 0
           }
@@ -2503,6 +2419,11 @@
             "node": "Email Account State",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Multi-Account State Manager",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -2512,6 +2433,16 @@
         [
           {
             "node": "Read Jobs from Sheet for Outreach",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Google Sheets Account State",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Groq API Key State",
             "type": "main",
             "index": 0
           }
@@ -2654,16 +2585,11 @@
       "main": [
         [
           {
-            "node": "Email Account Switch Notification",
+            "node": "Log Email Switch",
             "type": "main",
             "index": 0
           }
         ],
-        []
-      ]
-    },
-    "Email Account Switch Notification": {
-      "main": [
         []
       ]
     },
@@ -2683,28 +2609,6 @@
         [
           {
             "node": "Parse The Muse Response",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Fetch USAJobs API": {
-      "main": [
-        [
-          {
-            "node": "Parse USAJobs Response",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Fetch GitHub Jobs API": {
-      "main": [
-        [
-          {
-            "node": "Parse GitHub Jobs Response",
             "type": "main",
             "index": 0
           }
@@ -2733,28 +2637,6 @@
         ]
       ]
     },
-    "Parse USAJobs Response": {
-      "main": [
-        [
-          {
-            "node": "Merge All API Results",
-            "type": "main",
-            "index": 4
-          }
-        ]
-      ]
-    },
-    "Parse GitHub Jobs Response": {
-      "main": [
-        [
-          {
-            "node": "Merge All API Results",
-            "type": "main",
-            "index": 5
-          }
-        ]
-      ]
-    },
     "Update API Health Status": {
       "main": [
         [
@@ -2766,7 +2648,7 @@
         ]
       ]
     },
-    "trigger-4-daily-reset": {
+    "Schedule Trigger: Daily Reset (Midnight UTC)": {
       "main": [
         [
           {
@@ -2777,7 +2659,7 @@
         ]
       ]
     },
-    "check-needs-state-report": {
+    "Needs State Report?": {
       "main": [
         [
           {
@@ -2795,7 +2677,7 @@
         ]
       ]
     },
-    "get-full-state-report": {
+    "Get Full State Report": {
       "main": [
         [
           {
@@ -2806,7 +2688,7 @@
         ]
       ]
     },
-    "log-email-switch": {
+    "Log Email Switch": {
       "main": [
         [
           {
@@ -2817,7 +2699,7 @@
         ]
       ]
     },
-    "account-switch-logger": {
+    "Account Switch Logger": {
       "main": [
         [
           {
@@ -2828,7 +2710,7 @@
         ]
       ]
     },
-    "log-sheets-switch": {
+    "Log Sheets Switch": {
       "main": [
         [
           {
@@ -2839,7 +2721,7 @@
         ]
       ]
     },
-    "log-groq-switch": {
+    "Log Groq Switch": {
       "main": [
         [
           {
@@ -2850,7 +2732,7 @@
         ]
       ]
     },
-    "switch-notification-router": {
+    "Route to Appropriate Notification": {
       "main": [
         [
           {
@@ -2873,6 +2755,132 @@
             "index": 0
           }
         ]
+      ]
+    },
+    "Multi-Account State Manager": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets Account State",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Groq API Key State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets Account State": {
+      "main": [
+        [
+          {
+            "node": "Select Sheets Credential",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq API Key State": {
+      "main": [
+        [
+          {
+            "node": "Select Groq Credential",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Sheets Write Counter": {
+      "main": [
+        [
+          {
+            "node": "Check if Sheets Switch Notification Needed",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Sheets Error Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if Sheets Switch Notification Needed": {
+      "main": [
+        [
+          {
+            "node": "Log Sheets Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Groq Request Counter": {
+      "main": [
+        [
+          {
+            "node": "Check if Groq Switch Notification Needed",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Groq Error Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if Groq Switch Notification Needed": {
+      "main": [
+        [
+          {
+            "node": "Log Groq Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sheets Error Handler": {
+      "main": [
+        [
+          {
+            "node": "Check if Sheets Switch Notification Needed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Error Handler": {
+      "main": [
+        [
+          {
+            "node": "Check if Groq Switch Notification Needed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter by Score Threshold (\u226560)": {
+      "main": [
+        [
+          {
+            "node": "Append to Google Sheets: Jobs Tab",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
       ]
     }
   },
