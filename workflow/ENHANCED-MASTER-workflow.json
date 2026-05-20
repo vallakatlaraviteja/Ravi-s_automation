@@ -73,7 +73,7 @@
         300
       ],
       "parameters": {
-        "jsCode": "// USER PREFERENCES & METADATA (not a replacement for resume!)\n// This config provides: location preferences, visa status, email settings, and URLs\n// Your actual resume data (skills, projects, experience) is parsed from resumeUrl by Groq AI\n// The parsed resume data is merged with this config to create your complete profile\nreturn [{\n  json: {\n    name: 'Your Name',\n    currentRole: 'Senior Backend Engineer',\n    targetRole: 'Staff Engineer',\n    experience: '5 years',\n    skills: ['Python', 'Node.js', 'AWS', 'Docker', 'Kubernetes', 'PostgreSQL'],\n    location: 'Hyderabad, India',\n    workMode: ['remote', 'hybrid'],\n    minSalary: 80000,\n    targetRoles: ['Backend Engineer', 'Full Stack Engineer', 'DevOps Engineer'],\n    keywords: 'python developer OR backend engineer OR nodejs',\n    country: 'in',\n    githubUrl: 'https://github.com/yourusername',\n    linkedinUrl: 'https://linkedin.com/in/yourprofile',\n    portfolioUrl: 'https://yourportfolio.com',\n    resumeUrl: 'https://drive.google.com/file/d/YOUR_RESUME_ID/view',\n    resumeParsingEnabled: true,\n    userEmail: 'YOUR_EMAIL@example.com',\n    dailyLimit: 10,\n    scoreThreshold: 30,\n    sheetId: 'YOUR_SPREADSHEET_ID',\n    primaryEmail: 'raviintouch2@gmail.com',\n    secondaryEmail: 'ravitejavallakatla7@gmail.com',\n    primaryGmailCredentialId: 'YOUR_PRIMARY_GMAIL_CREDENTIAL_ID',\n    secondaryGmailCredentialId: 'YOUR_SECONDARY_GMAIL_CREDENTIAL_ID',\n    maxEmailsPerAccount: 50,\n    errorThreshold: 3\n  }\n}];"
+        "jsCode": "// USER PREFERENCES & METADATA (not a replacement for resume!)\n// This config provides: location preferences, visa status, email settings, and URLs\n// Your actual resume data (skills, projects, experience) is parsed from resumeUrl by Groq AI\n// The parsed resume data is merged with this config to create your complete profile\nreturn [{\n  json: {\n    name: 'Your Name',\n    currentRole: 'Senior Backend Engineer',\n    targetRole: 'Staff Engineer',\n    experience: '5 years',\n    skills: ['Python', 'Node.js', 'AWS', 'Docker', 'Kubernetes', 'PostgreSQL'],\n    location: 'Hyderabad, India',\n    workMode: ['remote', 'hybrid'],\n    minSalary: 80000,\n    targetRoles: ['Backend Engineer', 'Full Stack Engineer', 'DevOps Engineer'],\n    keywords: 'python developer OR backend engineer OR nodejs',\n    country: 'in',\n    githubUrl: 'https://github.com/yourusername',\n    linkedinUrl: 'https://linkedin.com/in/yourprofile',\n    portfolioUrl: 'https://yourportfolio.com',\n    resumeUrl: 'https://drive.google.com/file/d/YOUR_RESUME_ID/view',\n    resumeParsingEnabled: true,\n    userEmail: 'YOUR_EMAIL@example.com',\n    dailyLimit: 10,\n    scoreThreshold: 30,\n    sheetId: 'YOUR_SPREADSHEET_ID',\n    account1Email: 'raviintouch2@gmail.com',\n    account2Email: 'ravitejavallakatla7@gmail.com',\n    account3Email: 'ravitejav081@gmail.com',\n    account4Email: 'ravitejav0801@gmail.com',\n    account1CredentialId: 'YOUR_GMAIL_ACCOUNT_1_CREDENTIAL_ID',\n    account2CredentialId: 'YOUR_GMAIL_ACCOUNT_2_CREDENTIAL_ID',\n    account3CredentialId: 'YOUR_GMAIL_ACCOUNT_3_CREDENTIAL_ID',\n    account4CredentialId: 'YOUR_GMAIL_ACCOUNT_4_CREDENTIAL_ID',\n    maxEmailsPerAccount: 50,\n    errorThreshold: 3\n  }\n}];"
       }
     },
     {
@@ -729,7 +729,7 @@
         1800
       ],
       "parameters": {
-        "jsCode": "// Aggregate sending summary\nconst jobs = items.map(item => item.json);\nconst total = jobs.length;\n\nconst sentList = jobs.map(j => \n  `• **${j['Job Title'] || j.jobTitle}** at **${j.Company || j.company}** → ${j['Recruiter Email'] || j.recruiterEmail}`\n);\n\nreturn [{\n  json: {\n    total,\n    sentList: sentList.join('\\n'),\n    date: new Date().toISOString().split('T')[0]\n  }\n}];"
+        "jsCode": "// Aggregate sending summary with 4-account breakdown\nconst jobs = items.map(item => item.json);\nconst total = jobs.length;\n\n// Count emails sent per account\nconst accountBreakdown = {\n  account1: 0,\n  account2: 0,\n  account3: 0,\n  account4: 0\n};\n\njobs.forEach(j => {\n  const account = j.accountUsed;\n  if (account && accountBreakdown.hasOwnProperty(account)) {\n    accountBreakdown[account]++;\n  }\n});\n\nconst sentList = jobs.map(j => \n  `• **${j['Job Title'] || j.jobTitle}** at **${j.Company || j.company}** → ${j['Recruiter Email'] || j.recruiterEmail} [${j.accountUsed || 'unknown'}]`\n);\n\nreturn [{\n  json: {\n    total,\n    sentList: sentList.join('\\n'),\n    date: new Date().toISOString().split('T')[0],\n    account1Count: accountBreakdown.account1,\n    account2Count: accountBreakdown.account2,\n    account3Count: accountBreakdown.account3,\n    account4Count: accountBreakdown.account4\n  }\n}];"
       }
     },
     {
@@ -744,7 +744,7 @@
       "parameters": {
         "sendTo": "={{ $('User Config (Master Profile)').item.json.userEmail }}",
         "subject": "✅ Email Outreach Complete - {{ $json.total }} Emails Sent",
-        "message": "=Hello {{ $('User Config (Master Profile)').item.json.name }},\n\nYour daily email outreach campaign has completed!\n\n**Email Account Status:**\n📧 Primary (raviintouch2@gmail.com): {{ $('Email Send Result Handler').first().json.primaryDailyCount || 0 }} sent today\n📧 Secondary (ravitejavallakatla7@gmail.com): {{ $('Email Send Result Handler').first().json.secondaryDailyCount || 0 }} sent today\n✅ Active Account: {{ $('Email Send Result Handler').first().json.currentActive || 'primary' }}\n\n**Total Emails Sent:** {{ $json.total }}\n\n**Sent To:**\n{{ $json.sentList }}\n\nAll applications have been logged in your Google Sheet with status \"Email Sent\".\n\nCheck your Gmail Sent folder for copies (you were CC'd on all emails).\n\n**Date:** {{ $json.date }}\n\nBest regards,\nEmail Outreach System",
+        "message": "=Hello {{ $('User Config (Master Profile)').item.json.name }},\n\nYour daily email outreach campaign has completed!\n\n**Email Account Breakdown:**\n📧 Account 1 (raviintouch2@gmail.com): {{ $json.account1Count }} emails sent\n📧 Account 2 (ravitejavallakatla7@gmail.com): {{ $json.account2Count }} emails sent\n📧 Account 3 (ravitejav081@gmail.com): {{ $json.account3Count }} emails sent\n📧 Account 4 (ravitejav0801@gmail.com): {{ $json.account4Count }} emails sent\n\n**Total Emails Sent:** {{ $json.total }}\n**Total Daily Capacity:** 200 emails/day (50 per account × 4 accounts)\n\n**Sent To:**\n{{ $json.sentList }}\n\nAll applications have been logged in your Google Sheet with status \"Email Sent\".\n\nCheck your Gmail Sent folder for copies (you were CC'd on all emails).\n\n**Date:** {{ $json.date }}\n\nBest regards,\nEmail Outreach System",
         "options": {}
       },
       "credentials": {
@@ -1105,7 +1105,7 @@
         1900
       ],
       "parameters": {
-        "jsCode": "// Email account state management\n// Initialize or retrieve from workflow static data\nconst staticData = this.getWorkflowStaticData('global');\n\nif (!staticData.emailAccountState) {\n  staticData.emailAccountState = {\n    primaryEmail: 'raviintouch2@gmail.com',\n    secondaryEmail: 'ravitejavallakatla7@gmail.com',\n    currentActive: 'primary',\n    primaryDailyCount: 0,\n    secondaryDailyCount: 0,\n    lastResetDate: new Date().toISOString().split('T')[0],\n    primaryErrors: 0,\n    secondaryErrors: 0,\n    lastSwitchDate: null,\n    lastSwitchReason: ''\n  };\n}\n\nreturn [{\n  json: staticData.emailAccountState\n}];"
+        "jsCode": "// Email account state management - 4-way rotation system\n// Initialize or retrieve from workflow static data\nconst staticData = this.getWorkflowStaticData('global');\n\nif (!staticData.emailAccountState) {\n  staticData.emailAccountState = {\n    account1: {\n      email: 'raviintouch2@gmail.com',\n      dailyCount: 0,\n      errors: 0,\n      credentialId: ''\n    },\n    account2: {\n      email: 'ravitejavallakatla7@gmail.com',\n      dailyCount: 0,\n      errors: 0,\n      credentialId: ''\n    },\n    account3: {\n      email: 'ravitejav081@gmail.com',\n      dailyCount: 0,\n      errors: 0,\n      credentialId: ''\n    },\n    account4: {\n      email: 'ravitejav0801@gmail.com',\n      dailyCount: 0,\n      errors: 0,\n      credentialId: ''\n    },\n    currentActive: 'account1',\n    lastResetDate: null,\n    lastSwitchDate: null,\n    lastSwitchReason: ''\n  };\n}\n\nreturn [{\n  json: staticData.emailAccountState\n}];"
       }
     },
     {
@@ -1118,7 +1118,7 @@
         1900
       ],
       "parameters": {
-        "jsCode": "// Check email account status and determine which to use\nconst state = $('Email Account State').item.json;\nconst config = $('User Config (Master Profile)').item.json;\nconst today = new Date().toISOString().split('T')[0];\n\n// Daily reset check\nif (state.lastResetDate !== today) {\n  state.primaryDailyCount = 0;\n  state.secondaryDailyCount = 0;\n  state.primaryErrors = 0;\n  state.secondaryErrors = 0;\n  state.currentActive = 'primary';\n  state.lastResetDate = today;\n}\n\n// Determine which account to use\nlet accountToUse = 'primary';\nlet reason = '';\nlet shouldSwitch = false;\n\n// Check primary account availability\nconst primaryAvailable = state.primaryDailyCount < config.maxEmailsPerAccount \n  && state.primaryErrors < config.errorThreshold;\n\n// Check secondary account availability\nconst secondaryAvailable = state.secondaryDailyCount < config.maxEmailsPerAccount \n  && state.secondaryErrors < config.errorThreshold;\n\nif (!primaryAvailable && !secondaryAvailable) {\n  // Both accounts exhausted\n  reason = 'Both accounts exhausted';\n  accountToUse = 'skip';\n} else if (!primaryAvailable) {\n  // Primary exhausted, use secondary\n  accountToUse = 'secondary';\n  if (state.currentActive === 'primary') {\n    shouldSwitch = true;\n    reason = state.primaryDailyCount >= config.maxEmailsPerAccount \n      ? 'Daily limit reached' \n      : 'Error threshold exceeded';\n  }\n} else if (state.currentActive === 'secondary' && primaryAvailable) {\n  // Secondary was active but primary is available again (after reset)\n  accountToUse = 'primary';\n  shouldSwitch = true;\n  reason = 'Daily reset - returning to primary';\n} else {\n  // Use current active or primary by default\n  accountToUse = state.currentActive;\n}\n\n// Update state if switching\nif (shouldSwitch) {\n  state.currentActive = accountToUse;\n  state.lastSwitchDate = new Date().toISOString();\n  state.lastSwitchReason = reason;\n}\n\nreturn [{\n  json: {\n    ...state,\n    accountToUse,\n    shouldSwitch,\n    switchReason: reason,\n    primaryAvailable,\n    secondaryAvailable\n  }\n}];"
+        "jsCode": "// Check email account status and determine which to use - 4-way rotation\nconst state = $('Email Account State').item.json;\nconst config = $('User Config (Master Profile)').item.json;\nconst today = new Date().toISOString().split('T')[0];\n\n// Daily reset check\nif (state.lastResetDate !== today) {\n  state.account1.dailyCount = 0;\n  state.account1.errors = 0;\n  state.account2.dailyCount = 0;\n  state.account2.errors = 0;\n  state.account3.dailyCount = 0;\n  state.account3.errors = 0;\n  state.account4.dailyCount = 0;\n  state.account4.errors = 0;\n  state.currentActive = 'account1';\n  state.lastResetDate = today;\n}\n\n// Check each account availability in order\nconst accounts = ['account1', 'account2', 'account3', 'account4'];\nlet accountToUse = null;\nlet reason = '';\nlet shouldSwitch = false;\n\n// Find first available account\nfor (const acc of accounts) {\n  const available = state[acc].dailyCount < config.maxEmailsPerAccount \n    && state[acc].errors < config.errorThreshold;\n  \n  if (available) {\n    accountToUse = acc;\n    break;\n  }\n}\n\n// If no account available, skip sending\nif (!accountToUse) {\n  accountToUse = 'skip';\n  reason = 'All 4 accounts exhausted';\n} else if (accountToUse !== state.currentActive) {\n  // Account switch needed\n  shouldSwitch = true;\n  const prevAccount = state.currentActive;\n  const prevState = state[prevAccount];\n  \n  if (prevState.dailyCount >= config.maxEmailsPerAccount) {\n    reason = `Daily limit reached (${prevState.dailyCount}/${config.maxEmailsPerAccount})`;\n  } else if (prevState.errors >= config.errorThreshold) {\n    reason = `Error threshold exceeded (${prevState.errors}/${config.errorThreshold})`;\n  } else {\n    reason = 'Daily reset - returning to account1';\n  }\n  \n  state.currentActive = accountToUse;\n  state.lastSwitchDate = new Date().toISOString();\n  state.lastSwitchReason = reason;\n}\n\nreturn [{\n  json: {\n    ...state,\n    accountToUse,\n    shouldSwitch,\n    switchReason: reason,\n    account1Available: state.account1.dailyCount < config.maxEmailsPerAccount && state.account1.errors < config.errorThreshold,\n    account2Available: state.account2.dailyCount < config.maxEmailsPerAccount && state.account2.errors < config.errorThreshold,\n    account3Available: state.account3.dailyCount < config.maxEmailsPerAccount && state.account3.errors < config.errorThreshold,\n    account4Available: state.account4.dailyCount < config.maxEmailsPerAccount && state.account4.errors < config.errorThreshold\n  }\n}];"
       }
     },
     {
@@ -1131,7 +1131,7 @@
         1800
       ],
       "parameters": {
-        "jsCode": "// Check and perform daily reset if needed\nconst staticData = this.getWorkflowStaticData('global');\nconst today = new Date().toISOString().split('T')[0];\n\nif (staticData.emailAccountState) {\n  const state = staticData.emailAccountState;\n  \n  if (state.lastResetDate !== today) {\n    // Perform daily reset\n    state.primaryDailyCount = 0;\n    state.secondaryDailyCount = 0;\n    state.primaryErrors = 0;\n    state.secondaryErrors = 0;\n    state.currentActive = 'primary';\n    state.lastResetDate = today;\n    \n    console.log('Daily reset performed: Email counters reset to 0');\n  }\n}\n\n// Pass through to next node\nreturn [{json: {resetChecked: true, date: today}}];"
+        "jsCode": "// Check and perform daily reset if needed - 4-way rotation\nconst staticData = this.getWorkflowStaticData('global');\nconst today = new Date().toISOString().split('T')[0];\n\nif (staticData.emailAccountState) {\n  const state = staticData.emailAccountState;\n  \n  if (state.lastResetDate !== today) {\n    // Perform daily reset for all 4 accounts\n    state.account1.dailyCount = 0;\n    state.account1.errors = 0;\n    state.account2.dailyCount = 0;\n    state.account2.errors = 0;\n    state.account3.dailyCount = 0;\n    state.account3.errors = 0;\n    state.account4.dailyCount = 0;\n    state.account4.errors = 0;\n    state.currentActive = 'account1';\n    state.lastResetDate = today;\n    \n    console.log('Daily reset performed: All 4 email account counters reset to 0');\n  }\n}\n\n// Pass through to next node\nreturn [{json: {resetChecked: true, date: today}}];"
       }
     },
     {
@@ -1148,31 +1148,41 @@
           "rules": [
             {
               "type": "expression",
-              "value": "={{ $json.accountToUse === 'primary' }}",
+              "value": "={{ $json.accountToUse === 'account1' }}",
               "output": 0
             },
             {
               "type": "expression",
-              "value": "={{ $json.accountToUse === 'secondary' }}",
+              "value": "={{ $json.accountToUse === 'account2' }}",
               "output": 1
             },
             {
               "type": "expression",
-              "value": "={{ $json.accountToUse === 'skip' }}",
+              "value": "={{ $json.accountToUse === 'account3' }}",
               "output": 2
+            },
+            {
+              "type": "expression",
+              "value": "={{ $json.accountToUse === 'account4' }}",
+              "output": 3
+            },
+            {
+              "type": "expression",
+              "value": "={{ $json.accountToUse === 'skip' }}",
+              "output": 4
             }
           ]
         }
       }
     },
     {
-      "id": "send-gmail-primary",
-      "name": "Send Email via Gmail Primary",
+      "id": "send-gmail-account-1",
+      "name": "Send Email via Gmail Account 1",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
         1120,
-        1840
+        1700
       ],
       "parameters": {
         "sendTo": "={{ $json['Recruiter Email'] || $json.recruiterEmail }}",
@@ -1184,20 +1194,20 @@
       },
       "credentials": {
         "gmailOAuth2": {
-          "id": "YOUR_PRIMARY_GMAIL_CREDENTIAL_ID",
-          "name": "Gmail Primary OAuth2"
+          "id": "YOUR_GMAIL_ACCOUNT_1_CREDENTIAL_ID",
+          "name": "Gmail Account 1 (raviintouch2@gmail.com)"
         }
       },
       "continueOnFail": true
     },
     {
-      "id": "send-gmail-secondary",
-      "name": "Send Email via Gmail Secondary",
+      "id": "send-gmail-account-2",
+      "name": "Send Email via Gmail Account 2",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
         1120,
-        1960
+        1800
       ],
       "parameters": {
         "sendTo": "={{ $json['Recruiter Email'] || $json.recruiterEmail }}",
@@ -1209,23 +1219,73 @@
       },
       "credentials": {
         "gmailOAuth2": {
-          "id": "YOUR_SECONDARY_GMAIL_CREDENTIAL_ID",
-          "name": "Gmail Secondary OAuth2"
+          "id": "YOUR_GMAIL_ACCOUNT_2_CREDENTIAL_ID",
+          "name": "Gmail Account 2 (ravitejavallakatla7@gmail.com)"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "id": "send-gmail-account-3",
+      "name": "Send Email via Gmail Account 3",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        1900
+      ],
+      "parameters": {
+        "sendTo": "={{ $json['Recruiter Email'] || $json.recruiterEmail }}",
+        "subject": "={{ $json.emailSubject }}",
+        "message": "={{ $json.emailBody }}",
+        "options": {
+          "ccList": "={{ $('User Config (Master Profile)').item.json.userEmail }}"
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_GMAIL_ACCOUNT_3_CREDENTIAL_ID",
+          "name": "Gmail Account 3 (ravitejav081@gmail.com)"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "id": "send-gmail-account-4",
+      "name": "Send Email via Gmail Account 4",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        2000
+      ],
+      "parameters": {
+        "sendTo": "={{ $json['Recruiter Email'] || $json.recruiterEmail }}",
+        "subject": "={{ $json.emailSubject }}",
+        "message": "={{ $json.emailBody }}",
+        "options": {
+          "ccList": "={{ $('User Config (Master Profile)').item.json.userEmail }}"
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_GMAIL_ACCOUNT_4_CREDENTIAL_ID",
+          "name": "Gmail Account 4 (ravitejav0801@gmail.com)"
         }
       },
       "continueOnFail": true
     },
     {
       "id": "skip-send-exhausted",
-      "name": "Skip Send - Both Accounts Exhausted",
+      "name": "Skip Send - All 4 Accounts Exhausted",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
         1120,
-        2080
+        2100
       ],
       "parameters": {
-        "jsCode": "// Log warning when both accounts exhausted\nconst state = $('Check Email Account Status').item.json;\n\nconsole.warn('WARNING: Both email accounts exhausted. Skipping email send.');\nconsole.warn(`Primary: ${state.primaryDailyCount} sent, ${state.primaryErrors} errors`);\nconsole.warn(`Secondary: ${state.secondaryDailyCount} sent, ${state.secondaryErrors} errors`);\n\nreturn [{\n  json: {\n    ...items[0].json,\n    sendStatus: 'skipped',\n    skipReason: 'Both accounts exhausted',\n    primaryCount: state.primaryDailyCount,\n    secondaryCount: state.secondaryDailyCount\n  }\n}];"
+        "jsCode": "// Log warning when all 4 accounts exhausted\nconst state = $('Check Email Account Status').item.json;\n\nconsole.warn('WARNING: All 4 email accounts exhausted. Skipping email send.');\nconsole.warn(`Account 1: ${state.account1.dailyCount} sent, ${state.account1.errors} errors`);\nconsole.warn(`Account 2: ${state.account2.dailyCount} sent, ${state.account2.errors} errors`);\nconsole.warn(`Account 3: ${state.account3.dailyCount} sent, ${state.account3.errors} errors`);\nconsole.warn(`Account 4: ${state.account4.dailyCount} sent, ${state.account4.errors} errors`);\n\nreturn [{\n  json: {\n    ...items[0].json,\n    sendStatus: 'skipped',\n    skipReason: 'All 4 accounts exhausted',\n    account1Count: state.account1.dailyCount,\n    account2Count: state.account2.dailyCount,\n    account3Count: state.account3.dailyCount,\n    account4Count: state.account4.dailyCount\n  }\n}];"
       }
     },
     {
@@ -1238,7 +1298,7 @@
         1900
       ],
       "parameters": {
-        "jsCode": "// Handle email send result and update state\nconst item = items[0].json;\nconst state = $('Check Email Account Status').item.json;\nconst staticData = this.getWorkflowStaticData('global');\n\n// Determine send status\nconst sendStatus = item.sendStatus === 'skipped' ? 'skipped' : \n                   item.error ? 'error' : 'success';\n\nconst accountUsed = state.accountToUse;\n\n// Update state based on result\nif (sendStatus === 'success') {\n  // Increment daily count for the account used\n  if (accountUsed === 'primary') {\n    staticData.emailAccountState.primaryDailyCount++;\n    staticData.emailAccountState.primaryErrors = 0; // Reset error count on success\n  } else if (accountUsed === 'secondary') {\n    staticData.emailAccountState.secondaryDailyCount++;\n    staticData.emailAccountState.secondaryErrors = 0; // Reset error count on success\n  }\n} else if (sendStatus === 'error') {\n  // Increment error count for the account used\n  if (accountUsed === 'primary') {\n    staticData.emailAccountState.primaryErrors++;\n  } else if (accountUsed === 'secondary') {\n    staticData.emailAccountState.secondaryErrors++;\n  }\n  \n  // Check if we need to switch accounts\n  const config = $('User Config (Master Profile)').item.json;\n  const needsSwitch = (accountUsed === 'primary' && staticData.emailAccountState.primaryErrors >= config.errorThreshold) ||\n                      (accountUsed === 'secondary' && staticData.emailAccountState.secondaryErrors >= config.errorThreshold);\n  \n  if (needsSwitch) {\n    const newAccount = accountUsed === 'primary' ? 'secondary' : 'primary';\n    staticData.emailAccountState.currentActive = newAccount;\n    staticData.emailAccountState.lastSwitchDate = new Date().toISOString();\n    staticData.emailAccountState.lastSwitchReason = 'Error threshold exceeded';\n  }\n}\n\nreturn [{\n  json: {\n    ...item,\n    sendStatus,\n    accountUsed,\n    shouldNotify: state.shouldSwitch || (sendStatus === 'error' && staticData.emailAccountState.currentActive !== accountUsed),\n    primaryDailyCount: staticData.emailAccountState.primaryDailyCount,\n    secondaryDailyCount: staticData.emailAccountState.secondaryDailyCount,\n    primaryErrors: staticData.emailAccountState.primaryErrors,\n    secondaryErrors: staticData.emailAccountState.secondaryErrors,\n    currentActive: staticData.emailAccountState.currentActive,\n    switchReason: staticData.emailAccountState.lastSwitchReason\n  }\n}];"
+        "jsCode": "// Handle email send result and update state - 4-way rotation\nconst item = items[0].json;\nconst state = $('Check Email Account Status').item.json;\nconst staticData = this.getWorkflowStaticData('global');\n\n// Determine send status\nconst sendStatus = item.sendStatus === 'skipped' ? 'skipped' : \n                   item.error ? 'error' : 'success';\n\nconst accountUsed = state.accountToUse;\n\n// Update state based on result\nif (sendStatus === 'success') {\n  // Increment daily count for the account used, reset errors\n  if (accountUsed === 'account1') {\n    staticData.emailAccountState.account1.dailyCount++;\n    staticData.emailAccountState.account1.errors = 0;\n  } else if (accountUsed === 'account2') {\n    staticData.emailAccountState.account2.dailyCount++;\n    staticData.emailAccountState.account2.errors = 0;\n  } else if (accountUsed === 'account3') {\n    staticData.emailAccountState.account3.dailyCount++;\n    staticData.emailAccountState.account3.errors = 0;\n  } else if (accountUsed === 'account4') {\n    staticData.emailAccountState.account4.dailyCount++;\n    staticData.emailAccountState.account4.errors = 0;\n  }\n} else if (sendStatus === 'error') {\n  // Increment error count for the account used\n  if (accountUsed === 'account1') {\n    staticData.emailAccountState.account1.errors++;\n  } else if (accountUsed === 'account2') {\n    staticData.emailAccountState.account2.errors++;\n  } else if (accountUsed === 'account3') {\n    staticData.emailAccountState.account3.errors++;\n  } else if (accountUsed === 'account4') {\n    staticData.emailAccountState.account4.errors++;\n  }\n  \n  // Check if we need to switch accounts due to error threshold\n  const config = $('User Config (Master Profile)').item.json;\n  const currentAccountState = staticData.emailAccountState[accountUsed];\n  const needsSwitch = currentAccountState && currentAccountState.errors >= config.errorThreshold;\n  \n  if (needsSwitch) {\n    // Switch to next available account\n    const accounts = ['account1', 'account2', 'account3', 'account4'];\n    const currentIndex = accounts.indexOf(accountUsed);\n    \n    for (let i = 1; i <= 4; i++) {\n      const nextIndex = (currentIndex + i) % 4;\n      const nextAccount = accounts[nextIndex];\n      const nextState = staticData.emailAccountState[nextAccount];\n      \n      if (nextState.dailyCount < config.maxEmailsPerAccount && nextState.errors < config.errorThreshold) {\n        staticData.emailAccountState.currentActive = nextAccount;\n        staticData.emailAccountState.lastSwitchDate = new Date().toISOString();\n        staticData.emailAccountState.lastSwitchReason = `Error threshold exceeded (${currentAccountState.errors}/${config.errorThreshold})`;\n        break;\n      }\n    }\n  }\n}\n\n// Check if daily limit reached and trigger switch\nconst config = $('User Config (Master Profile)').item.json;\nconst currentAccountState = staticData.emailAccountState[accountUsed];\nif (sendStatus === 'success' && currentAccountState && currentAccountState.dailyCount >= config.maxEmailsPerAccount) {\n  // Try to switch to next available account\n  const accounts = ['account1', 'account2', 'account3', 'account4'];\n  const currentIndex = accounts.indexOf(accountUsed);\n  \n  for (let i = 1; i <= 4; i++) {\n    const nextIndex = (currentIndex + i) % 4;\n    const nextAccount = accounts[nextIndex];\n    const nextState = staticData.emailAccountState[nextAccount];\n    \n    if (nextState.dailyCount < config.maxEmailsPerAccount && nextState.errors < config.errorThreshold) {\n      staticData.emailAccountState.currentActive = nextAccount;\n      staticData.emailAccountState.lastSwitchDate = new Date().toISOString();\n      staticData.emailAccountState.lastSwitchReason = `Daily limit reached (${currentAccountState.dailyCount}/${config.maxEmailsPerAccount})`;\n      break;\n    }\n  }\n}\n\nreturn [{\n  json: {\n    ...item,\n    sendStatus,\n    accountUsed,\n    shouldNotify: state.shouldSwitch || (sendStatus === 'error' && staticData.emailAccountState.currentActive !== accountUsed),\n    account1DailyCount: staticData.emailAccountState.account1.dailyCount,\n    account2DailyCount: staticData.emailAccountState.account2.dailyCount,\n    account3DailyCount: staticData.emailAccountState.account3.dailyCount,\n    account4DailyCount: staticData.emailAccountState.account4.dailyCount,\n    account1Errors: staticData.emailAccountState.account1.errors,\n    account2Errors: staticData.emailAccountState.account2.errors,\n    account3Errors: staticData.emailAccountState.account3.errors,\n    account4Errors: staticData.emailAccountState.account4.errors,\n    currentActive: staticData.emailAccountState.currentActive,\n    switchReason: staticData.emailAccountState.lastSwitchReason\n  }\n}];"
       }
     },
     {
@@ -1251,7 +1311,7 @@
         1900
       ],
       "parameters": {
-        "jsCode": "// Persist updated email state\nconst staticData = this.getWorkflowStaticData('global');\nconst state = staticData.emailAccountState;\n\n// State is already updated in Email Send Result Handler\n// Just pass through for logging or potential Sheet append\n\nreturn [{\n  json: {\n    ...items[0].json,\n    stateUpdated: true,\n    timestamp: new Date().toISOString(),\n    currentState: {\n      primaryCount: state.primaryDailyCount,\n      secondaryCount: state.secondaryDailyCount,\n      activeAccount: state.currentActive,\n      primaryErrors: state.primaryErrors,\n      secondaryErrors: state.secondaryErrors\n    }\n  }\n}];"
+        "jsCode": "// Persist updated email state - 4-way rotation\nconst staticData = this.getWorkflowStaticData('global');\nconst state = staticData.emailAccountState;\n\n// State is already updated in Email Send Result Handler\n// Just pass through for logging or potential Sheet append\n\nreturn [{\n  json: {\n    ...items[0].json,\n    stateUpdated: true,\n    timestamp: new Date().toISOString(),\n    currentState: {\n      account1Count: state.account1.dailyCount,\n      account2Count: state.account2.dailyCount,\n      account3Count: state.account3.dailyCount,\n      account4Count: state.account4.dailyCount,\n      activeAccount: state.currentActive,\n      account1Errors: state.account1.errors,\n      account2Errors: state.account2.errors,\n      account3Errors: state.account3.errors,\n      account4Errors: state.account4.errors\n    }\n  }\n}];"
       }
     },
     {
@@ -1265,7 +1325,7 @@
       ],
       "parameters": {
         "chatId": "YOUR_TELEGRAM_CHAT_ID",
-        "text": "=⚠️ **Email Account Switched**\n\n**Reason:** {{ $json.switchReason }}\n\n**Previous Account:** {{ $json.accountUsed === 'primary' ? 'Primary (raviintouch2@gmail.com)' : 'Secondary (ravitejavallakatla7@gmail.com)' }}\n**New Active Account:** {{ $json.currentActive === 'primary' ? 'Primary (raviintouch2@gmail.com)' : 'Secondary (ravitejavallakatla7@gmail.com)' }}\n\n**Status:**\n📧 Primary: {{ $json.primaryDailyCount }} sent today, {{ $json.primaryErrors }} errors\n📧 Secondary: {{ $json.secondaryDailyCount }} sent today, {{ $json.secondaryErrors }} errors\n\n**Time:** {{ $json.timestamp }}",
+        "text": "=⚠️ **Email Account Switched**\n\n**Reason:** {{ $json.switchReason }}\n\n**Previous Account:** {{ $json.accountUsed === 'account1' ? 'Account 1 (raviintouch2@gmail.com)' : $json.accountUsed === 'account2' ? 'Account 2 (ravitejavallakatla7@gmail.com)' : $json.accountUsed === 'account3' ? 'Account 3 (ravitejav081@gmail.com)' : 'Account 4 (ravitejav0801@gmail.com)' }}\n**New Active Account:** {{ $json.currentActive === 'account1' ? 'Account 1 (raviintouch2@gmail.com)' : $json.currentActive === 'account2' ? 'Account 2 (ravitejavallakatla7@gmail.com)' : $json.currentActive === 'account3' ? 'Account 3 (ravitejav081@gmail.com)' : 'Account 4 (ravitejav0801@gmail.com)' }}\n\n**All Account Status:**\n📧 Account 1: {{ $json.account1DailyCount }}/50 sent, {{ $json.account1Errors }} errors\n📧 Account 2: {{ $json.account2DailyCount }}/50 sent, {{ $json.account2Errors }} errors\n📧 Account 3: {{ $json.account3DailyCount }}/50 sent, {{ $json.account3Errors }} errors\n📧 Account 4: {{ $json.account4DailyCount }}/50 sent, {{ $json.account4Errors }} errors\n\n**Total Capacity:** 200 emails/day (50 per account × 4)\n\n**Time:** {{ $json.timestamp }}",
         "additionalFields": {}
       },
       "credentials": {
@@ -1834,28 +1894,42 @@
       "main": [
         [
           {
-            "node": "Send Email via Gmail Primary",
+            "node": "Send Email via Gmail Account 1",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Send Email via Gmail Secondary",
+            "node": "Send Email via Gmail Account 2",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Skip Send - Both Accounts Exhausted",
+            "node": "Send Email via Gmail Account 3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Email via Gmail Account 4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Skip Send - All 4 Accounts Exhausted",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Send Email via Gmail Primary": {
+    "Send Email via Gmail Account 1": {
       "main": [
         [
           {
@@ -1866,7 +1940,7 @@
         ]
       ]
     },
-    "Send Email via Gmail Secondary": {
+    "Send Email via Gmail Account 2": {
       "main": [
         [
           {
@@ -1877,7 +1951,29 @@
         ]
       ]
     },
-    "Skip Send - Both Accounts Exhausted": {
+    "Send Email via Gmail Account 3": {
+      "main": [
+        [
+          {
+            "node": "Email Send Result Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email via Gmail Account 4": {
+      "main": [
+        [
+          {
+            "node": "Email Send Result Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Skip Send - All 4 Accounts Exhausted": {
       "main": [
         [
           {
