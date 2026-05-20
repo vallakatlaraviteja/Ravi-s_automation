@@ -73,7 +73,20 @@
         300
       ],
       "parameters": {
-        "jsCode": "// USER PREFERENCES & METADATA (not a replacement for resume!)\n// This config provides: location preferences, visa status, email settings, and URLs\n// Your actual resume data (skills, projects, experience) is parsed from resumeUrl by Groq AI\n// The parsed resume data is merged with this config to create your complete profile\nreturn [{\n  json: {\n    name: 'Your Name',\n    currentRole: 'Senior Backend Engineer',\n    targetRole: 'Staff Engineer',\n    experience: '5 years',\n    skills: ['Python', 'Node.js', 'AWS', 'Docker', 'Kubernetes', 'PostgreSQL'],\n    location: 'Hyderabad, India',\n    workMode: ['remote', 'hybrid'],\n    minSalary: 80000,\n    targetRoles: ['Backend Engineer', 'Full Stack Engineer', 'DevOps Engineer'],\n    keywords: 'python developer OR backend engineer OR nodejs',\n    country: 'in',\n    githubUrl: 'https://github.com/yourusername',\n    linkedinUrl: 'https://linkedin.com/in/yourprofile',\n    portfolioUrl: 'https://yourportfolio.com',\n    resumeUrl: 'https://drive.google.com/file/d/YOUR_RESUME_ID/view',\n    resumeParsingEnabled: true,\n    userEmail: 'YOUR_EMAIL@example.com',\n    dailyLimit: 10,\n    scoreThreshold: 30,\n    sheetId: 'YOUR_SPREADSHEET_ID',\n    account1Email: 'raviintouch2@gmail.com',\n    account2Email: 'ravitejavallakatla7@gmail.com',\n    account3Email: 'ravitejav081@gmail.com',\n    account4Email: 'ravitejav0801@gmail.com',\n    account1CredentialId: 'YOUR_GMAIL_ACCOUNT_1_CREDENTIAL_ID',\n    account2CredentialId: 'YOUR_GMAIL_ACCOUNT_2_CREDENTIAL_ID',\n    account3CredentialId: 'YOUR_GMAIL_ACCOUNT_3_CREDENTIAL_ID',\n    account4CredentialId: 'YOUR_GMAIL_ACCOUNT_4_CREDENTIAL_ID',\n    maxEmailsPerAccount: 50,\n    errorThreshold: 3\n  }\n}];"
+        "jsCode": "// USER PREFERENCES & METADATA (not a replacement for resume!)\n// This config provides: location preferences, visa status, email settings, and URLs\n// Your actual resume data (skills, projects, experience) is parsed from resumeUrl by Groq AI\n// The parsed resume data is merged with this config to create your complete profile\nreturn [{\n  json: {\n    name: 'Your Name',\n    currentRole: 'Senior Backend Engineer',\n    targetRole: 'Staff Engineer',\n    experience: '5 years',\n    skills: ['Python', 'Node.js', 'AWS', 'Docker', 'Kubernetes', 'PostgreSQL'],\n    location: 'Hyderabad, India',\n    workMode: ['remote', 'hybrid'],\n    minSalary: 80000,\n    targetRoles: ['Backend Engineer', 'Full Stack Engineer', 'DevOps Engineer'],\n    keywords: 'python developer OR backend engineer OR nodejs',\n    country: 'in',\n    githubUrl: 'https://github.com/yourusername',\n    linkedinUrl: 'https://linkedin.com/in/yourprofile',\n    portfolioUrl: 'https://yourportfolio.com',\n    resumeUrl: 'https://drive.google.com/file/d/YOUR_RESUME_ID/view',\n    resumeParsingEnabled: true,\n    userEmail: 'YOUR_EMAIL@example.com',\n    dailyLimit: 10,\n    scoreThreshold: 30,\n    sheetId: 'YOUR_SPREADSHEET_ID',\n    account1Email: 'raviintouch2@gmail.com',\n    account2Email: 'ravitejavallakatla7@gmail.com',\n    account3Email: 'ravitejav081@gmail.com',\n    account4Email: 'ravitejav0801@gmail.com',\n    account1CredentialId: 'YOUR_GMAIL_ACCOUNT_1_CREDENTIAL_ID',\n    account2CredentialId: 'YOUR_GMAIL_ACCOUNT_2_CREDENTIAL_ID',\n    account3CredentialId: 'YOUR_GMAIL_ACCOUNT_3_CREDENTIAL_ID',\n    account4CredentialId: 'YOUR_GMAIL_ACCOUNT_4_CREDENTIAL_ID',\n    maxEmailsPerAccount: 50,\n    errorThreshold: 3,\n    sheetsAccount1CredentialId: 'YOUR_SHEETS_ACCOUNT_1_CREDENTIAL_ID',\n    sheetsAccount2CredentialId: 'YOUR_SHEETS_ACCOUNT_2_CREDENTIAL_ID',\n    sheetsAccount3CredentialId: 'YOUR_SHEETS_ACCOUNT_3_CREDENTIAL_ID',\n    sheetsAccount4CredentialId: 'YOUR_SHEETS_ACCOUNT_4_CREDENTIAL_ID',\n    maxSheetsWritesPerAccount: 300\n  }\n}];"
+      }
+    },
+    {
+      "id": "sheets-account-state",
+      "name": "Google Sheets Account State",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        460,
+        500
+      ],
+      "parameters": {
+        "jsCode": "// Google Sheets account state management - 4-way rotation system\n// Initialize or retrieve from workflow static data\nconst staticData = this.getWorkflowStaticData('global');\n\nif (!staticData.sheetsAccountState) {\n  staticData.sheetsAccountState = {\n    account1: {\n      email: 'raviintouch2@gmail.com',\n      dailyWrites: 0,\n      credentialId: '',\n      lastError: null\n    },\n    account2: {\n      email: 'ravitejavallakatla7@gmail.com',\n      dailyWrites: 0,\n      credentialId: '',\n      lastError: null\n    },\n    account3: {\n      email: 'ravitejav081@gmail.com',\n      dailyWrites: 0,\n      credentialId: '',\n      lastError: null\n    },\n    account4: {\n      email: 'ravitejav0801@gmail.com',\n      dailyWrites: 0,\n      credentialId: '',\n      lastError: null\n    },\n    currentActive: 'account1',\n    lastResetDate: null,\n    lastSwitchDate: null,\n    lastSwitchReason: ''\n  };\n}\n\nreturn [{\n  json: staticData.sheetsAccountState\n}];"
       }
     },
     {
@@ -276,7 +289,7 @@
     },
     {
       "id": "filter-by-score",
-      "name": "Filter by Score Threshold (≥30)",
+      "name": "Filter by Score Threshold (\u226530)",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
@@ -458,7 +471,7 @@
         360
       ],
       "parameters": {
-        "jsCode": "// Aggregate job discovery summary\nconst jobs = items.map(item => item.json);\nconst total = jobs.length;\nconst high = jobs.filter(j => j.priority === 'high').length;\nconst medium = jobs.filter(j => j.priority === 'medium').length;\nconst low = jobs.filter(j => j.priority === 'low').length;\n\nconst topJobs = jobs\n  .sort((a, b) => b.score - a.score)\n  .slice(0, 5)\n  .map(j => `• **${j.jobTitle}** at **${j.company}** (${j.location}) - Score: ${j.score} [${j.source}]`);\n\nconst sourceBreakdown = jobs.reduce((acc, j) => {\n  acc[j.source] = (acc[j.source] || 0) + 1;\n  return acc;\n}, {});\n\nconst sourceStats = Object.entries(sourceBreakdown)\n  .map(([source, count]) => `${source}: ${count}`)\n  .join(', ');\n\nreturn [{\n  json: {\n    total,\n    high,\n    medium,\n    low,\n    topJobsList: topJobs.join('\\n'),\n    sourceStats,\n    date: new Date().toISOString().split('T')[0]\n  }\n}];"
+        "jsCode": "// Aggregate job discovery summary\nconst jobs = items.map(item => item.json);\nconst total = jobs.length;\nconst high = jobs.filter(j => j.priority === 'high').length;\nconst medium = jobs.filter(j => j.priority === 'medium').length;\nconst low = jobs.filter(j => j.priority === 'low').length;\n\nconst topJobs = jobs\n  .sort((a, b) => b.score - a.score)\n  .slice(0, 5)\n  .map(j => `\u2022 **${j.jobTitle}** at **${j.company}** (${j.location}) - Score: ${j.score} [${j.source}]`);\n\nconst sourceBreakdown = jobs.reduce((acc, j) => {\n  acc[j.source] = (acc[j.source] || 0) + 1;\n  return acc;\n}, {});\n\nconst sourceStats = Object.entries(sourceBreakdown)\n  .map(([source, count]) => `${source}: ${count}`)\n  .join(', ');\n\nreturn [{\n  json: {\n    total,\n    high,\n    medium,\n    low,\n    topJobsList: topJobs.join('\\n'),\n    sourceStats,\n    date: new Date().toISOString().split('T')[0]\n  }\n}];"
       }
     },
     {
@@ -472,7 +485,7 @@
       ],
       "parameters": {
         "chatId": "YOUR_TELEGRAM_CHAT_ID",
-        "text": "=📊 **Daily Job Discovery Complete**\n\n✅ Found **{{ $json.total }}** new relevant jobs!\n\n**Priority Breakdown:**\n🔴 High: {{ $json.high }}\n🟡 Medium: {{ $json.medium }}\n🟢 Low: {{ $json.low }}\n\n**Sources:** {{ $json.sourceStats }}\n\n**Top 5 Matches:**\n{{ $json.topJobsList }}\n\nAll jobs saved to Google Sheet. Add recruiter emails for auto-outreach!\n\n**Date:** {{ $json.date }}",
+        "text": "=\ud83d\udcca **Daily Job Discovery Complete**\n\n\u2705 Found **{{ $json.total }}** new relevant jobs!\n\n**Priority Breakdown:**\n\ud83d\udd34 High: {{ $json.high }}\n\ud83d\udfe1 Medium: {{ $json.medium }}\n\ud83d\udfe2 Low: {{ $json.low }}\n\n**Sources:** {{ $json.sourceStats }}\n\n**Top 5 Matches:**\n{{ $json.topJobsList }}\n\nAll jobs saved to Google Sheet. Add recruiter emails for auto-outreach!\n\n**Date:** {{ $json.date }}",
         "additionalFields": {}
       },
       "credentials": {
@@ -493,8 +506,8 @@
       ],
       "parameters": {
         "sendTo": "={{ $('User Config (Master Profile)').item.json.userEmail }}",
-        "subject": "📊 Daily Job Discovery - {{ $json.total }} New Jobs",
-        "message": "=Hello {{ $('User Config (Master Profile)').item.json.name }},\n\nYour job discovery engine found **{{ $json.total }}** new relevant jobs!\n\n**Priority Breakdown:**\n🔴 High: {{ $json.high }}\n🟡 Medium: {{ $json.medium }}\n🟢 Low: {{ $json.low }}\n\n**Sources:**\n{{ $json.sourceStats }}\n\n**Top 5 Matches:**\n{{ $json.topJobsList }}\n\nAll jobs have been added to your Google Sheet.\nReview them and add recruiter emails for auto-outreach.\n\n**Date:** {{ $json.date }}\n\nBest regards,\nJob Discovery Engine",
+        "subject": "\ud83d\udcca Daily Job Discovery - {{ $json.total }} New Jobs",
+        "message": "=Hello {{ $('User Config (Master Profile)').item.json.name }},\n\nYour job discovery engine found **{{ $json.total }}** new relevant jobs!\n\n**Priority Breakdown:**\n\ud83d\udd34 High: {{ $json.high }}\n\ud83d\udfe1 Medium: {{ $json.medium }}\n\ud83d\udfe2 Low: {{ $json.low }}\n\n**Sources:**\n{{ $json.sourceStats }}\n\n**Top 5 Matches:**\n{{ $json.topJobsList }}\n\nAll jobs have been added to your Google Sheet.\nReview them and add recruiter emails for auto-outreach.\n\n**Date:** {{ $json.date }}\n\nBest regards,\nJob Discovery Engine",
         "options": {}
       },
       "credentials": {
@@ -729,7 +742,7 @@
         1800
       ],
       "parameters": {
-        "jsCode": "// Aggregate sending summary with 4-account breakdown\nconst jobs = items.map(item => item.json);\nconst total = jobs.length;\n\n// Count emails sent per account\nconst accountBreakdown = {\n  account1: 0,\n  account2: 0,\n  account3: 0,\n  account4: 0\n};\n\njobs.forEach(j => {\n  const account = j.accountUsed;\n  if (account && accountBreakdown.hasOwnProperty(account)) {\n    accountBreakdown[account]++;\n  }\n});\n\nconst sentList = jobs.map(j => \n  `• **${j['Job Title'] || j.jobTitle}** at **${j.Company || j.company}** → ${j['Recruiter Email'] || j.recruiterEmail} [${j.accountUsed || 'unknown'}]`\n);\n\nreturn [{\n  json: {\n    total,\n    sentList: sentList.join('\\n'),\n    date: new Date().toISOString().split('T')[0],\n    account1Count: accountBreakdown.account1,\n    account2Count: accountBreakdown.account2,\n    account3Count: accountBreakdown.account3,\n    account4Count: accountBreakdown.account4\n  }\n}];"
+        "jsCode": "// Aggregate sending summary with 4-account breakdown\nconst jobs = items.map(item => item.json);\nconst total = jobs.length;\n\n// Count emails sent per account\nconst accountBreakdown = {\n  account1: 0,\n  account2: 0,\n  account3: 0,\n  account4: 0\n};\n\njobs.forEach(j => {\n  const account = j.accountUsed;\n  if (account && accountBreakdown.hasOwnProperty(account)) {\n    accountBreakdown[account]++;\n  }\n});\n\nconst sentList = jobs.map(j => \n  `\u2022 **${j['Job Title'] || j.jobTitle}** at **${j.Company || j.company}** \u2192 ${j['Recruiter Email'] || j.recruiterEmail} [${j.accountUsed || 'unknown'}]`\n);\n\nreturn [{\n  json: {\n    total,\n    sentList: sentList.join('\\n'),\n    date: new Date().toISOString().split('T')[0],\n    account1Count: accountBreakdown.account1,\n    account2Count: accountBreakdown.account2,\n    account3Count: accountBreakdown.account3,\n    account4Count: accountBreakdown.account4\n  }\n}];"
       }
     },
     {
@@ -743,8 +756,8 @@
       ],
       "parameters": {
         "sendTo": "={{ $('User Config (Master Profile)').item.json.userEmail }}",
-        "subject": "✅ Email Outreach Complete - {{ $json.total }} Emails Sent",
-        "message": "=Hello {{ $('User Config (Master Profile)').item.json.name }},\n\nYour daily email outreach campaign has completed!\n\n**Email Account Breakdown:**\n📧 Account 1 (raviintouch2@gmail.com): {{ $json.account1Count }} emails sent\n📧 Account 2 (ravitejavallakatla7@gmail.com): {{ $json.account2Count }} emails sent\n📧 Account 3 (ravitejav081@gmail.com): {{ $json.account3Count }} emails sent\n📧 Account 4 (ravitejav0801@gmail.com): {{ $json.account4Count }} emails sent\n\n**Total Emails Sent:** {{ $json.total }}\n**Total Daily Capacity:** 200 emails/day (50 per account × 4 accounts)\n\n**Sent To:**\n{{ $json.sentList }}\n\nAll applications have been logged in your Google Sheet with status \"Email Sent\".\n\nCheck your Gmail Sent folder for copies (you were CC'd on all emails).\n\n**Date:** {{ $json.date }}\n\nBest regards,\nEmail Outreach System",
+        "subject": "\u2705 Email Outreach Complete - {{ $json.total }} Emails Sent",
+        "message": "=Hello {{ $('User Config (Master Profile)').item.json.name }},\n\nYour daily email outreach campaign has completed!\n\n**Email Account Breakdown:**\n\ud83d\udce7 Account 1 (raviintouch2@gmail.com): {{ $json.account1Count }} emails sent\n\ud83d\udce7 Account 2 (ravitejavallakatla7@gmail.com): {{ $json.account2Count }} emails sent\n\ud83d\udce7 Account 3 (ravitejav081@gmail.com): {{ $json.account3Count }} emails sent\n\ud83d\udce7 Account 4 (ravitejav0801@gmail.com): {{ $json.account4Count }} emails sent\n\n**Total Emails Sent:** {{ $json.total }}\n**Total Daily Capacity:** 200 emails/day (50 per account \u00d7 4 accounts)\n\n**Sent To:**\n{{ $json.sentList }}\n\nAll applications have been logged in your Google Sheet with status \"Email Sent\".\n\nCheck your Gmail Sent folder for copies (you were CC'd on all emails).\n\n**Date:** {{ $json.date }}\n\nBest regards,\nEmail Outreach System",
         "options": {}
       },
       "credentials": {
@@ -777,7 +790,7 @@
         3300
       ],
       "parameters": {
-        "jsCode": "// Quick command handler\nconst text = items[0].json.text.toLowerCase();\nconst config = $('User Config (Master Profile)').item.json;\n\nlet quickResponse = '';\nlet isQuickCommand = false;\n\nif (text === '/start' || text === '/help') {\n  isQuickCommand = true;\n  quickResponse = `**Job Hunt Assistant**\n\nWelcome ${config.name}! \n\n**Commands:**\n• /stats - View your application stats\n• /resume - View your resume\n• /help - Show this help message\n\nAsk me anything about your job search!`;\n} else if (text === '/resume') {\n  isQuickCommand = true;\n  quickResponse = `**Your Resume:**\n${config.resumeUrl}\n\n**Profile:**\n• ${config.currentRole}\n• ${config.experience}\n• Skills: ${config.skills.join(', ')}\n• Location: ${config.location}\n\n**Links:**\nLinkedIn: ${config.linkedinUrl}\nGitHub: ${config.githubUrl}\nPortfolio: ${config.portfolioUrl}`;\n} else if (text === '/stats') {\n  isQuickCommand = false; // Will need sheet query\n  quickResponse = '';\n}\n\nreturn [{\n  json: {\n    ...items[0].json,\n    quickResponse,\n    isQuickCommand\n  }\n}];"
+        "jsCode": "// Quick command handler\nconst text = items[0].json.text.toLowerCase();\nconst config = $('User Config (Master Profile)').item.json;\n\nlet quickResponse = '';\nlet isQuickCommand = false;\n\nif (text === '/start' || text === '/help') {\n  isQuickCommand = true;\n  quickResponse = `**Job Hunt Assistant**\n\nWelcome ${config.name}! \n\n**Commands:**\n\u2022 /stats - View your application stats\n\u2022 /resume - View your resume\n\u2022 /help - Show this help message\n\nAsk me anything about your job search!`;\n} else if (text === '/resume') {\n  isQuickCommand = true;\n  quickResponse = `**Your Resume:**\n${config.resumeUrl}\n\n**Profile:**\n\u2022 ${config.currentRole}\n\u2022 ${config.experience}\n\u2022 Skills: ${config.skills.join(', ')}\n\u2022 Location: ${config.location}\n\n**Links:**\nLinkedIn: ${config.linkedinUrl}\nGitHub: ${config.githubUrl}\nPortfolio: ${config.portfolioUrl}`;\n} else if (text === '/stats') {\n  isQuickCommand = false; // Will need sheet query\n  quickResponse = '';\n}\n\nreturn [{\n  json: {\n    ...items[0].json,\n    quickResponse,\n    isQuickCommand\n  }\n}];"
       }
     },
     {
@@ -930,7 +943,7 @@
         3300
       ],
       "parameters": {
-        "jsCode": "// Aggregate sheet stats\nconst jobs = items.map(item => item.json);\n\nconst total = jobs.length;\nconst statusCounts = jobs.reduce((acc, j) => {\n  const status = j.Status || j.status || 'Unknown';\n  acc[status] = (acc[status] || 0) + 1;\n  return acc;\n}, {});\n\nconst priorityCounts = jobs.reduce((acc, j) => {\n  const priority = j.Priority || j.priority || 'unknown';\n  acc[priority] = (acc[priority] || 0) + 1;\n  return acc;\n}, {});\n\nconst stats = `**Your Job Tracker Stats:**\n• Total jobs: ${total}\n\n**Status Breakdown:**\n` + Object.entries(statusCounts).map(([status, count]) => \n  `• ${status}: ${count}`\n).join('\\n') + `\n\n**Priority Breakdown:**\n` + Object.entries(priorityCounts).map(([priority, count]) => \n  `• ${priority}: ${count}`\n).join('\\n');\n\nreturn [{\n  json: {\n    ...items[0].json,\n    stats\n  }\n}];"
+        "jsCode": "// Aggregate sheet stats\nconst jobs = items.map(item => item.json);\n\nconst total = jobs.length;\nconst statusCounts = jobs.reduce((acc, j) => {\n  const status = j.Status || j.status || 'Unknown';\n  acc[status] = (acc[status] || 0) + 1;\n  return acc;\n}, {});\n\nconst priorityCounts = jobs.reduce((acc, j) => {\n  const priority = j.Priority || j.priority || 'unknown';\n  acc[priority] = (acc[priority] || 0) + 1;\n  return acc;\n}, {});\n\nconst stats = `**Your Job Tracker Stats:**\n\u2022 Total jobs: ${total}\n\n**Status Breakdown:**\n` + Object.entries(statusCounts).map(([status, count]) => \n  `\u2022 ${status}: ${count}`\n).join('\\n') + `\n\n**Priority Breakdown:**\n` + Object.entries(priorityCounts).map(([priority, count]) => \n  `\u2022 ${priority}: ${count}`\n).join('\\n');\n\nreturn [{\n  json: {\n    ...items[0].json,\n    stats\n  }\n}];"
       }
     },
     {
@@ -1131,7 +1144,7 @@
         1800
       ],
       "parameters": {
-        "jsCode": "// Check and perform daily reset if needed - 4-way rotation\nconst staticData = this.getWorkflowStaticData('global');\nconst today = new Date().toISOString().split('T')[0];\n\nif (staticData.emailAccountState) {\n  const state = staticData.emailAccountState;\n  \n  if (state.lastResetDate !== today) {\n    // Perform daily reset for all 4 accounts\n    state.account1.dailyCount = 0;\n    state.account1.errors = 0;\n    state.account2.dailyCount = 0;\n    state.account2.errors = 0;\n    state.account3.dailyCount = 0;\n    state.account3.errors = 0;\n    state.account4.dailyCount = 0;\n    state.account4.errors = 0;\n    state.currentActive = 'account1';\n    state.lastResetDate = today;\n    \n    console.log('Daily reset performed: All 4 email account counters reset to 0');\n  }\n}\n\n// Pass through to next node\nreturn [{json: {resetChecked: true, date: today}}];"
+        "jsCode": "// Check and perform daily reset if needed - 4-way rotation (Email + Sheets)\nconst staticData = this.getWorkflowStaticData('global');\nconst today = new Date().toISOString().split('T')[0];\n\nif (staticData.emailAccountState) {\n  const state = staticData.emailAccountState;\n  \n  if (state.lastResetDate !== today) {\n    // Perform daily reset for all 4 email accounts\n    state.account1.dailyCount = 0;\n    state.account1.errors = 0;\n    state.account2.dailyCount = 0;\n    state.account2.errors = 0;\n    state.account3.dailyCount = 0;\n    state.account3.errors = 0;\n    state.account4.dailyCount = 0;\n    state.account4.errors = 0;\n    state.currentActive = 'account1';\n    state.lastResetDate = today;\n    \n    console.log('Daily reset performed: All 4 email account counters reset to 0');\n  }\n}\n\n// Also reset Google Sheets account state\nif (staticData.sheetsAccountState) {\n  const sheetsState = staticData.sheetsAccountState;\n  \n  if (sheetsState.lastResetDate !== today) {\n    // Perform daily reset for all 4 Sheets accounts\n    sheetsState.account1.dailyWrites = 0;\n    sheetsState.account1.lastError = null;\n    sheetsState.account2.dailyWrites = 0;\n    sheetsState.account2.lastError = null;\n    sheetsState.account3.dailyWrites = 0;\n    sheetsState.account3.lastError = null;\n    sheetsState.account4.dailyWrites = 0;\n    sheetsState.account4.lastError = null;\n    sheetsState.currentActive = 'account1';\n    sheetsState.lastResetDate = today;\n    \n    console.log('Daily reset performed: All 4 Google Sheets account counters reset to 0');\n  }\n}\n\n// Pass through to next node\nreturn [{json: {resetChecked: true, date: today}}];"
       }
     },
     {
@@ -1325,7 +1338,7 @@
       ],
       "parameters": {
         "chatId": "YOUR_TELEGRAM_CHAT_ID",
-        "text": "=⚠️ **Email Account Switched**\n\n**Reason:** {{ $json.switchReason }}\n\n**Previous Account:** {{ $json.accountUsed === 'account1' ? 'Account 1 (raviintouch2@gmail.com)' : $json.accountUsed === 'account2' ? 'Account 2 (ravitejavallakatla7@gmail.com)' : $json.accountUsed === 'account3' ? 'Account 3 (ravitejav081@gmail.com)' : 'Account 4 (ravitejav0801@gmail.com)' }}\n**New Active Account:** {{ $json.currentActive === 'account1' ? 'Account 1 (raviintouch2@gmail.com)' : $json.currentActive === 'account2' ? 'Account 2 (ravitejavallakatla7@gmail.com)' : $json.currentActive === 'account3' ? 'Account 3 (ravitejav081@gmail.com)' : 'Account 4 (ravitejav0801@gmail.com)' }}\n\n**All Account Status:**\n📧 Account 1: {{ $json.account1DailyCount }}/50 sent, {{ $json.account1Errors }} errors\n📧 Account 2: {{ $json.account2DailyCount }}/50 sent, {{ $json.account2Errors }} errors\n📧 Account 3: {{ $json.account3DailyCount }}/50 sent, {{ $json.account3Errors }} errors\n📧 Account 4: {{ $json.account4DailyCount }}/50 sent, {{ $json.account4Errors }} errors\n\n**Total Capacity:** 200 emails/day (50 per account × 4)\n\n**Time:** {{ $json.timestamp }}",
+        "text": "=\u26a0\ufe0f **Email Account Switched**\n\n**Reason:** {{ $json.switchReason }}\n\n**Previous Account:** {{ $json.accountUsed === 'account1' ? 'Account 1 (raviintouch2@gmail.com)' : $json.accountUsed === 'account2' ? 'Account 2 (ravitejavallakatla7@gmail.com)' : $json.accountUsed === 'account3' ? 'Account 3 (ravitejav081@gmail.com)' : 'Account 4 (ravitejav0801@gmail.com)' }}\n**New Active Account:** {{ $json.currentActive === 'account1' ? 'Account 1 (raviintouch2@gmail.com)' : $json.currentActive === 'account2' ? 'Account 2 (ravitejavallakatla7@gmail.com)' : $json.currentActive === 'account3' ? 'Account 3 (ravitejav081@gmail.com)' : 'Account 4 (ravitejav0801@gmail.com)' }}\n\n**All Account Status:**\n\ud83d\udce7 Account 1: {{ $json.account1DailyCount }}/50 sent, {{ $json.account1Errors }} errors\n\ud83d\udce7 Account 2: {{ $json.account2DailyCount }}/50 sent, {{ $json.account2Errors }} errors\n\ud83d\udce7 Account 3: {{ $json.account3DailyCount }}/50 sent, {{ $json.account3Errors }} errors\n\ud83d\udce7 Account 4: {{ $json.account4DailyCount }}/50 sent, {{ $json.account4Errors }} errors\n\n**Total Capacity:** 200 emails/day (50 per account \u00d7 4)\n\n**Time:** {{ $json.timestamp }}",
         "additionalFields": {}
       },
       "credentials": {
@@ -1349,6 +1362,86 @@
           "boolean": [
             {
               "value1": "={{ $json.shouldNotify }}",
+              "value2": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "select-sheets-credential",
+      "name": "Select Sheets Credential",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1500,
+        360
+      ],
+      "parameters": {
+        "jsCode": "// Select active Google Sheets credential based on account state\nconst staticData = this.getWorkflowStaticData('global');\nconst config = $('User Config (Master Profile)').item.json;\n\n// Initialize if not exists\nif (!staticData.sheetsAccountState) {\n  staticData.sheetsAccountState = {\n    account1: { email: 'raviintouch2@gmail.com', dailyWrites: 0, credentialId: '', lastError: null },\n    account2: { email: 'ravitejavallakatla7@gmail.com', dailyWrites: 0, credentialId: '', lastError: null },\n    account3: { email: 'ravitejav081@gmail.com', dailyWrites: 0, credentialId: '', lastError: null },\n    account4: { email: 'ravitejav0801@gmail.com', dailyWrites: 0, credentialId: '', lastError: null },\n    currentActive: 'account1',\n    lastResetDate: null\n  };\n}\n\nconst state = staticData.sheetsAccountState;\nconst maxWrites = config.maxSheetsWritesPerAccount || 300;\n\n// Find first available account\nconst accounts = ['account1', 'account2', 'account3', 'account4'];\nlet accountToUse = state.currentActive;\n\nfor (const acc of accounts) {\n  if (state[acc].dailyWrites < maxWrites && !state[acc].lastError) {\n    accountToUse = acc;\n    break;\n  }\n}\n\n// Map to credential IDs\nconst credentialMap = {\n  account1: config.sheetsAccount1CredentialId,\n  account2: config.sheetsAccount2CredentialId,\n  account3: config.sheetsAccount3CredentialId,\n  account4: config.sheetsAccount4CredentialId\n};\n\nreturn [{\n  json: {\n    ...items[0].json,\n    sheetsAccountToUse: accountToUse,\n    sheetsCredentialId: credentialMap[accountToUse],\n    sheetsAccountEmail: state[accountToUse].email\n  }\n}];"
+      }
+    },
+    {
+      "id": "sheets-error-handler",
+      "name": "Sheets Error Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1720,
+        500
+      ],
+      "parameters": {
+        "jsCode": "// Handle Google Sheets API errors and trigger account switch\nconst staticData = this.getWorkflowStaticData('global');\nconst state = staticData.sheetsAccountState;\nconst item = items[0].json;\n\nif (item.error) {\n  const errorCode = item.error.httpCode || item.error.code;\n  const errorMessage = item.error.message || '';\n  \n  // Detect quota errors (429 rate limit, 403 quota exceeded)\n  if (errorCode === 429 || errorCode === 403 || errorMessage.includes('quota') || errorMessage.includes('rate limit')) {\n    const currentAccount = state.currentActive;\n    state[currentAccount].lastError = { code: errorCode, message: errorMessage, time: new Date().toISOString() };\n    \n    // Switch to next available account\n    const accounts = ['account1', 'account2', 'account3', 'account4'];\n    const currentIndex = accounts.indexOf(currentAccount);\n    \n    for (let i = 1; i <= 4; i++) {\n      const nextIndex = (currentIndex + i) % 4;\n      const nextAccount = accounts[nextIndex];\n      const config = $('User Config (Master Profile)').item.json;\n      const maxWrites = config.maxSheetsWritesPerAccount || 300;\n      \n      if (state[nextAccount].dailyWrites < maxWrites && !state[nextAccount].lastError) {\n        state.currentActive = nextAccount;\n        state.lastSwitchDate = new Date().toISOString();\n        state.lastSwitchReason = `Error ${errorCode}: ${errorMessage}`;\n        console.log(`Sheets account switched from ${currentAccount} to ${nextAccount} due to error`);\n        break;\n      }\n    }\n  }\n}\n\nreturn [{\n  json: {\n    ...item,\n    errorHandled: true,\n    sheetsAccountSwitched: state.currentActive !== (item.sheetsAccountToUse || 'account1')\n  }\n}];"
+      }
+    },
+    {
+      "id": "update-sheets-write-counter",
+      "name": "Update Sheets Write Counter",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2680,
+        500
+      ],
+      "parameters": {
+        "jsCode": "// Update Sheets write counter after successful write operation\nconst staticData = this.getWorkflowStaticData('global');\nconst state = staticData.sheetsAccountState;\nconst config = $('User Config (Master Profile)').item.json;\nconst maxWrites = config.maxSheetsWritesPerAccount || 300;\n\nconst currentAccount = state.currentActive;\n\n// Increment write count\nstate[currentAccount].dailyWrites++;\n\nconsole.log(`Sheets write recorded: ${state[currentAccount].email} - ${state[currentAccount].dailyWrites}/${maxWrites}`);\n\n// Check if we need to switch accounts (reached daily limit)\nlet needsSwitch = false;\nlet switchReason = '';\n\nif (state[currentAccount].dailyWrites >= maxWrites) {\n  // Find next available account\n  const accounts = ['account1', 'account2', 'account3', 'account4'];\n  const currentIndex = accounts.indexOf(currentAccount);\n  \n  for (let i = 1; i <= 4; i++) {\n    const nextIndex = (currentIndex + i) % 4;\n    const nextAccount = accounts[nextIndex];\n    \n    if (state[nextAccount].dailyWrites < maxWrites && !state[nextAccount].lastError) {\n      state.currentActive = nextAccount;\n      state.lastSwitchDate = new Date().toISOString();\n      state.lastSwitchReason = `Daily write limit reached (${state[currentAccount].dailyWrites}/${maxWrites})`;\n      needsSwitch = true;\n      switchReason = state.lastSwitchReason;\n      console.log(`Sheets account switched from ${currentAccount} to ${nextAccount}`);\n      break;\n    }\n  }\n}\n\nreturn [{\n  json: {\n    ...items[0].json,\n    sheetsWriteRecorded: true,\n    sheetsAccount: currentAccount,\n    sheetsWriteCount: state[currentAccount].dailyWrites,\n    sheetsNeedsSwitch: needsSwitch,\n    sheetsSwitchReason: switchReason,\n    account1Writes: state.account1.dailyWrites,\n    account2Writes: state.account2.dailyWrites,\n    account3Writes: state.account3.dailyWrites,\n    account4Writes: state.account4.dailyWrites\n  }\n}];"
+      }
+    },
+    {
+      "id": "sheets-switch-notification",
+      "name": "Sheets Account Switch Notification",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2900,
+        500
+      ],
+      "parameters": {
+        "chatId": "YOUR_TELEGRAM_CHAT_ID",
+        "text": "=\ud83d\udcca **Google Sheets Account Switched**\\n\\n**Reason:** {{ $json.sheetsSwitchReason }}\\n\\n**Previous Account:** {{ $json.sheetsAccount === 'account1' ? 'Account 1 (raviintouch2@gmail.com)' : $json.sheetsAccount === 'account2' ? 'Account 2 (ravitejavallakatla7@gmail.com)' : $json.sheetsAccount === 'account3' ? 'Account 3 (ravitejav081@gmail.com)' : 'Account 4 (ravitejav0801@gmail.com)' }}\\n\\n**All Sheets Account Status:**\\n\ud83d\udcdd Account 1: {{ $json.account1Writes }}/300 writes\\n\ud83d\udcdd Account 2: {{ $json.account2Writes }}/300 writes\\n\ud83d\udcdd Account 3: {{ $json.account3Writes }}/300 writes\\n\ud83d\udcdd Account 4: {{ $json.account4Writes }}/300 writes\\n\\n**Total Daily Capacity:** 1200 writes/day (300 per account \u00d7 4)",
+        "additionalFields": {}
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_TELEGRAM_CREDENTIAL_ID",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "id": "check-sheets-switch-needed",
+      "name": "Check if Sheets Switch Notification Needed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2680,
+        600
+      ],
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.sheetsNeedsSwitch }}",
               "value2": true
             }
           ]
@@ -1499,7 +1592,7 @@
         ]
       ]
     },
-    "Filter by Score Threshold (≥30)": {
+    "Filter by Score Threshold (\u226530)": {
       "main": [
         [
           {
@@ -1850,7 +1943,7 @@
       "main": [
         [
           {
-            "node": "Filter by Score Threshold (≥30)",
+            "node": "Filter by Score Threshold (\u226530)",
             "type": "main",
             "index": 0
           }
