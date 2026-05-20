@@ -86,7 +86,7 @@
         500
       ],
       "parameters": {
-        "jsCode": "// Google Sheets account state management - 4-way rotation system\n// Initialize or retrieve from workflow static data\nconst staticData = this.getWorkflowStaticData('global');\n\nif (!staticData.sheetsAccountState) {\n  staticData.sheetsAccountState = {\n    account1: {\n      email: 'raviintouch2@gmail.com',\n      dailyWrites: 0,\n      credentialId: '',\n      lastError: null\n    },\n    account2: {\n      email: 'ravitejavallakatla7@gmail.com',\n      dailyWrites: 0,\n      credentialId: '',\n      lastError: null\n    },\n    account3: {\n      email: 'ravitejav081@gmail.com',\n      dailyWrites: 0,\n      credentialId: '',\n      lastError: null\n    },\n    account4: {\n      email: 'ravitejav0801@gmail.com',\n      dailyWrites: 0,\n      credentialId: '',\n      lastError: null\n    },\n    currentActive: 'account1',\n    lastResetDate: null,\n    lastSwitchDate: null,\n    lastSwitchReason: ''\n  };\n}\n\nreturn [{\n  json: staticData.sheetsAccountState\n}];"
+        "jsCode": "// Google Sheets account state - Now reads from centralized Multi-Account State Manager\nconst staticData = this.getWorkflowStaticData('global');\n\n// Ensure centralized state exists\nif (!staticData.multiAccountState || !staticData.multiAccountState.sheets) {\n  if (!staticData.multiAccountState) {\n    staticData.multiAccountState = {\n      gmail: { account1: {}, account2: {}, account3: {}, account4: {}, currentActive: 'account1' },\n      sheets: {\n        account1: { email: 'raviintouch2@gmail.com', dailyWrites: 0, credentialId: '', lastError: null },\n        account2: { email: 'ravitejavallakatla7@gmail.com', dailyWrites: 0, credentialId: '', lastError: null },\n        account3: { email: 'ravitejav081@gmail.com', dailyWrites: 0, credentialId: '', lastError: null },\n        account4: { email: 'ravitejav0801@gmail.com', dailyWrites: 0, credentialId: '', lastError: null },\n        currentActive: 'account1'\n      },\n      groq: { key1: {}, key2: {}, key3: {}, key4: {}, currentActive: 'key1' },\n      jobApis: {},\n      lastResetDate: null,\n      switchHistory: []\n    };\n  }\n}\n\n// Return Sheets state from centralized manager\nreturn [{ json: staticData.multiAccountState.sheets }];"
       }
     },
     {
@@ -790,7 +790,7 @@
         3300
       ],
       "parameters": {
-        "jsCode": "// Quick command handler\nconst text = items[0].json.text.toLowerCase();\nconst config = $('User Config (Master Profile)').item.json;\n\nlet quickResponse = '';\nlet isQuickCommand = false;\n\nif (text === '/start' || text === '/help') {\n  isQuickCommand = true;\n  quickResponse = `**Job Hunt Assistant**\n\nWelcome ${config.name}! \n\n**Commands:**\n\u2022 /stats - View your application stats\n\u2022 /resume - View your resume\n\u2022 /help - Show this help message\n\nAsk me anything about your job search!`;\n} else if (text === '/resume') {\n  isQuickCommand = true;\n  quickResponse = `**Your Resume:**\n${config.resumeUrl}\n\n**Profile:**\n\u2022 ${config.currentRole}\n\u2022 ${config.experience}\n\u2022 Skills: ${config.skills.join(', ')}\n\u2022 Location: ${config.location}\n\n**Links:**\nLinkedIn: ${config.linkedinUrl}\nGitHub: ${config.githubUrl}\nPortfolio: ${config.portfolioUrl}`;\n} else if (text === '/stats') {\n  isQuickCommand = false; // Will need sheet query\n  quickResponse = '';\n}\n\nreturn [{\n  json: {\n    ...items[0].json,\n    quickResponse,\n    isQuickCommand\n  }\n}];"
+        "jsCode": "// Quick command handler\nconst text = items[0].json.text.toLowerCase();\nconst config = $('User Config (Master Profile)').item.json;\n\nlet quickResponse = '';\nlet isQuickCommand = false;\nlet needsStateReport = false;\n\nif (text === '/start' || text === '/help') {\n  isQuickCommand = true;\n  quickResponse = `**Job Hunt Assistant**\n\nWelcome ${config.name}! \n\n**Commands:**\n\u2022 /stats - View your application stats\n\u2022 /status - View all account states in real-time\n\u2022 /resume - View your resume\n\u2022 /help - Show this help message\n\nAsk me anything about your job search!`;\n} else if (text === '/resume') {\n  isQuickCommand = true;\n  quickResponse = `**Your Resume:**\n${config.resumeUrl}\n\n**Profile:**\n\u2022 ${config.currentRole}\n\u2022 ${config.experience}\n\u2022 Skills: ${config.skills.join(', ')}\n\u2022 Location: ${config.location}\n\n**Links:**\nLinkedIn: ${config.linkedinUrl}\nGitHub: ${config.githubUrl}\nPortfolio: ${config.portfolioUrl}`;\n} else if (text === '/status') {\n  needsStateReport = true;\n  isQuickCommand = false; // Will need state report\n  quickResponse = '';\n} else if (text === '/stats') {\n  isQuickCommand = false; // Will need sheet query\n  quickResponse = '';\n}\n\nreturn [{\n  json: {\n    ...items[0].json,\n    quickResponse,\n    isQuickCommand,\n    needsStateReport\n  }\n}];"
       }
     },
     {
@@ -1118,7 +1118,7 @@
         1900
       ],
       "parameters": {
-        "jsCode": "// Email account state management - 4-way rotation system\n// Initialize or retrieve from workflow static data\nconst staticData = this.getWorkflowStaticData('global');\n\nif (!staticData.emailAccountState) {\n  staticData.emailAccountState = {\n    account1: {\n      email: 'raviintouch2@gmail.com',\n      dailyCount: 0,\n      errors: 0,\n      credentialId: ''\n    },\n    account2: {\n      email: 'ravitejavallakatla7@gmail.com',\n      dailyCount: 0,\n      errors: 0,\n      credentialId: ''\n    },\n    account3: {\n      email: 'ravitejav081@gmail.com',\n      dailyCount: 0,\n      errors: 0,\n      credentialId: ''\n    },\n    account4: {\n      email: 'ravitejav0801@gmail.com',\n      dailyCount: 0,\n      errors: 0,\n      credentialId: ''\n    },\n    currentActive: 'account1',\n    lastResetDate: null,\n    lastSwitchDate: null,\n    lastSwitchReason: ''\n  };\n}\n\nreturn [{\n  json: staticData.emailAccountState\n}];"
+        "jsCode": "// Email account state - Now reads from centralized Multi-Account State Manager\nconst staticData = this.getWorkflowStaticData('global');\n\n// Initialize centralized state if not exists\nif (!staticData.multiAccountState) {\n  staticData.multiAccountState = {\n    gmail: {\n      account1: { email: 'raviintouch2@gmail.com', dailyCount: 0, errors: 0, credentialId: '', lastError: null },\n      account2: { email: 'ravitejavallakatla7@gmail.com', dailyCount: 0, errors: 0, credentialId: '', lastError: null },\n      account3: { email: 'ravitejav081@gmail.com', dailyCount: 0, errors: 0, credentialId: '', lastError: null },\n      account4: { email: 'ravitejav0801@gmail.com', dailyCount: 0, errors: 0, credentialId: '', lastError: null },\n      currentActive: 'account1'\n    },\n    sheets: { account1: {}, account2: {}, account3: {}, account4: {}, currentActive: 'account1' },\n    groq: { key1: {}, key2: {}, key3: {}, key4: {}, currentActive: 'key1' },\n    jobApis: {},\n    lastResetDate: null,\n    switchHistory: []\n  };\n}\n\n// Return Gmail state from centralized manager\nreturn [{ json: staticData.multiAccountState.gmail }];"
       }
     },
     {
@@ -1131,7 +1131,7 @@
         1900
       ],
       "parameters": {
-        "jsCode": "// Check email account status and determine which to use - 4-way rotation\nconst state = $('Email Account State').item.json;\nconst config = $('User Config (Master Profile)').item.json;\nconst today = new Date().toISOString().split('T')[0];\n\n// Daily reset check\nif (state.lastResetDate !== today) {\n  state.account1.dailyCount = 0;\n  state.account1.errors = 0;\n  state.account2.dailyCount = 0;\n  state.account2.errors = 0;\n  state.account3.dailyCount = 0;\n  state.account3.errors = 0;\n  state.account4.dailyCount = 0;\n  state.account4.errors = 0;\n  state.currentActive = 'account1';\n  state.lastResetDate = today;\n}\n\n// Check each account availability in order\nconst accounts = ['account1', 'account2', 'account3', 'account4'];\nlet accountToUse = null;\nlet reason = '';\nlet shouldSwitch = false;\n\n// Find first available account\nfor (const acc of accounts) {\n  const available = state[acc].dailyCount < config.maxEmailsPerAccount \n    && state[acc].errors < config.errorThreshold;\n  \n  if (available) {\n    accountToUse = acc;\n    break;\n  }\n}\n\n// If no account available, skip sending\nif (!accountToUse) {\n  accountToUse = 'skip';\n  reason = 'All 4 accounts exhausted';\n} else if (accountToUse !== state.currentActive) {\n  // Account switch needed\n  shouldSwitch = true;\n  const prevAccount = state.currentActive;\n  const prevState = state[prevAccount];\n  \n  if (prevState.dailyCount >= config.maxEmailsPerAccount) {\n    reason = `Daily limit reached (${prevState.dailyCount}/${config.maxEmailsPerAccount})`;\n  } else if (prevState.errors >= config.errorThreshold) {\n    reason = `Error threshold exceeded (${prevState.errors}/${config.errorThreshold})`;\n  } else {\n    reason = 'Daily reset - returning to account1';\n  }\n  \n  state.currentActive = accountToUse;\n  state.lastSwitchDate = new Date().toISOString();\n  state.lastSwitchReason = reason;\n}\n\nreturn [{\n  json: {\n    ...state,\n    accountToUse,\n    shouldSwitch,\n    switchReason: reason,\n    account1Available: state.account1.dailyCount < config.maxEmailsPerAccount && state.account1.errors < config.errorThreshold,\n    account2Available: state.account2.dailyCount < config.maxEmailsPerAccount && state.account2.errors < config.errorThreshold,\n    account3Available: state.account3.dailyCount < config.maxEmailsPerAccount && state.account3.errors < config.errorThreshold,\n    account4Available: state.account4.dailyCount < config.maxEmailsPerAccount && state.account4.errors < config.errorThreshold\n  }\n}];"
+        "jsCode": "// Check email account status - Uses centralized state\nconst staticData = this.getWorkflowStaticData('global');\nconst config = $('User Config (Master Profile)').item.json;\nconst today = new Date().toISOString().split('T')[0];\n\n// Ensure centralized state exists\nif (!staticData.multiAccountState || !staticData.multiAccountState.gmail) {\n  return [{ json: { error: 'multiAccountState not initialized', accountToUse: 'skip' } }];\n}\n\nconst state = staticData.multiAccountState.gmail;\n\n// Daily reset check (backup - primary reset happens in Daily Reset Handler)\nif (staticData.multiAccountState.lastResetDate !== today) {\n  state.account1.dailyCount = 0;\n  state.account1.errors = 0;\n  state.account2.dailyCount = 0;\n  state.account2.errors = 0;\n  state.account3.dailyCount = 0;\n  state.account3.errors = 0;\n  state.account4.dailyCount = 0;\n  state.account4.errors = 0;\n  state.currentActive = 'account1';\n  staticData.multiAccountState.lastResetDate = today;\n}\n\n// Check each account availability in order\nconst accounts = ['account1', 'account2', 'account3', 'account4'];\nlet accountToUse = null;\nlet reason = '';\nlet shouldSwitch = false;\n\n// Find first available account\nfor (const acc of accounts) {\n  const available = state[acc].dailyCount < config.maxEmailsPerAccount \n    && state[acc].errors < config.errorThreshold;\n  \n  if (available) {\n    accountToUse = acc;\n    break;\n  }\n}\n\n// If no account available, skip sending\nif (!accountToUse) {\n  accountToUse = 'skip';\n  reason = 'All 4 accounts exhausted';\n} else if (accountToUse !== state.currentActive) {\n  // Account switch needed\n  shouldSwitch = true;\n  const prevAccount = state.currentActive;\n  const prevState = state[prevAccount];\n  \n  if (prevState.dailyCount >= config.maxEmailsPerAccount) {\n    reason = `Daily limit reached (${prevState.dailyCount}/${config.maxEmailsPerAccount})`;\n  } else if (prevState.errors >= config.errorThreshold) {\n    reason = `Error threshold exceeded (${prevState.errors}/${config.errorThreshold})`;\n  } else {\n    reason = 'Daily reset - returning to account1';\n  }\n  \n  state.currentActive = accountToUse;\n}\n\nreturn [{\n  json: {\n    ...state,\n    accountToUse,\n    shouldSwitch,\n    switchReason: reason,\n    account1Available: state.account1.dailyCount < config.maxEmailsPerAccount && state.account1.errors < config.errorThreshold,\n    account2Available: state.account2.dailyCount < config.maxEmailsPerAccount && state.account2.errors < config.errorThreshold,\n    account3Available: state.account3.dailyCount < config.maxEmailsPerAccount && state.account3.errors < config.errorThreshold,\n    account4Available: state.account4.dailyCount < config.maxEmailsPerAccount && state.account4.errors < config.errorThreshold\n  }\n}];"
       }
     },
     {
@@ -1144,7 +1144,7 @@
         1800
       ],
       "parameters": {
-        "jsCode": "// Check and perform daily reset if needed - 4-way rotation (Email + Sheets)\nconst staticData = this.getWorkflowStaticData('global');\nconst today = new Date().toISOString().split('T')[0];\n\nif (staticData.emailAccountState) {\n  const state = staticData.emailAccountState;\n  \n  if (state.lastResetDate !== today) {\n    // Perform daily reset for all 4 email accounts\n    state.account1.dailyCount = 0;\n    state.account1.errors = 0;\n    state.account2.dailyCount = 0;\n    state.account2.errors = 0;\n    state.account3.dailyCount = 0;\n    state.account3.errors = 0;\n    state.account4.dailyCount = 0;\n    state.account4.errors = 0;\n    state.currentActive = 'account1';\n    state.lastResetDate = today;\n    \n    console.log('Daily reset performed: All 4 email account counters reset to 0');\n  }\n}\n\n// Also reset Google Sheets account state\nif (staticData.sheetsAccountState) {\n  const sheetsState = staticData.sheetsAccountState;\n  \n  if (sheetsState.lastResetDate !== today) {\n    // Perform daily reset for all 4 Sheets accounts\n    sheetsState.account1.dailyWrites = 0;\n    sheetsState.account1.lastError = null;\n    sheetsState.account2.dailyWrites = 0;\n    sheetsState.account2.lastError = null;\n    sheetsState.account3.dailyWrites = 0;\n    sheetsState.account3.lastError = null;\n    sheetsState.account4.dailyWrites = 0;\n    sheetsState.account4.lastError = null;\n    sheetsState.currentActive = 'account1';\n    sheetsState.lastResetDate = today;\n    \n    console.log('Daily reset performed: All 4 Google Sheets account counters reset to 0');\n  }\n}\n\n\n\n// Also reset Groq API key state\nif (staticData.groqKeyState) {\n  const groqState = staticData.groqKeyState;\n  \n  if (groqState.lastResetDate !== today) {\n    // Perform daily reset for all 4 Groq keys\n    groqState.key1.dailyRequests = 0;\n    groqState.key1.lastError = null;\n    groqState.key2.dailyRequests = 0;\n    groqState.key2.lastError = null;\n    groqState.key3.dailyRequests = 0;\n    groqState.key3.lastError = null;\n    groqState.key4.dailyRequests = 0;\n    groqState.key4.lastError = null;\n    groqState.currentActive = 'key1';\n    groqState.lastResetDate = today;\n    \n    console.log('Daily reset performed: All 4 Groq API key counters reset to 0');\n  }\n}\n\n// Pass through to next node\nreturn [{json: {resetChecked: true, date: today}}];"
+        "jsCode": "// Daily Reset Check - Now uses centralized Multi-Account State Manager\nconst staticData = this.getWorkflowStaticData('global');\nconst today = new Date().toISOString().split('T')[0];\n\n// Ensure centralized state exists\nif (!staticData.multiAccountState) {\n  staticData.multiAccountState = {\n    gmail: {\n      account1: { email: 'raviintouch2@gmail.com', dailyCount: 0, errors: 0, credentialId: '', lastError: null },\n      account2: { email: 'ravitejavallakatla7@gmail.com', dailyCount: 0, errors: 0, credentialId: '', lastError: null },\n      account3: { email: 'ravitejav081@gmail.com', dailyCount: 0, errors: 0, credentialId: '', lastError: null },\n      account4: { email: 'ravitejav0801@gmail.com', dailyCount: 0, errors: 0, credentialId: '', lastError: null },\n      currentActive: 'account1'\n    },\n    sheets: {\n      account1: { email: 'raviintouch2@gmail.com', dailyWrites: 0, credentialId: '', lastError: null },\n      account2: { email: 'ravitejavallakatla7@gmail.com', dailyWrites: 0, credentialId: '', lastError: null },\n      account3: { email: 'ravitejav081@gmail.com', dailyWrites: 0, credentialId: '', lastError: null },\n      account4: { email: 'ravitejav0801@gmail.com', dailyWrites: 0, credentialId: '', lastError: null },\n      currentActive: 'account1'\n    },\n    groq: {\n      key1: { name: 'groq1', dailyRequests: 0, credentialId: '', lastError: null },\n      key2: { name: 'groq2', dailyRequests: 0, credentialId: '', lastError: null },\n      key3: { name: 'groq3', dailyRequests: 0, credentialId: '', lastError: null },\n      key4: { name: 'groq4', dailyRequests: 0, credentialId: '', lastError: null },\n      currentActive: 'key1'\n    },\n    jobApis: {\n      remotive: { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 },\n      arbeitnow: { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 },\n      adzuna: { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 },\n      jsearch: { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 },\n      themuse: { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 },\n      usajobs: { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 },\n      githubjobs: { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 }\n    },\n    lastResetDate: null,\n    switchHistory: []\n  };\n}\n\nconst state = staticData.multiAccountState;\n\n// Perform daily reset if needed\nif (state.lastResetDate !== today) {\n  // Reset Gmail accounts\n  state.gmail.account1.dailyCount = 0;\n  state.gmail.account1.errors = 0;\n  state.gmail.account2.dailyCount = 0;\n  state.gmail.account2.errors = 0;\n  state.gmail.account3.dailyCount = 0;\n  state.gmail.account3.errors = 0;\n  state.gmail.account4.dailyCount = 0;\n  state.gmail.account4.errors = 0;\n  state.gmail.currentActive = 'account1';\n  \n  // Reset Google Sheets accounts\n  state.sheets.account1.dailyWrites = 0;\n  state.sheets.account1.lastError = null;\n  state.sheets.account2.dailyWrites = 0;\n  state.sheets.account2.lastError = null;\n  state.sheets.account3.dailyWrites = 0;\n  state.sheets.account3.lastError = null;\n  state.sheets.account4.dailyWrites = 0;\n  state.sheets.account4.lastError = null;\n  state.sheets.currentActive = 'account1';\n  \n  // Reset Groq API keys\n  state.groq.key1.dailyRequests = 0;\n  state.groq.key1.lastError = null;\n  state.groq.key2.dailyRequests = 0;\n  state.groq.key2.lastError = null;\n  state.groq.key3.dailyRequests = 0;\n  state.groq.key3.lastError = null;\n  state.groq.key4.dailyRequests = 0;\n  state.groq.key4.lastError = null;\n  state.groq.currentActive = 'key1';\n  \n  // Update last reset date\n  state.lastResetDate = today;\n  \n  console.log('\u2705 Daily reset performed: All account counters reset to 0');\n}\n\n// Pass through to next node\nreturn [{json: {resetChecked: true, date: today, resetPerformed: state.lastResetDate === today}}];"
       }
     },
     {
@@ -1311,7 +1311,7 @@
         1900
       ],
       "parameters": {
-        "jsCode": "// Handle email send result and update state - 4-way rotation\nconst item = items[0].json;\nconst state = $('Check Email Account Status').item.json;\nconst staticData = this.getWorkflowStaticData('global');\n\n// Determine send status\nconst sendStatus = item.sendStatus === 'skipped' ? 'skipped' : \n                   item.error ? 'error' : 'success';\n\nconst accountUsed = state.accountToUse;\n\n// Update state based on result\nif (sendStatus === 'success') {\n  // Increment daily count for the account used, reset errors\n  if (accountUsed === 'account1') {\n    staticData.emailAccountState.account1.dailyCount++;\n    staticData.emailAccountState.account1.errors = 0;\n  } else if (accountUsed === 'account2') {\n    staticData.emailAccountState.account2.dailyCount++;\n    staticData.emailAccountState.account2.errors = 0;\n  } else if (accountUsed === 'account3') {\n    staticData.emailAccountState.account3.dailyCount++;\n    staticData.emailAccountState.account3.errors = 0;\n  } else if (accountUsed === 'account4') {\n    staticData.emailAccountState.account4.dailyCount++;\n    staticData.emailAccountState.account4.errors = 0;\n  }\n} else if (sendStatus === 'error') {\n  // Increment error count for the account used\n  if (accountUsed === 'account1') {\n    staticData.emailAccountState.account1.errors++;\n  } else if (accountUsed === 'account2') {\n    staticData.emailAccountState.account2.errors++;\n  } else if (accountUsed === 'account3') {\n    staticData.emailAccountState.account3.errors++;\n  } else if (accountUsed === 'account4') {\n    staticData.emailAccountState.account4.errors++;\n  }\n  \n  // Check if we need to switch accounts due to error threshold\n  const config = $('User Config (Master Profile)').item.json;\n  const currentAccountState = staticData.emailAccountState[accountUsed];\n  const needsSwitch = currentAccountState && currentAccountState.errors >= config.errorThreshold;\n  \n  if (needsSwitch) {\n    // Switch to next available account\n    const accounts = ['account1', 'account2', 'account3', 'account4'];\n    const currentIndex = accounts.indexOf(accountUsed);\n    \n    for (let i = 1; i <= 4; i++) {\n      const nextIndex = (currentIndex + i) % 4;\n      const nextAccount = accounts[nextIndex];\n      const nextState = staticData.emailAccountState[nextAccount];\n      \n      if (nextState.dailyCount < config.maxEmailsPerAccount && nextState.errors < config.errorThreshold) {\n        staticData.emailAccountState.currentActive = nextAccount;\n        staticData.emailAccountState.lastSwitchDate = new Date().toISOString();\n        staticData.emailAccountState.lastSwitchReason = `Error threshold exceeded (${currentAccountState.errors}/${config.errorThreshold})`;\n        break;\n      }\n    }\n  }\n}\n\n// Check if daily limit reached and trigger switch\nconst config = $('User Config (Master Profile)').item.json;\nconst currentAccountState = staticData.emailAccountState[accountUsed];\nif (sendStatus === 'success' && currentAccountState && currentAccountState.dailyCount >= config.maxEmailsPerAccount) {\n  // Try to switch to next available account\n  const accounts = ['account1', 'account2', 'account3', 'account4'];\n  const currentIndex = accounts.indexOf(accountUsed);\n  \n  for (let i = 1; i <= 4; i++) {\n    const nextIndex = (currentIndex + i) % 4;\n    const nextAccount = accounts[nextIndex];\n    const nextState = staticData.emailAccountState[nextAccount];\n    \n    if (nextState.dailyCount < config.maxEmailsPerAccount && nextState.errors < config.errorThreshold) {\n      staticData.emailAccountState.currentActive = nextAccount;\n      staticData.emailAccountState.lastSwitchDate = new Date().toISOString();\n      staticData.emailAccountState.lastSwitchReason = `Daily limit reached (${currentAccountState.dailyCount}/${config.maxEmailsPerAccount})`;\n      break;\n    }\n  }\n}\n\nreturn [{\n  json: {\n    ...item,\n    sendStatus,\n    accountUsed,\n    shouldNotify: state.shouldSwitch || (sendStatus === 'error' && staticData.emailAccountState.currentActive !== accountUsed),\n    account1DailyCount: staticData.emailAccountState.account1.dailyCount,\n    account2DailyCount: staticData.emailAccountState.account2.dailyCount,\n    account3DailyCount: staticData.emailAccountState.account3.dailyCount,\n    account4DailyCount: staticData.emailAccountState.account4.dailyCount,\n    account1Errors: staticData.emailAccountState.account1.errors,\n    account2Errors: staticData.emailAccountState.account2.errors,\n    account3Errors: staticData.emailAccountState.account3.errors,\n    account4Errors: staticData.emailAccountState.account4.errors,\n    currentActive: staticData.emailAccountState.currentActive,\n    switchReason: staticData.emailAccountState.lastSwitchReason\n  }\n}];"
+        "jsCode": "// Handle email send result - Uses centralized state\nconst item = items[0].json;\nconst staticData = this.getWorkflowStaticData('global');\nconst state = staticData.multiAccountState.gmail;\nconst config = $('User Config (Master Profile)').item.json;\n\nconst sendStatus = item.sendStatus === 'skipped' ? 'skipped' : item.error ? 'error' : 'success';\nconst accountUsed = $('Check Email Account Status').item.json.accountToUse;\n\n// Update state based on result\nif (sendStatus === 'success') {\n  if (state[accountUsed]) {\n    state[accountUsed].dailyCount++;\n    state[accountUsed].errors = 0;\n  }\n} else if (sendStatus === 'error') {\n  if (state[accountUsed]) {\n    state[accountUsed].errors++;\n  }\n}\n\nreturn [{\n  json: {\n    ...item,\n    sendStatus,\n    accountUsed,\n    shouldNotify: $('Check Email Account Status').item.json.shouldSwitch,\n    account1DailyCount: state.account1.dailyCount,\n    account2DailyCount: state.account2.dailyCount,\n    account3DailyCount: state.account3.dailyCount,\n    account4DailyCount: state.account4.dailyCount,\n    account1Errors: state.account1.errors,\n    account2Errors: state.account2.errors,\n    account3Errors: state.account3.errors,\n    account4Errors: state.account4.errors,\n    currentActive: state.currentActive,\n    switchReason: $('Check Email Account Status').item.json.switchReason\n  }\n}];"
       }
     },
     {
@@ -1404,7 +1404,7 @@
         500
       ],
       "parameters": {
-        "jsCode": "// Update Sheets write counter after successful write operation\nconst staticData = this.getWorkflowStaticData('global');\nconst state = staticData.sheetsAccountState;\nconst config = $('User Config (Master Profile)').item.json;\nconst maxWrites = config.maxSheetsWritesPerAccount || 300;\n\nconst currentAccount = state.currentActive;\n\n// Increment write count\nstate[currentAccount].dailyWrites++;\n\nconsole.log(`Sheets write recorded: ${state[currentAccount].email} - ${state[currentAccount].dailyWrites}/${maxWrites}`);\n\n// Check if we need to switch accounts (reached daily limit)\nlet needsSwitch = false;\nlet switchReason = '';\n\nif (state[currentAccount].dailyWrites >= maxWrites) {\n  // Find next available account\n  const accounts = ['account1', 'account2', 'account3', 'account4'];\n  const currentIndex = accounts.indexOf(currentAccount);\n  \n  for (let i = 1; i <= 4; i++) {\n    const nextIndex = (currentIndex + i) % 4;\n    const nextAccount = accounts[nextIndex];\n    \n    if (state[nextAccount].dailyWrites < maxWrites && !state[nextAccount].lastError) {\n      state.currentActive = nextAccount;\n      state.lastSwitchDate = new Date().toISOString();\n      state.lastSwitchReason = `Daily write limit reached (${state[currentAccount].dailyWrites}/${maxWrites})`;\n      needsSwitch = true;\n      switchReason = state.lastSwitchReason;\n      console.log(`Sheets account switched from ${currentAccount} to ${nextAccount}`);\n      break;\n    }\n  }\n}\n\nreturn [{\n  json: {\n    ...items[0].json,\n    sheetsWriteRecorded: true,\n    sheetsAccount: currentAccount,\n    sheetsWriteCount: state[currentAccount].dailyWrites,\n    sheetsNeedsSwitch: needsSwitch,\n    sheetsSwitchReason: switchReason,\n    account1Writes: state.account1.dailyWrites,\n    account2Writes: state.account2.dailyWrites,\n    account3Writes: state.account3.dailyWrites,\n    account4Writes: state.account4.dailyWrites\n  }\n}];"
+        "jsCode": "// Update Sheets write counter - Uses centralized state\nconst staticData = this.getWorkflowStaticData('global');\nconst state = staticData.multiAccountState.sheets;\nconst config = $('User Config (Master Profile)').item.json;\nconst maxWrites = config.maxSheetsWritesPerAccount || 300;\n\nconst currentAccount = state.currentActive;\n\n// Increment write count\nstate[currentAccount].dailyWrites++;\n\nconsole.log(`Sheets write recorded: ${state[currentAccount].email} - ${state[currentAccount].dailyWrites}/${maxWrites}`);\n\n// Check if we need to switch accounts (reached daily limit)\nlet needsSwitch = false;\nlet switchReason = '';\n\nif (state[currentAccount].dailyWrites >= maxWrites) {\n  // Find next available account\n  const accounts = ['account1', 'account2', 'account3', 'account4'];\n  const currentIndex = accounts.indexOf(currentAccount);\n  \n  for (let i = 1; i <= 4; i++) {\n    const nextIndex = (currentIndex + i) % 4;\n    const nextAccount = accounts[nextIndex];\n    \n    if (state[nextAccount].dailyWrites < maxWrites && !state[nextAccount].lastError) {\n      state.currentActive = nextAccount;\n      needsSwitch = true;\n      switchReason = `Daily write limit reached (${state[currentAccount].dailyWrites}/${maxWrites})`;\n      console.log(`Sheets account switched from ${currentAccount} to ${nextAccount}`);\n      break;\n    }\n  }\n}\n\nreturn [{\n  json: {\n    ...items[0].json,\n    sheetsWriteRecorded: true,\n    sheetsAccount: currentAccount,\n    sheetsWriteCount: state[currentAccount].dailyWrites,\n    sheetsNeedsSwitch: needsSwitch,\n    sheetsSwitchReason: switchReason,\n    account1Writes: state.account1.dailyWrites,\n    account2Writes: state.account2.dailyWrites,\n    account3Writes: state.account3.dailyWrites,\n    account4Writes: state.account4.dailyWrites\n  }\n}];"
       }
     },
     {
@@ -1458,7 +1458,7 @@
         100
       ],
       "parameters": {
-        "jsCode": "// Groq API Key state management - 4-way rotation system\n// Initialize or retrieve from workflow static data\nconst staticData = this.getWorkflowStaticData('global');\n\nif (!staticData.groqKeyState) {\n  staticData.groqKeyState = {\n    key1: {\n      name: 'groq1',\n      dailyRequests: 0,\n      credentialId: '',\n      lastError: null\n    },\n    key2: {\n      name: 'groq2',\n      dailyRequests: 0,\n      credentialId: '',\n      lastError: null\n    },\n    key3: {\n      name: 'groq3',\n      dailyRequests: 0,\n      credentialId: '',\n      lastError: null\n    },\n    key4: {\n      name: 'groq4',\n      dailyRequests: 0,\n      credentialId: '',\n      lastError: null\n    },\n    currentActive: 'key1',\n    lastResetDate: null,\n    lastSwitchDate: null,\n    lastSwitchReason: ''\n  };\n}\n\nreturn [{\n  json: staticData.groqKeyState\n}];"
+        "jsCode": "// Groq API Key state - Now reads from centralized Multi-Account State Manager\nconst staticData = this.getWorkflowStaticData('global');\n\n// Ensure centralized state exists\nif (!staticData.multiAccountState || !staticData.multiAccountState.groq) {\n  if (!staticData.multiAccountState) {\n    staticData.multiAccountState = {\n      gmail: { account1: {}, account2: {}, account3: {}, account4: {}, currentActive: 'account1' },\n      sheets: { account1: {}, account2: {}, account3: {}, account4: {}, currentActive: 'account1' },\n      groq: {\n        key1: { name: 'groq1', dailyRequests: 0, credentialId: '', lastError: null },\n        key2: { name: 'groq2', dailyRequests: 0, credentialId: '', lastError: null },\n        key3: { name: 'groq3', dailyRequests: 0, credentialId: '', lastError: null },\n        key4: { name: 'groq4', dailyRequests: 0, credentialId: '', lastError: null },\n        currentActive: 'key1'\n      },\n      jobApis: {},\n      lastResetDate: null,\n      switchHistory: []\n    };\n  }\n}\n\n// Return Groq state from centralized manager\nreturn [{ json: staticData.multiAccountState.groq }];"
       }
     },
     {
@@ -1497,7 +1497,7 @@
         360
       ],
       "parameters": {
-        "jsCode": "// Update Groq request counter after successful API call\nconst staticData = this.getWorkflowStaticData('global');\nconst state = staticData.groqKeyState;\nconst config = $('User Config (Master Profile)').item.json;\nconst maxRequests = config.maxGroqRequestsPerKey || 14400;\n\nconst currentKey = state.currentActive;\n\n// Increment request count\nstate[currentKey].dailyRequests++;\n\nconsole.log(`Groq request recorded: ${state[currentKey].name} - ${state[currentKey].dailyRequests}/${maxRequests}`);\n\n// Check if we need to switch keys (reached daily limit)\nlet needsSwitch = false;\nlet switchReason = '';\n\nif (state[currentKey].dailyRequests >= maxRequests) {\n  // Find next available key\n  const keys = ['key1', 'key2', 'key3', 'key4'];\n  const currentIndex = keys.indexOf(currentKey);\n  \n  for (let i = 1; i <= 4; i++) {\n    const nextIndex = (currentIndex + i) % 4;\n    const nextKey = keys[nextIndex];\n    \n    if (state[nextKey].dailyRequests < maxRequests && !state[nextKey].lastError) {\n      state.currentActive = nextKey;\n      state.lastSwitchDate = new Date().toISOString();\n      state.lastSwitchReason = `Daily limit reached (${state[currentKey].dailyRequests}/${maxRequests})`;\n      needsSwitch = true;\n      switchReason = state.lastSwitchReason;\n      console.log(`Groq key switched from ${currentKey} to ${nextKey}`);\n      break;\n    }\n  }\n}\n\nreturn [{\n  json: {\n    ...items[0].json,\n    groqRequestRecorded: true,\n    groqKey: currentKey,\n    groqRequestCount: state[currentKey].dailyRequests,\n    groqNeedsSwitch: needsSwitch,\n    groqSwitchReason: switchReason,\n    key1Requests: state.key1.dailyRequests,\n    key2Requests: state.key2.dailyRequests,\n    key3Requests: state.key3.dailyRequests,\n    key4Requests: state.key4.dailyRequests\n  }\n}];"
+        "jsCode": "// Update Groq request counter - Uses centralized state\nconst staticData = this.getWorkflowStaticData('global');\nconst state = staticData.multiAccountState.groq;\nconst config = $('User Config (Master Profile)').item.json;\nconst maxRequests = config.maxGroqRequestsPerKey || 14400;\n\nconst currentKey = state.currentActive;\n\n// Increment request count\nstate[currentKey].dailyRequests++;\n\nconsole.log(`Groq request recorded: ${state[currentKey].name} - ${state[currentKey].dailyRequests}/${maxRequests}`);\n\n// Check if we need to switch keys (reached daily limit)\nlet needsSwitch = false;\nlet switchReason = '';\n\nif (state[currentKey].dailyRequests >= maxRequests) {\n  // Find next available key\n  const keys = ['key1', 'key2', 'key3', 'key4'];\n  const currentIndex = keys.indexOf(currentKey);\n  \n  for (let i = 1; i <= 4; i++) {\n    const nextIndex = (currentIndex + i) % 4;\n    const nextKey = keys[nextIndex];\n    \n    if (state[nextKey].dailyRequests < maxRequests && !state[nextKey].lastError) {\n      state.currentActive = nextKey;\n      needsSwitch = true;\n      switchReason = `Daily limit reached (${state[currentKey].dailyRequests}/${maxRequests})`;\n      console.log(`Groq key switched from ${currentKey} to ${nextKey}`);\n      break;\n    }\n  }\n}\n\nreturn [{\n  json: {\n    ...items[0].json,\n    groqRequestRecorded: true,\n    groqKey: currentKey,\n    groqRequestCount: state[currentKey].dailyRequests,\n    groqNeedsSwitch: needsSwitch,\n    groqSwitchReason: switchReason,\n    key1Requests: state.key1.dailyRequests,\n    key2Requests: state.key2.dailyRequests,\n    key3Requests: state.key3.dailyRequests,\n    key4Requests: state.key4.dailyRequests\n  }\n}];"
       }
     },
     {
@@ -1551,7 +1551,7 @@
         200
       ],
       "parameters": {
-        "jsCode": "// Job API State Manager - Track health status of all 7 APIs\n// Initialize or retrieve from workflow static data\nconst staticData = this.getWorkflowStaticData('global');\n\nif (!staticData.jobApiState) {\n  staticData.jobApiState = {\n    remotive: {\n      status: 'healthy',\n      lastSuccess: null,\n      consecutiveFailures: 0\n    },\n    arbeitnow: {\n      status: 'healthy',\n      lastSuccess: null,\n      consecutiveFailures: 0\n    },\n    adzuna: {\n      status: 'healthy',\n      lastSuccess: null,\n      consecutiveFailures: 0\n    },\n    jsearch: {\n      status: 'healthy',\n      lastSuccess: null,\n      consecutiveFailures: 0\n    },\n    themuse: {\n      status: 'healthy',\n      lastSuccess: null,\n      consecutiveFailures: 0\n    },\n    usajobs: {\n      status: 'healthy',\n      lastSuccess: null,\n      consecutiveFailures: 0\n    },\n    githubjobs: {\n      status: 'healthy',\n      lastSuccess: null,\n      consecutiveFailures: 0\n    }\n  };\n}\n\nreturn [{\n  json: staticData.jobApiState\n}];"
+        "jsCode": "// Job API State Manager - Now reads from centralized Multi-Account State Manager\nconst staticData = this.getWorkflowStaticData('global');\n\n// Ensure centralized state exists\nif (!staticData.multiAccountState || !staticData.multiAccountState.jobApis) {\n  if (!staticData.multiAccountState) {\n    staticData.multiAccountState = {\n      gmail: { account1: {}, account2: {}, account3: {}, account4: {}, currentActive: 'account1' },\n      sheets: { account1: {}, account2: {}, account3: {}, account4: {}, currentActive: 'account1' },\n      groq: { key1: {}, key2: {}, key3: {}, key4: {}, currentActive: 'key1' },\n      jobApis: {\n        remotive: { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 },\n        arbeitnow: { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 },\n        adzuna: { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 },\n        jsearch: { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 },\n        themuse: { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 },\n        usajobs: { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 },\n        githubjobs: { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 }\n      },\n      lastResetDate: null,\n      switchHistory: []\n    };\n  }\n}\n\n// Return Job API state from centralized manager\nreturn [{ json: staticData.multiAccountState.jobApis }];"
       }
     },
     {
@@ -1779,6 +1779,189 @@
       ],
       "parameters": {
         "jsCode": "// Update API Health Status - Track successes and failures\nconst staticData = this.getWorkflowStaticData('global');\nconst apiState = staticData.jobApiState || {};\n\n// Get results from all API parsers\nconst apiResults = {\n  remotive: $('Parse Remotive Response').all(),\n  arbeitnow: $('Parse Arbeitnow Response').all(),\n  jsearch: $('Parse JSearch Response').all(),\n  themuse: $('Parse The Muse Response').all(),\n  usajobs: $('Parse USAJobs Response').all(),\n  githubjobs: $('Parse GitHub Jobs Response').all()\n};\n\nconst now = new Date().toISOString();\nconst unhealthyApis = [];\n\n// Update status for each API\nfor (const [apiName, results] of Object.entries(apiResults)) {\n  if (!apiState[apiName]) {\n    apiState[apiName] = { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 };\n  }\n  \n  const state = apiState[apiName];\n  \n  // Check if API returned results\n  if (results && results.length > 0 && !results[0].json.error) {\n    // Success - reset failures\n    state.consecutiveFailures = 0;\n    state.lastSuccess = now;\n    state.status = 'healthy';\n  } else {\n    // Failure - increment counter\n    state.consecutiveFailures++;\n    \n    // Mark unhealthy if 5+ consecutive failures\n    if (state.consecutiveFailures >= 5 && state.status !== 'unhealthy') {\n      state.status = 'unhealthy';\n      unhealthyApis.push({\n        name: apiName,\n        failures: state.consecutiveFailures,\n        lastSuccess: state.lastSuccess\n      });\n    }\n  }\n}\n\n// Save updated state\nstaticData.jobApiState = apiState;\n\nreturn [{\n  json: {\n    apiState,\n    unhealthyApis,\n    timestamp: now,\n    healthySummary: Object.entries(apiState).filter(([_, s]) => s.status === 'healthy').map(([name]) => name).join(', '),\n    unhealthySummary: Object.entries(apiState).filter(([_, s]) => s.status === 'unhealthy').map(([name]) => name).join(', ')\n  }\n}];"
+      }
+    },
+    {
+      "id": "multi-account-state-manager",
+      "name": "Multi-Account State Manager",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        100
+      ],
+      "parameters": {
+        "jsCode": "// Centralized Multi-Account State Manager - Single source of truth\nconst staticData = this.getWorkflowStaticData('global');\n\nif (!staticData.multiAccountState) {\n  staticData.multiAccountState = {\n    gmail: {\n      account1: { email: 'raviintouch2@gmail.com', dailyCount: 0, errors: 0, credentialId: '', lastError: null },\n      account2: { email: 'ravitejavallakatla7@gmail.com', dailyCount: 0, errors: 0, credentialId: '', lastError: null },\n      account3: { email: 'ravitejav081@gmail.com', dailyCount: 0, errors: 0, credentialId: '', lastError: null },\n      account4: { email: 'ravitejav0801@gmail.com', dailyCount: 0, errors: 0, credentialId: '', lastError: null },\n      currentActive: 'account1'\n    },\n    sheets: {\n      account1: { email: 'raviintouch2@gmail.com', dailyWrites: 0, credentialId: '', lastError: null },\n      account2: { email: 'ravitejavallakatla7@gmail.com', dailyWrites: 0, credentialId: '', lastError: null },\n      account3: { email: 'ravitejav081@gmail.com', dailyWrites: 0, credentialId: '', lastError: null },\n      account4: { email: 'ravitejav0801@gmail.com', dailyWrites: 0, credentialId: '', lastError: null },\n      currentActive: 'account1'\n    },\n    groq: {\n      key1: { name: 'groq1', dailyRequests: 0, credentialId: '', lastError: null },\n      key2: { name: 'groq2', dailyRequests: 0, credentialId: '', lastError: null },\n      key3: { name: 'groq3', dailyRequests: 0, credentialId: '', lastError: null },\n      key4: { name: 'groq4', dailyRequests: 0, credentialId: '', lastError: null },\n      currentActive: 'key1'\n    },\n    jobApis: {\n      remotive: { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 },\n      arbeitnow: { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 },\n      adzuna: { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 },\n      jsearch: { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 },\n      themuse: { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 },\n      usajobs: { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 },\n      githubjobs: { status: 'healthy', lastSuccess: null, consecutiveFailures: 0 }\n    },\n    lastResetDate: null,\n    switchHistory: []\n  };\n}\n\nreturn [{ json: staticData.multiAccountState }];"
+      }
+    },
+    {
+      "id": "daily-reset-handler",
+      "name": "Daily Reset Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        460,
+        50
+      ],
+      "parameters": {
+        "jsCode": "// Daily Reset Handler - Midnight UTC reset for all accounts\nconst staticData = this.getWorkflowStaticData('global');\nconst today = new Date().toISOString().split('T')[0];\n\nif (!staticData.multiAccountState) {\n  return [{ json: { error: 'multiAccountState not initialized', date: today } }];\n}\n\nconst state = staticData.multiAccountState;\n\n// Check if reset needed\nif (state.lastResetDate !== today) {\n  // Reset Gmail accounts\n  state.gmail.account1.dailyCount = 0;\n  state.gmail.account1.errors = 0;\n  state.gmail.account2.dailyCount = 0;\n  state.gmail.account2.errors = 0;\n  state.gmail.account3.dailyCount = 0;\n  state.gmail.account3.errors = 0;\n  state.gmail.account4.dailyCount = 0;\n  state.gmail.account4.errors = 0;\n  state.gmail.currentActive = 'account1';\n  \n  // Reset Google Sheets accounts\n  state.sheets.account1.dailyWrites = 0;\n  state.sheets.account2.dailyWrites = 0;\n  state.sheets.account3.dailyWrites = 0;\n  state.sheets.account4.dailyWrites = 0;\n  state.sheets.currentActive = 'account1';\n  \n  // Reset Groq API keys\n  state.groq.key1.dailyRequests = 0;\n  state.groq.key2.dailyRequests = 0;\n  state.groq.key3.dailyRequests = 0;\n  state.groq.key4.dailyRequests = 0;\n  state.groq.currentActive = 'key1';\n  \n  // Update last reset date\n  state.lastResetDate = today;\n  \n  console.log(`\u2705 Daily reset performed at midnight UTC for ${today}`);\n  console.log(`   Gmail: All 4 accounts reset to 0 emails, 0 errors`);\n  console.log(`   Sheets: All 4 accounts reset to 0 writes`);\n  console.log(`   Groq: All 4 keys reset to 0 requests`);\n  \n  return [{\n    json: {\n      resetPerformed: true,\n      date: today,\n      timestamp: new Date().toISOString(),\n      message: 'All account counters reset to 0 at midnight UTC'\n    }\n  }];\n} else {\n  return [{\n    json: {\n      resetPerformed: false,\n      date: today,\n      message: 'Reset already performed today',\n      lastResetDate: state.lastResetDate\n    }\n  }];\n}"
+      }
+    },
+    {
+      "id": "trigger-4-daily-reset",
+      "name": "Schedule Trigger: Daily Reset (Midnight UTC)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        50
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 0 * * *"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "get-full-state-report",
+      "name": "Get Full State Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1340,
+        3500
+      ],
+      "parameters": {
+        "jsCode": "// Get Full State Report for /status command\nconst staticData = this.getWorkflowStaticData('global');\nconst config = $('User Config (Master Profile)').item.json;\n\nif (!staticData.multiAccountState) {\n  return [{ json: { report: '\u274c Multi-Account State not initialized' } }];\n}\n\nconst state = staticData.multiAccountState;\n\n// Gmail Accounts Report\nconst gmailReport = `**Gmail Accounts (200 emails/day capacity)**\n\ud83d\udce7 Account 1 (raviintouch2@gmail.com): ${state.gmail.account1.dailyCount}/50 used, ${state.gmail.account1.errors} errors, Status: ${state.gmail.currentActive === 'account1' ? '\u2705 Active' : 'Ready'}\n\ud83d\udce7 Account 2 (ravitejavallakatla7@gmail.com): ${state.gmail.account2.dailyCount}/50 used, ${state.gmail.account2.errors} errors, Status: ${state.gmail.currentActive === 'account2' ? '\u2705 Active' : 'Ready'}\n\ud83d\udce7 Account 3 (ravitejav081@gmail.com): ${state.gmail.account3.dailyCount}/50 used, ${state.gmail.account3.errors} errors, Status: ${state.gmail.currentActive === 'account3' ? '\u2705 Active' : 'Ready'}\n\ud83d\udce7 Account 4 (ravitejav0801@gmail.com): ${state.gmail.account4.dailyCount}/50 used, ${state.gmail.account4.errors} errors, Status: ${state.gmail.currentActive === 'account4' ? '\u2705 Active' : 'Ready'}\nTotal Used: ${state.gmail.account1.dailyCount + state.gmail.account2.dailyCount + state.gmail.account3.dailyCount + state.gmail.account4.dailyCount}/200`;\n\n// Google Sheets Report\nconst sheetsReport = `**Google Sheets (1200 writes/day capacity)**\n\ud83d\udcdd Account 1: ${state.sheets.account1.dailyWrites}/300 writes, Status: ${state.sheets.currentActive === 'account1' ? '\u2705 Active' : 'Ready'}\n\ud83d\udcdd Account 2: ${state.sheets.account2.dailyWrites}/300 writes, Status: ${state.sheets.currentActive === 'account2' ? '\u2705 Active' : 'Ready'}\n\ud83d\udcdd Account 3: ${state.sheets.account3.dailyWrites}/300 writes, Status: ${state.sheets.currentActive === 'account3' ? '\u2705 Active' : 'Ready'}\n\ud83d\udcdd Account 4: ${state.sheets.account4.dailyWrites}/300 writes, Status: ${state.sheets.currentActive === 'account4' ? '\u2705 Active' : 'Ready'}\nTotal Used: ${state.sheets.account1.dailyWrites + state.sheets.account2.dailyWrites + state.sheets.account3.dailyWrites + state.sheets.account4.dailyWrites}/1200`;\n\n// Groq API Keys Report\nconst groqReport = `**Groq API Keys (57,600 requests/day capacity)**\n\ud83e\udd16 Key 1 (groq1): ${state.groq.key1.dailyRequests}/14400 requests, Status: ${state.groq.currentActive === 'key1' ? '\u2705 Active' : 'Ready'}\n\ud83e\udd16 Key 2 (groq2): ${state.groq.key2.dailyRequests}/14400 requests, Status: ${state.groq.currentActive === 'key2' ? '\u2705 Active' : 'Ready'}\n\ud83e\udd16 Key 3 (groq3): ${state.groq.key3.dailyRequests}/14400 requests, Status: ${state.groq.currentActive === 'key3' ? '\u2705 Active' : 'Ready'}\n\ud83e\udd16 Key 4 (groq4): ${state.groq.key4.dailyRequests}/14400 requests, Status: ${state.groq.currentActive === 'key4' ? '\u2705 Active' : 'Ready'}\nTotal Used: ${state.groq.key1.dailyRequests + state.groq.key2.dailyRequests + state.groq.key3.dailyRequests + state.groq.key4.dailyRequests}/57600`;\n\n// Job APIs Report\nconst jobApisReport = `**Job APIs (7 sources)**\n${Object.entries(state.jobApis).map(([api, apiState]) => {\n  const statusIcon = apiState.status === 'healthy' ? '\u2705' : apiState.status === 'degraded' ? '\u26a0\ufe0f' : '\u274c';\n  const lastSuccess = apiState.lastSuccess ? new Date(apiState.lastSuccess).toLocaleString() : 'Never';\n  return `${statusIcon} ${api.charAt(0).toUpperCase() + api.slice(1)}: ${apiState.status} (${apiState.consecutiveFailures} failures, last success: ${lastSuccess})`;\n}).join('\\n')}`;\n\n// Last Reset Info\nconst lastReset = state.lastResetDate ? `${state.lastResetDate} 00:00 UTC` : 'Never';\n\n// Full Report\nconst fullReport = `\ud83d\udd04 **Multi-Account System Status**\n\n${gmailReport}\n\n${sheetsReport}\n\n${groqReport}\n\n${jobApisReport}\n\n**Last Reset:** ${lastReset}\n\n**Recent Switches:** ${state.switchHistory.length > 0 ? state.switchHistory.slice(-3).reverse().map(s => `${s.service} (${s.reason})`).join(', ') : 'None'}`;\n\nreturn [{\n  json: {\n    report: fullReport,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      }
+    },
+    {
+      "id": "account-switch-logger",
+      "name": "Account Switch Logger",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2880,
+        100
+      ],
+      "parameters": {
+        "jsCode": "// Account Switch Logger - Audit trail for all account switches\nconst staticData = this.getWorkflowStaticData('global');\nconst item = items[0].json;\n\nif (!staticData.multiAccountState) {\n  return [{ json: { ...item, logged: false, error: 'multiAccountState not initialized' } }];\n}\n\nconst state = staticData.multiAccountState;\n\n// Extract switch information from item\nconst service = item.service || 'unknown'; // 'gmail', 'sheets', 'groq'\nconst fromAccount = item.fromAccount || 'unknown';\nconst toAccount = item.toAccount || state[service]?.currentActive || 'unknown';\nconst reason = item.reason || 'unknown'; // 'limit', 'errors', 'quota', 'reset'\nconst details = item.details || item.switchReason || '';\n\n// Create switch history entry\nconst switchEntry = {\n  timestamp: new Date().toISOString(),\n  service: service,\n  fromAccount: fromAccount,\n  toAccount: toAccount,\n  reason: reason,\n  details: details\n};\n\n// Initialize switchHistory if not exists\nif (!state.switchHistory) {\n  state.switchHistory = [];\n}\n\n// Add to history (keep last 100)\nstate.switchHistory.push(switchEntry);\nif (state.switchHistory.length > 100) {\n  state.switchHistory = state.switchHistory.slice(-100);\n}\n\nconsole.log(`\u2705 Account switch logged: ${service} from ${fromAccount} to ${toAccount} (${reason})`);\n\nreturn [{\n  json: {\n    ...item,\n    logged: true,\n    switchEntry: switchEntry,\n    totalSwitches: state.switchHistory.length\n  }\n}];"
+      }
+    },
+    {
+      "id": "check-needs-state-report",
+      "name": "Needs State Report?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        900,
+        3450
+      ],
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.needsStateReport }}",
+              "value2": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "send-telegram-reply-status",
+      "name": "Send Telegram Reply (status)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1560,
+        3500
+      ],
+      "parameters": {
+        "chatId": "={{ $('Extract Telegram Message').item.json.chatId }}",
+        "text": "={{ $('Get Full State Report').item.json.report }}",
+        "additionalFields": {}
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_TELEGRAM_CREDENTIAL_ID",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "id": "log-email-switch",
+      "name": "Log Email Switch",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1680,
+        1900
+      ],
+      "parameters": {
+        "jsCode": "// Prepare data for Account Switch Logger\nconst item = items[0].json;\n\nreturn [{\n  json: {\n    ...item,\n    service: 'gmail',\n    fromAccount: item.accountUsed || 'unknown',\n    toAccount: item.currentActive || 'unknown',\n    reason: item.switchReason?.includes('limit') ? 'limit' : \n            item.switchReason?.includes('error') ? 'errors' : 'unknown',\n    details: item.switchReason || ''\n  }\n}];"
+      }
+    },
+    {
+      "id": "log-sheets-switch",
+      "name": "Log Sheets Switch",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2800,
+        500
+      ],
+      "parameters": {
+        "jsCode": "// Prepare data for Account Switch Logger\nconst item = items[0].json;\n\nreturn [{\n  json: {\n    ...item,\n    service: 'sheets',\n    fromAccount: item.sheetsAccount || 'unknown',\n    toAccount: 'unknown', // Will be determined by current state\n    reason: item.sheetsSwitchReason?.includes('limit') ? 'limit' : \n            item.sheetsSwitchReason?.includes('quota') ? 'quota' : 'unknown',\n    details: item.sheetsSwitchReason || ''\n  }\n}];"
+      }
+    },
+    {
+      "id": "log-groq-switch",
+      "name": "Log Groq Switch",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2540,
+        100
+      ],
+      "parameters": {
+        "jsCode": "// Prepare data for Account Switch Logger\nconst item = items[0].json;\n\nreturn [{\n  json: {\n    ...item,\n    service: 'groq',\n    fromAccount: item.groqKey || 'unknown',\n    toAccount: 'unknown', // Will be determined by current state\n    reason: item.groqSwitchReason?.includes('limit') ? 'limit' : \n            item.groqSwitchReason?.includes('rate limit') ? 'quota' : 'unknown',\n    details: item.groqSwitchReason || ''\n  }\n}];"
+      }
+    },
+    {
+      "id": "switch-notification-router",
+      "name": "Route to Appropriate Notification",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        3000,
+        100
+      ],
+      "parameters": {
+        "rules": {
+          "rules": [
+            {
+              "type": "expression",
+              "value": "={{ $json.service === 'gmail' }}",
+              "output": 0
+            },
+            {
+              "type": "expression",
+              "value": "={{ $json.service === 'sheets' }}",
+              "output": 1
+            },
+            {
+              "type": "expression",
+              "value": "={{ $json.service === 'groq' }}",
+              "output": 2
+            }
+          ]
+        }
       }
     }
   ],
@@ -2577,6 +2760,115 @@
         [
           {
             "node": "Aggregate Job Discovery Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "trigger-4-daily-reset": {
+      "main": [
+        [
+          {
+            "node": "Daily Reset Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check-needs-state-report": {
+      "main": [
+        [
+          {
+            "node": "Get Full State Report",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Is Quick Command?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get-full-state-report": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Reply (status)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "log-email-switch": {
+      "main": [
+        [
+          {
+            "node": "Account Switch Logger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "account-switch-logger": {
+      "main": [
+        [
+          {
+            "node": "Route to Appropriate Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "log-sheets-switch": {
+      "main": [
+        [
+          {
+            "node": "Account Switch Logger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "log-groq-switch": {
+      "main": [
+        [
+          {
+            "node": "Account Switch Logger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "switch-notification-router": {
+      "main": [
+        [
+          {
+            "node": "Email Account Switch Notification",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sheets Account Switch Notification",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Groq Key Switch Notification",
             "type": "main",
             "index": 0
           }
